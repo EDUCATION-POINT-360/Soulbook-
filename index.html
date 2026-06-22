@@ -5,6 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Soulbook — Deep Sanctum Flow Matrix</title>
 
+<!-- Website Structured SEO Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SocialMediaPosting",
+  "headline": "Soulbook — Deep Sanctum Flow Matrix",
+  "description": "A private sanctuary for everything you leave unsaid. Micro-journals, existential overthinking loops, or pure secret poetry.",
+  "author": {
+    "@type": "Organization",
+    "name": "Soulbook Architecture Inc."
+  },
+  "datePublished": "2026-06-22",
+  "applicationCategory": "Social Network Application"
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -207,6 +223,18 @@ h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
 .badge { padding: 6px 14px; border-radius: var(--radius-full); font-size: 11px; font-weight: 700; background: rgba(225, 29, 72, 0.05); border: 1px solid rgba(225, 29, 72, 0.1); color: var(--accent-red); letter-spacing: 0.03em; text-transform: uppercase; }
 .card-body p { font-size: 16px; line-height: 1.7; color: var(--text-primary); font-weight: 400; word-break: break-word; }
 
+/* Media Box styling */
+.card-media-box { margin-top: 14px; border-radius: var(--radius-sm); overflow: hidden; max-height: 240px; background: #000; display: flex; justify-content: center; align-items: center; }
+.card-media-box img, .card-media-box video { width: 100%; height: auto; max-height: 240px; object-fit: contain; }
+
+/* Comments Dynamic Panel styling */
+.comments-panel-area { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border-glass); display: flex; flex-direction: column; gap: 10px; }
+.comments-list-box { display: flex; flex-direction: column; gap: 8px; max-height: 180px; overflow-y: auto; }
+.comment-bubble-node { background: rgba(0,0,0,0.02); padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; border: 1px solid var(--border-glass); }
+.dark-theme .comment-bubble-node { background: rgba(255,255,255,0.02); }
+.comment-node-meta { font-weight: 700; font-size: 11px; color: var(--accent-red); margin-bottom: 3px; }
+.comment-input-inline-group { display: flex; gap: 8px; margin-top: 6px; }
+
 /* Segmented Filtering Infrastructure */
 .filter-bar { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 16px; margin-bottom: 36px; border-bottom: 1px solid var(--border-glass); }
 .filter-bar::-webkit-scrollbar { display: none; }
@@ -230,7 +258,7 @@ h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
 .user-profile-status { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; color: var(--text-primary); padding: 8px 16px; border-radius: var(--radius-full); background: rgba(225,29,72,0.06); border: 1px solid rgba(225,29,72,0.1); }
 
 .reaction-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: var(--radius-full); background: rgba(225,29,72,0.03); border: 1px solid var(--border-glass); cursor: pointer; transition: var(--transition-smooth); color: var(--text-secondary); }
-.reaction-btn:hover { background: rgba(225,29,72,0.08); border-color: var(--accent-rose); color: var(--accent-red); transform: scale(1.05); }
+.reaction-btn:hover, .reaction-btn.user-liked { background: rgba(225,29,72,0.08); border-color: var(--accent-rose); color: var(--accent-red); transform: scale(1.05); }
 
 footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align: center; font-size: 14px; color: var(--text-secondary); background: #ffffff; transition: background-color 0.4s ease; }
 .dark-theme footer { background: #0b0c10; }
@@ -396,6 +424,11 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
                 <option value="Life Lesson">Life Lesson</option>
             </select>
         </div>
+
+        <div style="margin-bottom:18px;">
+            <label style="display:block; font-size:12px; font-weight:700; margin-bottom:6px; color:var(--text-secondary); text-transform:uppercase;">Attach Media (Photo / Max 1-Min Video)</label>
+            <input type="file" id="media-file-input" class="input-field" accept="image/*,video/*" onchange="validateMediaPayload(this)">
+        </div>
         
         <div style="margin-bottom:24px;">
             <label style="display:block; font-size:12px; font-weight:700; margin-bottom:6px; color:var(--text-secondary); text-transform:uppercase;">Narrative Sequence Payload</label>
@@ -450,7 +483,6 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
 </footer>
 
 <script>
-// Secured Infrastructure Access Keys Configuration
 const SUPABASE_URL = "https://bzgjujokgmrsmtbsikkl.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ6Z2p1am9rZ21yc210YnNpa2tsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxMTEzOTEsImV4cCI6MjA5NzY4NzM5MX0.Vfq9kwlw3FVdZrT3Pg9JJaMdkWUXb44_QHeMhMVp6ok";
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -459,6 +491,10 @@ let currentSessionUser = null;
 let activeCategoryFilter = "All";
 let memoryDatabase = [];
 
+// Base64 or Object Media String Allocation Node
+let dynamicProcessedMediaRaw = null;
+let dynamicMediaType = null;
+
 document.addEventListener("DOMContentLoaded", async () => {
     lucide.createIcons();
     await checkActiveSession();
@@ -466,13 +502,44 @@ document.addEventListener("DOMContentLoaded", async () => {
     initializeLiveEcosystemStreams();
 });
 
-// Real-Time Sync Stream Subscriptions Controller
+// Dynamic File Verification Algorithm (Enforces max 60 seconds constraint)
+function validateMediaPayload(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    if (file.type.startsWith('video/')) {
+        const videoElement = document.createElement('video');
+        videoElement.preload = 'metadata';
+        videoElement.onloadedmetadata = function() {
+            window.URL.revokeObjectURL(videoElement.src);
+            if (videoElement.duration > 61) {
+                alert("Transaction Blocked: Videos cannot exceed 1 minute (60 seconds) length restriction.");
+                input.value = "";
+                dynamicProcessedMediaRaw = null;
+                dynamicMediaType = null;
+            } else {
+                processRawFileToBase64(file);
+            }
+        };
+        videoElement.src = URL.createObjectURL(file);
+    } else {
+        processRawFileToBase64(file);
+    }
+}
+
+function processRawFileToBase64(file) {
+    const reader = new FileReader();
+    reader.onloadend = function() {
+        dynamicProcessedMediaRaw = reader.result;
+        dynamicMediaType = file.type.startsWith('image/') ? 'image' : 'video';
+    };
+    reader.readAsDataURL(file);
+}
+
 function initializeLiveEcosystemStreams() {
     _supabase
         .channel('schema-db-changes')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'stories' }, (payload) => {
-            console.log('Synchronizing Live Network Data Event:', payload);
-            
             if (payload.eventType === 'INSERT') {
                 const checkedStory = memoryDatabase.find(x => x.id === payload.new.id);
                 if (!checkedStory) memoryDatabase.unshift(payload.new);
@@ -484,7 +551,6 @@ function initializeLiveEcosystemStreams() {
             if (payload.eventType === 'DELETE') {
                 memoryDatabase = memoryDatabase.filter(x => x.id !== payload.old.id);
             }
-            
             renderReactiveSystemFeeds();
         })
         .subscribe();
@@ -502,7 +568,6 @@ async function initialDatabaseFetch() {
     }
 }
 
-// Transaction Mutation Pipeline Commands
 async function submitStorySequence() {
     if(!currentSessionUser) { closeAllModalOverlays(); return openAuthLogin(); }
     const catValue = document.getElementById("category-input").value;
@@ -510,42 +575,113 @@ async function submitStorySequence() {
 
     if(!bodyValue) return alert("System requires structural text to commit transaction log payload.");
 
+    const payloadObject = { 
+        author: currentSessionUser, 
+        category: catValue, 
+        body: bodyValue, 
+        likes: 0,
+        liked_by: [], // Storage Array Node containing users who interacted
+        media_url: dynamicProcessedMediaRaw, 
+        media_type: dynamicMediaType,
+        comments: [] // Multi-node comments storage buffer array
+    };
+
     const { error } = await _supabase
         .from('stories')
-        .insert([{ 
-            author: currentSessionUser, 
-            category: catValue, 
-            body: bodyValue, 
-            likes: 0
-        }]);
+        .insert([payloadObject]);
 
     if (error) {
         alert("Write Protocol Failure: " + error.message);
     } else {
         closeAllModalOverlays();
         document.getElementById("body-input").value = "";
+        document.getElementById("media-file-input").value = "";
+        dynamicProcessedMediaRaw = null;
+        dynamicMediaType = null;
         await initialDatabaseFetch();
     }
 }
 
+// Strict Account Profile Intersected One-Time Like Toggle System
 async function incrementReaction(id) {
+    if(!currentSessionUser) return openAuthLogin();
+    
     const record = memoryDatabase.find(x => x.id === id);
     if (!record) return;
 
-    // Optimistic state alteration framework
-    record.likes += 1;
+    if (!record.liked_by) record.liked_by = [];
+
+    const userIndex = record.liked_by.indexOf(currentSessionUser);
+    if (userIndex === -1) {
+        // User has not liked yet -> Increment
+        record.likes += 1;
+        record.liked_by.push(currentSessionUser);
+    } else {
+        // User clicked again -> Decrement (Unlike)
+        record.likes = Math.max(0, record.likes - 1);
+        record.liked_by.splice(userIndex, 1);
+    }
+
     renderReactiveSystemFeeds();
 
     await _supabase
         .from('stories')
-        .update({ likes: record.likes })
+        .update({ likes: record.likes, liked_by: record.liked_by })
         .eq('id', id);
+}
+
+// Dynamic Multi-Node Inline Comments Integration Protocol
+async function injectCommentToken(id) {
+    if(!currentSessionUser) return openAuthLogin();
+    const commentInput = document.getElementById(`inline-comment-field-${id}`);
+    const text = commentInput.value.trim();
+
+    if(!text) return;
+
+    const record = memoryDatabase.find(x => x.id === id);
+    if (!record) return;
+
+    if(!record.comments) record.comments = [];
+    
+    record.comments.push({
+        author: currentSessionUser,
+        body: text,
+        created_at: new Date().toISOString()
+    });
+
+    commentInput.value = "";
+    renderReactiveSystemFeeds();
+
+    await _supabase
+        .from('stories')
+        .update({ comments: record.comments })
+        .eq('id', id);
+}
+
+// Global Execution Web Share API Wrapper Module
+async function executeGlobalShareInterface(id, author, category) {
+    const record = memoryDatabase.find(x => x.id === id);
+    const bodySnippet = record ? record.body.substring(0, 50) : "";
+    
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: `Soulbook - Log Entry from @${author}`,
+                text: `"${bodySnippet}..." via Channel [${category}] on Soulbook.`,
+                url: window.location.href
+            });
+        } catch (err) {
+            console.log("Interface Native Share Cancelled Safely");
+        }
+    } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Ecosystem Path URL Copied to Clipboard Node! Distribute across standard platforms.");
+    }
 }
 
 async function purgeRecord(id) {
     if(!confirm("Are you sure you want to permanently purge this memory coordinate from the cloud ledger?")) return;
     
-    // Optimistic UI drop mechanics
     memoryDatabase = memoryDatabase.filter(x => x.id !== id);
     renderReactiveSystemFeeds();
 
@@ -556,7 +692,6 @@ async function purgeRecord(id) {
     if (error) alert("Failed to complete record deletion: " + error.message);
 }
 
-// Cryptographic Authentication Engines
 async function executeRegistrationSequence() {
     const email = document.getElementById("reg-email").value.trim();
     const password = document.getElementById("reg-password").value;
@@ -571,7 +706,7 @@ async function executeRegistrationSequence() {
     });
 
     if (error) return alert(error.message);
-    alert("Crypt system provisioned! Please inspect your activation inbox to finalize registration verification parameters.");
+    alert("Crypt system provisioned! Profile space allocated successfully.");
     closeAllModalOverlays();
 }
 
@@ -609,7 +744,6 @@ async function checkActiveSession() {
     }
 }
 
-// Core Interface Synchronization Routines
 function synchronizeSessionUI() {
     const headerAuthTarget = document.getElementById("auth-state-header-target");
     const heroActionsTarget = document.getElementById("hero-actions-container");
@@ -675,6 +809,33 @@ function renderReactiveSystemFeeds() {
             personalReactionCount += story.likes;
         }
 
+        // Processing Optional Injected Structural Media Element
+        let parsedMediaMarkUp = "";
+        if (story.media_url) {
+            if (story.media_type === 'image') {
+                parsedMediaMarkUp = `<div class="card-media-box"><img src="${story.media_url}" alt="Injected Context Node"></div>`;
+            } else if (story.media_type === 'video') {
+                parsedMediaMarkUp = `<div class="card-media-box"><video src="${story.media_url}" controls></video></div>`;
+            }
+        }
+
+        // Rendering Dynamic Dynamic Feed Comments Markup String Matrix Array
+        let commentsArrayMarkup = "";
+        if (story.comments && story.comments.length > 0) {
+            story.comments.forEach(c => {
+                commentsArrayMarkup += `
+                    <div class="comment-bubble-node">
+                        <div class="comment-node-meta">@${c.author.toLowerCase()}</div>
+                        <div style="color:var(--text-primary); font-size:13px;">${c.body}</div>
+                    </div>
+                `;
+            });
+        }
+
+        const userHasLiked = currentSessionUser && story.liked_by && story.liked_by.includes(currentSessionUser);
+        const activeLikeClass = userHasLiked ? "user-liked" : "";
+        const heartFillAttribute = userHasLiked ? "var(--accent-red)" : "none";
+
         // Processing Global Feed Rendering Layer
         if (activeCategoryFilter === "All" || story.category === activeCategoryFilter) {
             const authorInit = story.author ? story.author.charAt(0).toUpperCase() : '?';
@@ -696,11 +857,25 @@ function renderReactiveSystemFeeds() {
                         <div class="card-body">
                             <p>"${story.body}"</p>
                         </div>
+                        ${parsedMediaMarkUp}
                     </div>
+
+                    <div class="comments-panel-area">
+                        <div class="comments-list-box">${commentsArrayMarkup}</div>
+                        <div class="comment-input-inline-group">
+                            <input type="text" id="inline-comment-field-${story.id}" class="input-field" placeholder="Add a public comment..." style="padding:10px 14px; font-size:13px;">
+                            <button class="btn-modern btn-primary" style="padding:0 16px; border-radius:var(--radius-sm);" onclick="injectCommentToken(${story.id})"><i data-lucide="message-square" style="width:14px;height:14px;"></i></button>
+                        </div>
+                    </div>
+
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; padding-top:16px; border-top:1px solid var(--border-glass);">
-                        <button class="reaction-btn" onclick="incrementReaction(${story.id})">
-                            <i data-lucide="heart" style="width:15px; height:15px; color:var(--accent-red); fill:var(--accent-red);"></i> 
+                        <button class="reaction-btn ${activeLikeClass}" onclick="incrementReaction(${story.id})">
+                            <i data-lucide="heart" style="width:15px; height:15px; color:var(--accent-red); fill:${heartFillAttribute};"></i> 
                             <span style="font-size:13px; font-weight:700;">${story.likes}</span>
+                        </button>
+                        <button class="reaction-btn" onclick="executeGlobalShareInterface(${story.id}, '${story.author}', '${story.category}')">
+                            <i data-lucide="share-2" style="width:15px; height:15px;"></i> 
+                            <span style="font-size:13px; font-weight:600;">Share</span>
                         </button>
                     </div>
                 </div>
@@ -720,6 +895,7 @@ function renderReactiveSystemFeeds() {
                         <div class="card-body">
                             <p>"${story.body}"</p>
                         </div>
+                        ${parsedMediaMarkUp}
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; padding-top:16px; border-top:1px solid var(--border-glass);">
                         <div style="font-size:13px; color:var(--text-secondary); display:flex; align-items:center; gap:6px; font-weight:600;">
