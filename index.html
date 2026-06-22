@@ -3,57 +3,59 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Soulbook — Full Matrix Node Sync</title>
+<title>Soulbook — Every Story Matters</title>
 
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
 
+<!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest"></script>
+
+<!-- Supabase JS Client Infrastructure SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root {
-    --bg-main: #f8fafc;
+    --bg-main: #fcfcfd;
     --bg-surface: rgba(255, 255, 255, 0.85);
     --bg-surface-solid: #ffffff;
-    --border-glass: rgba(15, 23, 42, 0.06);
-    --border-glass-glow: rgba(225, 29, 72, 0.25);
+    --border-glass: rgba(0, 0, 0, 0.08);
+    --border-glass-glow: rgba(225, 29, 72, 0.3);
     
     --accent-red: #e11d48;
     --accent-dark-red: #9f1239;
     --accent-rose: #fda4af;
     --accent-charcoal: #0f172a;
-    --accent-emerald: #10b981;
     
     --text-primary: #0f172a;
     --text-secondary: #475569;
-    --text-muted: #64748b;
+    --text-muted: #94a3b8;
     
-    --grad-primary: linear-gradient(135deg, #e11d48 0%, #be123c 60%, #881337 100%);
-    --grad-text: linear-gradient(135deg, #0f172a 20%, #e11d48 100%);
-    --grad-surface: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(254,242,244,0.75) 100%);
+    --grad-primary: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #9f1239 100%);
+    --grad-text: linear-gradient(135deg, #0f172a 30%, #e11d48 100%);
+    --grad-surface: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(253,244,245,0.9) 100%);
     
-    --radius-sm: 10px;
-    --radius-md: 16px;
-    --radius-lg: 28px;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 24px;
     --radius-full: 9999px;
     
-    --shadow-premium: 0 25px 50px -12px rgba(159, 18, 57, 0.04), 0 4px 12px rgba(0,0,0,0.01);
-    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    --shadow-premium: 0 20px 40px -15px rgba(159, 18, 57, 0.08), 0 1px 3px rgba(0,0,0,0.02);
+    --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dark-theme {
-    --bg-main: #050508;
-    --bg-surface: rgba(13, 16, 23, 0.85);
-    --bg-surface-solid: #0d1017;
-    --border-glass: rgba(255, 255, 255, 0.05);
-    --border-glass-glow: rgba(253, 164, 175, 0.3);
-    --text-primary: #f1f5f9;
-    --text-secondary: #94a3b8;
-    --text-muted: #475569;
+    --bg-main: #07080b;
+    --bg-surface: rgba(18, 20, 26, 0.85);
+    --bg-surface-solid: #12141a;
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
     --grad-text: linear-gradient(135deg, #ffffff 40%, #fda4af 100%);
-    --grad-surface: linear-gradient(180deg, rgba(13,16,23,0.92) 0%, rgba(7,4,6,0.95) 100%);
+    --grad-surface: linear-gradient(180deg, rgba(18,20,26,0.9) 0%, rgba(12,8,9,0.9) 100%);
 }
 
 * {
@@ -69,12 +71,12 @@ body {
     color: var(--text-primary);
     overflow-x: hidden;
     min-height: 100vh;
-    transition: background-color 0.5s ease, color 0.5s ease;
+    transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-main); }
-::-webkit-scrollbar-thumb { background: rgba(225, 29, 72, 0.15); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb { background: rgba(225, 29, 72, 0.2); border-radius: var(--radius-full); }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-red); }
 
 .ambient-wrapper {
@@ -87,22 +89,22 @@ body {
 .blob {
     position: absolute;
     border-radius: var(--radius-full);
-    filter: blur(160px);
-    opacity: 0.14;
-    animation: floatBlob 22s infinite alternate ease-in-out;
+    filter: blur(150px);
+    opacity: 0.18;
+    animation: floatBlob 25s infinite alternate ease-in-out;
 }
-.blob-1 { background: var(--accent-red); width: 55vw; height: 55vw; top: -10%; left: -5%; }
-.blob-2 { background: var(--accent-rose); width: 40vw; height: 40vw; bottom: -5%; right: -5%; animation-delay: -5s; }
+.blob-1 { background: var(--accent-red); width: 60vw; height: 60vw; top: -15%; left: -10%; }
+.blob-2 { background: var(--accent-rose); width: 45vw; height: 45vw; bottom: -5%; right: -5%; animation-delay: -7s; }
 
 @keyframes floatBlob {
     0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(6%, 8%) scale(1.12); }
+    100% { transform: translate(8%, 10%) scale(1.15); }
 }
 
 .glass {
     background: var(--bg-surface);
     background-image: var(--grad-surface);
-    backdrop-filter: blur(30px) saturate(200%);
+    backdrop-filter: blur(24px) saturate(190%);
     border: 1px solid var(--border-glass);
 }
 
@@ -111,12 +113,12 @@ body {
 }
 .glass-interactive:hover {
     border-color: var(--border-glass-glow);
-    box-shadow: 0 40px 80px -25px rgba(225, 29, 72, 0.15);
+    box-shadow: 0 30px 60px -20px rgba(225, 29, 72, 0.2);
     transform: translateY(-4px);
 }
 
 h1, .font-display { font-family: 'Playfair Display', serif; font-weight: 700; }
-h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
+h2, h3 { font-weight: 700; letter-spacing: -0.01em; }
 .gradient-text { background: var(--grad-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
 .btn-modern {
@@ -124,7 +126,7 @@ h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
     align-items: center;
     justify-content: center;
     gap: 10px;
-    padding: 14px 26px;
+    padding: 14px 28px;
     border-radius: var(--radius-md);
     font-weight: 600;
     font-size: 14px;
@@ -132,48 +134,48 @@ h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
     transition: var(--transition-smooth);
     text-decoration: none;
     border: none;
-    user-select: none;
 }
-.btn-primary { background: var(--grad-primary); color: #ffffff; box-shadow: 0 4px 25px rgba(225, 29, 72, 0.25); }
-.btn-primary:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 12px 35px rgba(225, 29, 72, 0.4); }
+.btn-primary { background: var(--grad-primary); color: #ffffff; box-shadow: 0 4px 20px rgba(225, 29, 72, 0.25); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(225, 29, 72, 0.45); }
 .btn-secondary { background: var(--bg-surface-solid); color: var(--text-primary); border: 1px solid var(--border-glass); box-shadow: var(--shadow-premium); }
-.btn-secondary:hover { border-color: var(--accent-red); color: var(--accent-red); background: rgba(225, 29, 72, 0.02); }
+.btn-secondary:hover { border-color: var(--accent-red); color: var(--accent-red); }
 
-.app-view { display: none; opacity: 0; transform: translateY(15px); transition: opacity 0.4s ease, transform 0.4s ease; }
+.app-view { display: none; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
 .app-view.active { display: block; opacity: 1; transform: translateY(0); }
 
-/* Navigation Top Architecture */
+/* Navigation Top Bar */
 .desktop-nav { position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-glass); }
-.desktop-nav-container { max-width: 1440px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 16px 4%; }
-.logo-area { display: flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 700; color: var(--text-primary); cursor: pointer; transition: var(--transition-smooth); }
-.logo-area:hover { transform: scale(1.02); }
-.logo-dot { width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--grad-primary); display: grid; place-items: center; color: white; box-shadow: 0 8px 20px rgba(225, 29, 72, 0.25); }
-.desktop-links { display: flex; align-items: center; gap: 28px; }
-.desktop-link { color: var(--text-secondary); text-decoration: none; font-size: 15px; font-weight: 600; position: relative; padding: 6px 0; transition: var(--transition-smooth); }
+.desktop-nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 16px 4%; }
+.logo-area { display: flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 700; color: var(--text-primary); cursor: pointer; }
+.logo-dot { width: 38px; height: 38px; border-radius: var(--radius-md); background: var(--grad-primary); display: grid; place-items: center; color: white; }
+.desktop-links { display: flex; align-items: center; gap: 24px; }
+.desktop-link { color: var(--text-secondary); text-decoration: none; font-size: 15px; font-weight: 500; transition: var(--transition-smooth); }
 .desktop-link:hover, .desktop-link.active { color: var(--accent-red); }
-.desktop-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--accent-red); transition: var(--transition-smooth); }
-.desktop-link.active::after, .desktop-link:hover::after { width: 100%; }
 
+/* Hamburger Menu Button */
 .hamburger-btn { display: flex; flex-direction: column; justify-content: space-between; width: 26px; height: 18px; background: none; border: none; cursor: pointer; z-index: 1100; }
 .hamburger-btn span { width: 100%; height: 2px; background: var(--text-primary); border-radius: var(--radius-full); transition: var(--transition-smooth); transform-origin: left center; }
 .hamburger-btn.open span:nth-child(1) { transform: rotate(45deg); }
-.hamburger-btn.open span:nth-child(2) { opacity: 0; transform: scale(0); }
+.hamburger-btn.open span:nth-child(2) { opacity: 0; }
 .hamburger-btn.open span:nth-child(3) { transform: rotate(-45deg); }
 
+/* PC Sidebar Layout */
 .pc-sidebar-nav { border-right: 1px solid var(--border-glass); padding: 40px 24px; display: flex; flex-direction: column; justify-content: space-between; height: calc(100vh - 73px); position: sticky; top: 73px; }
-.sidebar-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.sidebar-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
 .sidebar-link { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: var(--radius-md); color: var(--text-secondary); text-decoration: none; font-size: 15px; font-weight: 600; transition: var(--transition-smooth); }
-.sidebar-link:hover, .sidebar-link.active { background: rgba(225, 29, 72, 0.06); color: var(--accent-red); }
+.sidebar-link:hover, .sidebar-link.active { background: rgba(225, 29, 72, 0.08); color: var(--accent-red); }
 
-.mobile-dock-nav { position: fixed; bottom: 16px; left: 16px; right: 16px; height: 72px; border: 1px solid var(--border-glass); z-index: 999; display: none; justify-content: space-around; align-items: center; padding: 0 12px; border-radius: var(--radius-md); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-.dock-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); text-decoration: none; font-size: 11px; font-weight: 600; gap: 4px; transition: var(--transition-smooth); }
-.dock-item.active, .dock-item:hover { color: var(--accent-red); transform: translateY(-2px); }
+/* Mobile Bottom Dock */
+.mobile-dock-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 72px; border-top: 1px solid var(--border-glass); z-index: 999; display: none; justify-content: space-around; align-items: center; padding: 0 10px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.05); }
+.dock-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); text-decoration: none; font-size: 11px; font-weight: 500; gap: 5px; transition: var(--transition-smooth); }
+.dock-item.active, .dock-item:hover { color: var(--accent-red); }
 
-.command-drawer { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100vh; z-index: 1050; padding: 120px 40px 40px 40px; box-shadow: -20px 0 60px rgba(0,0,0,0.1); transition: var(--transition-smooth); display: flex; flex-direction: column; justify-content: space-between; }
+/* Sidebar/Overlay Navigation Drawer */
+.command-drawer { position: fixed; top: 0; right: -100%; width: 100%; max-width: 420px; height: 100vh; z-index: 1050; padding: 110px 40px 40px 40px; box-shadow: -30px 0 60px rgba(0,0,0,0.15); transition: var(--transition-smooth); display: flex; flex-direction: column; justify-content: space-between; }
 .command-drawer.open { right: 0; }
-.drawer-links { display: flex; flex-direction: column; gap: 26px; }
-.drawer-link { display: flex; align-items: center; gap: 18px; font-size: 18px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: var(--transition-smooth); }
-.drawer-link:hover { color: var(--accent-red); transform: translateX(8px); }
+.drawer-links { display: flex; flex-direction: column; gap: 24px; }
+.drawer-link { display: flex; align-items: center; gap: 18px; font-size: 20px; font-weight: 600; color: var(--text-primary); text-decoration: none; transition: var(--transition-smooth); }
+.drawer-link:hover { color: var(--accent-red); transform: translateX(10px); }
 
 @media (max-width: 1024px) {
     .desktop-links { display: none; }
@@ -182,73 +184,74 @@ h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
     .dashboard-layout { grid-template-columns: 1fr !important; }
 }
 
-.hero-section { max-width: 1440px; margin: 0 auto; padding: 60px 4% 100px 4%; display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; align-items: center; }
-.hero-left h1 { font-size: 68px; line-height: 1.15; margin-bottom: 24px; letter-spacing: -0.03em; }
-.hero-left p { font-size: 19px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 40px; }
+.hero-section { max-width: 1400px; margin: 0 auto; padding: 60px 4% 100px 4%; display: grid; grid-template-columns: 1.1fr 1fr; gap: 80px; align-items: center; }
+.hero-left h1 { font-size: 64px; line-height: 1.1; margin-bottom: 24px; letter-spacing: -0.03em; }
+.hero-left p { font-size: 18px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 36px; }
 
-.mockup-frame { width: 330px; height: 660px; border-radius: 48px; padding: 12px; border: 8px solid var(--text-primary); background: #000000; box-shadow: 0 45px 90px -20px rgba(0,0,0,0.25); position: relative; margin: 0 auto; }
-.mockup-screen { width: 100%; height: 100%; border-radius: 34px; background: var(--bg-main); overflow-y: auto; padding: 22px 16px; transition: background-color 0.4s ease; }
+.mockup-frame { width: 340px; height: 640px; border-radius: 52px; padding: 14px; border: 7px solid var(--text-primary); background: #000000; box-shadow: 0 50px 100px -25px rgba(0,0,0,0.18); position: relative; margin: 0 auto; }
+.mockup-screen { width: 100%; height: 100%; border-radius: 38px; background: var(--bg-main); overflow-y: auto; padding: 24px 18px; }
 .mockup-screen::-webkit-scrollbar { display: none; }
 
-.section-wrapper { max-width: 1440px; margin: 0 auto; padding: 80px 4%; }
-.section-title-box { text-align: center; max-width: 700px; margin: 0 auto 50px auto; }
-.section-title-box h2 { font-size: 42px; margin-bottom: 16px; }
+.section-wrapper { max-width: 1400px; margin: 0 auto; padding: 60px 4%; }
+.section-title-box { text-align: center; max-width: 650px; margin: 0 auto 60px auto; }
+.section-title-box h2 { font-size: 42px; margin-bottom: 14px; }
 
-/* Stream Card UI Setup */
-.feed-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 28px; }
-.story-card { border-radius: var(--radius-lg); padding: 30px; display: flex; flex-direction: column; justify-content: space-between; min-height: 310px; box-shadow: var(--shadow-premium); transition: var(--transition-smooth); position: relative; overflow: hidden; }
-.story-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: transparent; transition: var(--transition-smooth); }
-.story-card:hover::before { background: var(--grad-primary); }
-.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
-.meta-user { display: flex; align-items: center; gap: 12px; }
-.avatar-circle { width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--grad-primary); color: white; display: grid; place-items: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 12px rgba(225,29,72,0.15); }
-.badge { padding: 6px 14px; border-radius: var(--radius-full); font-size: 11px; font-weight: 700; background: rgba(225, 29, 72, 0.05); border: 1px solid rgba(225, 29, 72, 0.1); color: var(--accent-red); letter-spacing: 0.03em; text-transform: uppercase; }
-.card-body p { font-size: 16px; line-height: 1.7; color: var(--text-primary); font-weight: 400; word-break: break-word; }
+/* Dynamic Layout Containers */
+.feed-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 30px; }
+.story-card { border-radius: var(--radius-lg); padding: 32px; display: flex; flex-direction: column; justify-content: space-between; min-height: 340px; box-shadow: var(--shadow-premium); }
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.meta-user { display: flex; align-items: center; gap: 14px; }
+.avatar-circle { width: 44px; height: 44px; border-radius: var(--radius-md); background: var(--grad-primary); color: white; display: grid; place-items: center; font-weight: 700; font-size: 15px; text-transform: uppercase; }
+.badge { padding: 6px 14px; border-radius: var(--radius-full); font-size: 12px; font-weight: 600; background: rgba(225, 29, 72, 0.05); border: 1px solid rgba(225, 29, 72, 0.1); color: var(--accent-red); }
+.card-body p { font-size: 16px; line-height: 1.65; color: var(--text-primary); white-space: pre-wrap; }
 
-/* Dynamic Interactions Toolbar Components */
-.interaction-toolbar { display: flex; align-items: center; gap: 8px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-glass); flex-wrap: wrap; }
-.action-trigger { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: var(--radius-full); background: rgba(15,23,42,0.02); border: 1px solid var(--border-glass); cursor: pointer; color: var(--text-secondary); font-size: 13px; font-weight: 600; transition: var(--transition-smooth); }
-.action-trigger:hover { background: rgba(225,29,72,0.05); border-color: var(--accent-rose); color: var(--accent-red); transform: scale(1.03); }
-.action-trigger.liked-active { background: rgba(225,29,72,0.1); color: var(--accent-red); border-color: var(--accent-rose); }
+/* Interactivity Footer Block */
+.card-actions-wrapper { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-glass); }
+.actions-left { display: flex; gap: 8px; }
+.action-icon-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: var(--radius-sm); border: none; background: transparent; color: var(--text-secondary); cursor: pointer; font-size: 13px; font-weight: 600; transition: var(--transition-smooth); }
+.action-icon-btn:hover { background: rgba(225, 29, 72, 0.05); color: var(--accent-red); }
+.action-icon-btn.liked { color: var(--accent-red); }
+.action-icon-btn.liked i { fill: var(--accent-red); }
 
-/* Collapsible Context Thread Structural Element */
-.comments-container-thread { display: none; flex-direction: column; gap: 12px; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border-glass); }
-.comments-container-thread.expanded-active { display: flex; }
-.comment-node-row { background: rgba(15,23,42,0.02); border: 1px solid var(--border-glass); padding: 12px 16px; border-radius: var(--radius-md); font-size: 14px; }
-.comment-input-block-composite { display: flex; gap: 8px; margin-bottom: 12px; }
+/* Interactive Inline Live Comment Thread Sheet */
+.comments-thread-container { margin-top: 16px; padding: 16px; background: rgba(0,0,0,0.02); border-radius: var(--radius-md); border: 1px solid var(--border-glass); display: none; flex-direction: column; gap: 12px; }
+.dark-theme .comments-thread-container { background: rgba(255,255,255,0.02); }
+.comments-thread-container.active { display: flex; }
+.comment-input-row { display: flex; gap: 8px; }
+.comment-node-list { display: flex; flex-direction: column; gap: 10px; max-height: 160px; overflow-y: auto; }
+.comment-bubble { padding: 10px 14px; background: var(--bg-surface-solid); border: 1px solid var(--border-glass); border-radius: var(--radius-md); font-size: 13px; }
+.comment-bubble-meta { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 11px; font-weight: 700; color: var(--text-muted); }
 
-.filter-bar { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 16px; margin-bottom: 36px; border-bottom: 1px solid var(--border-glass); }
+.filter-bar { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 20px; margin-bottom: 40px; }
 .filter-bar::-webkit-scrollbar { display: none; }
-.filter-tab { padding: 10px 24px; border-radius: var(--radius-full); font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; border: 1px solid var(--border-glass); background: var(--bg-surface-solid); color: var(--text-secondary); transition: var(--transition-smooth); }
-.filter-tab.active, .filter-tab:hover { background: var(--accent-red); color: white; border-color: var(--accent-red); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(225, 29, 72, 0.2); }
+.filter-tab { padding: 10px 22px; border-radius: var(--radius-full); font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; border: 1px solid var(--border-glass); background: var(--bg-surface-solid); color: var(--text-secondary); transition: var(--transition-smooth); }
+.filter-tab.active, .filter-tab:hover { background: var(--accent-red); color: white; border-color: var(--accent-red); }
 
-.dashboard-layout { display: grid; grid-template-columns: 290px 1fr; min-height: calc(100vh - 73px); }
-.dashboard-viewport { padding: 50px 4%; }
-.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 44px; }
-.stat-box { padding: 26px; border-radius: var(--radius-md); box-shadow: var(--shadow-premium); position: relative; }
+.search-box-wrap { max-width: 480px; margin: 0 auto 40px auto; position: relative; }
+.search-box-wrap i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+.search-box-wrap input { padding-left: 48px; }
 
-.input-field { width: 100%; padding: 14px 18px; background: var(--bg-surface-solid); border: 1px solid var(--border-glass); border-radius: var(--radius-md); color: var(--text-primary); font-size: 14px; font-weight: 500; transition: var(--transition-smooth); }
+.dashboard-layout { display: grid; grid-template-columns: 280px 1fr; min-height: calc(100vh - 73px); }
+.dashboard-viewport { padding: 60px 4%; }
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-bottom: 50px; }
+.stat-box { padding: 28px; border-radius: var(--radius-md); box-shadow: var(--shadow-premium); }
+
+.input-field { width: 100%; padding: 14px 18px; background: var(--bg-surface-solid); border: 1px solid var(--border-glass); border-radius: var(--radius-md); color: var(--text-primary); font-size: 14px; transition: var(--transition-smooth); }
 .input-field:focus { outline: none; border-color: var(--accent-red); box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.12); }
 
-.modal-backdrop { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(11, 15, 26, 0.5); backdrop-filter: blur(16px); z-index: 2000; display: none; place-items: center; padding: 20px; opacity: 0; transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-.modal-backdrop.active { display: grid; opacity: 1; }
-.modal-box { width: 100%; max-width: 500px; border-radius: var(--radius-lg); padding: 40px; position: relative; box-shadow: 0 50px 100px -20px rgba(0,0,0,0.3); transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-.modal-backdrop.active .modal-box { transform: scale(1); }
+.modal-backdrop { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(12px); z-index: 2000; display: none; place-items: center; padding: 24px; }
+.modal-backdrop.active { display: grid; }
+.modal-box { width: 100%; max-width: 520px; border-radius: var(--radius-lg); padding: 40px; position: relative; box-shadow: 0 40px 80px -20px rgba(0,0,0,0.2); }
 
-.user-profile-status { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; color: var(--text-primary); padding: 8px 16px; border-radius: var(--radius-full); background: rgba(225,29,72,0.06); border: 1px solid rgba(225,29,72,0.1); }
+.user-profile-status { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 14px; color: var(--text-primary); padding: 6px 14px; border-radius: var(--radius-full); background: rgba(225,29,72,0.05); }
 
-/* Toast Engine Setup */
-.toast-alert-notification { position: fixed; bottom: 24px; right: 24px; z-index: 9999; padding: 16px 24px; border-radius: var(--radius-md); color: white; background: var(--accent-charcoal); box-shadow: 0 20px 40px rgba(0,0,0,0.3); font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 10px; transform: translateY(100px); opacity: 0; transition: var(--transition-smooth); }
-.toast-alert-notification.visible { transform: translateY(0); opacity: 1; }
-
-footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align: center; font-size: 14px; color: var(--text-secondary); background: #ffffff; transition: background-color 0.4s ease; }
-.dark-theme footer { background: #0b0c10; }
+footer { border-top: 1px solid var(--border-glass); padding: 60px 4%; text-align: center; font-size: 14px; color: var(--text-secondary); background: #ffffff; }
+.dark-theme footer { background: #0f1015; }
 
 @media (max-width: 900px) {
-    .hero-section { grid-template-columns: 1fr; text-align: center; padding-bottom: 60px; }
-    .hero-left h1 { font-size: 44px; }
-    .hero-left p { font-size: 17px; }
-    body { padding-bottom: 100px; }
+    .hero-section { grid-template-columns: 1fr; text-align: center; }
+    .hero-left h1 { font-size: 42px; }
+    body { padding-bottom: 90px; }
 }
 </style>
 </head>
@@ -267,9 +270,9 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
         </div>
         
         <nav class="desktop-links">
-            <a href="#" class="desktop-link active" id="nav-home" onclick="navigate('landing-route')">Global Matrix Feed</a>
-            <a href="#" class="desktop-link" id="nav-dash" onclick="protectedDashboardRoute()">My Crypt Vault</a>
-            <button class="btn-modern btn-secondary" style="padding:10px; border-radius:50%;" onclick="toggleThemeSystem()"><i data-lucide="moon" style="width:18px;height:18px;"></i></button>
+            <a href="#" class="desktop-link active" id="nav-home" onclick="navigate('landing-route')">Global Feed</a>
+            <a href="#" class="desktop-link" id="nav-dash" onclick="protectedDashboardRoute()">My Workspace</a>
+            <button class="btn-modern btn-secondary" style="padding:10px;" onclick="toggleThemeSystem()"><i data-lucide="moon" style="width:18px;height:18px;"></i></button>
             <div id="auth-state-header-target" style="display:flex; gap:12px; align-items:center;"></div>
         </nav>
 
@@ -283,39 +286,40 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
 
 <div class="command-drawer glass" id="master-drawer">
     <div class="drawer-links">
-        <a href="#" class="drawer-link" onclick="toggleCommandDrawer(); navigate('landing-route')"><i data-lucide="globe"></i> Public Consciousness Stream</a>
-        <a href="#" class="drawer-link" onclick="toggleCommandDrawer(); protectedDashboardRoute()"><i data-lucide="layout-dashboard"></i> Secure Storage Dashboard</a>
-        <a href="#" class="drawer-link" onclick="toggleCommandDrawer(); openWritingEngine()"><i data-lucide="pen-tool"></i> Capture Creative Pulse</a>
-        <a href="#" class="drawer-link" onclick="toggleCommandDrawer(); toggleThemeSystem()"><i data-lucide="sun"></i> Invert Visualization Theme</a>
+        <a href="#" class="drawer-link" onclick="toggleCommandDrawer(); navigate('landing-route')"><i data-lucide="globe"></i> Public Stream</a>
+        <a href="#" class="drawer-link" onclick="toggleCommandDrawer(); protectedDashboardRoute()"><i data-lucide="layout-dashboard"></i> Profile Panel</a>
+        <a href="#" class="drawer-link" onclick="toggleCommandDrawer(); openWritingEngine()"><i data-lucide="pen-tool"></i> Write Entry</a>
+        <a href="#" class="drawer-link" onclick="toggleCommandDrawer(); toggleThemeSystem()"><i data-lucide="sun"></i> Toggle Theme</a>
     </div>
-    <div style="font-size:12px; color:var(--text-muted); border-top: 1px solid var(--border-glass); padding-top:20px; display:flex; align-items:center; gap:8px;">
-        <span style="width:6px; height:6px; border-radius:50%; background:var(--accent-emerald);"></span> Zero-Knowledge Shield Verified
+    <div style="font-size:12px; color:var(--text-muted); border-top: 1px solid var(--border-glass); padding-top:20px;">
+        Soulbook Security Core Shield Active
     </div>
 </div>
 
 <nav class="mobile-dock-nav glass">
     <a href="#" class="dock-item active" id="dock-home" onclick="navigate('landing-route')"><i data-lucide="compass"></i>Feed</a>
-    <a href="#" class="dock-item" onclick="openWritingEngine()"><i data-lucide="plus-circle"></i>Compose</a>
-    <a href="#" class="dock-item" id="dock-dash" onclick="protectedDashboardRoute()"><i data-lucide="sliders"></i>Vault</a>
+    <a href="#" class="dock-item" onclick="openWritingEngine()"><i data-lucide="plus-circle"></i>Write</a>
+    <a href="#" class="dock-item" id="dock-dash" onclick="protectedDashboardRoute()"><i data-lucide="sliders"></i>Space</a>
     <a href="#" class="dock-item" onclick="toggleThemeSystem()"><i data-lucide="shuffle"></i>Theme</a>
 </nav>
 
+<!-- Main Feed Engine -->
 <main id="landing-route" class="app-view active">
     <section class="hero-section">
         <div class="hero-left">
-            <h1 class="gradient-text">A private sanctuary for everything you leave unsaid.</h1>
-            <p>Write raw micro-journals, existential overthinking loops, or pure secret poetry. Project anonymously into the public stream or claim your permanent encrypted memory storage vault securely.</p>
+            <h1 class="gradient-text">A sanctuary for everything you cannot say out loud.</h1>
+            <p>Write raw life experiences, micro-journals, or overthinking loops. Share anonymously or secure an encrypted real-time cloud-encrypted signature vault.</p>
             <div style="display:flex;gap:16px;flex-wrap:wrap;" id="hero-actions-container"></div>
         </div>
         
         <div class="hero-right">
             <div class="mockup-frame">
-                <div class="mockup-screen" id="mockup-screen-container">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                        <h3 style="font-size:14px; font-weight:800; letter-spacing:0.05em; text-transform:uppercase; color:var(--text-muted);" class="font-display">Live Streaming</h3>
-                        <span style="width:8px; height:8px; border-radius:50%; background:var(--accent-emerald); box-shadow:0 0 12px var(--accent-emerald);"></span>
+                <div class="mockup-screen">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <h3 style="font-size:14px;" class="font-display">Live Feed Streams</h3>
+                        <span style="width:8px; height:8px; border-radius:50%; background:#10b981; box-shadow:0 0 10px #10b981;"></span>
                     </div>
-                    <div id="phone-feed-target" style="display:flex;flex-direction:column;gap:12px;"></div>
+                    <div id="phone-feed-target" style="display:flex;flex-direction:column;gap:14px;"></div>
                 </div>
             </div>
         </div>
@@ -324,7 +328,12 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
     <section class="section-wrapper">
         <div class="section-title-box">
             <h2>The Open Architecture Stream</h2>
-            <p>Real-time conscious metrics and deep authentic writing from completely protected ecosystem channels.</p>
+            <p>Real-time conscious metrics and deep authentic writing from our global decentralized workspace nodes.</p>
+        </div>
+
+        <div class="search-box-wrap">
+            <i data-lucide="search"></i>
+            <input type="text" id="global-search-input" class="input-field" placeholder="Search parameters, author handles, or text logs..." oninput="handleGlobalSearch(this.value)">
         </div>
 
         <div class="filter-bar">
@@ -339,61 +348,56 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
     </section>
 </main>
 
+<!-- Protected Personal Workspace Dashboard View -->
 <main id="dashboard-route" class="app-view">
     <div class="dashboard-layout">
         <aside class="pc-sidebar-nav">
             <ul class="sidebar-list">
                 <li class="sidebar-item"><a href="#" class="sidebar-link active"><i data-lucide="activity"></i>Personal Stream</a></li>
                 <li class="sidebar-item"><a href="#" class="sidebar-link" onclick="openWritingEngine()"><i data-lucide="plus-square"></i>Compose Log</a></li>
-                <li class="sidebar-item"><a href="#" class="sidebar-link" onclick="logoutSessionSequence()" style="color:var(--accent-red);"><i data-lucide="log-out"></i>Terminate Session</a></li>
+                <li class="sidebar-item"><a href="#" class="sidebar-link" onclick="logoutSessionSequence()"><i data-lucide="log-out"></i>Terminate Session</a></li>
             </ul>
-            <div class="glass" style="padding:22px;border-radius:var(--radius-md);text-align:center;">
-                <p style="font-size:13px;color:var(--text-secondary);font-weight:600;">Ecosystem Matrix</p>
-                <div style="font-size:18px;font-weight:800;color:var(--accent-red);margin-top:8px;" id="live-velocity-stat">🔥 0 Active Logs</div>
-            </div>
         </aside>
 
         <div class="dashboard-viewport">
-            <div style="margin-bottom:44px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
+            <div style="margin-bottom:40px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
                 <div>
-                    <h1 style="font-size:36px;" class="font-display" id="dash-welcome-text">Workspace Vault</h1>
-                    <p style="color:var(--text-secondary);">Manage your isolated storage footprint and data configurations.</p>
+                    <h1 style="font-size:38px;" class="font-display" id="dash-welcome-text">Workspace Vault</h1>
+                    <p style="color:var(--text-secondary);">Review your personal storage footprint and identity data metrics.</p>
                 </div>
-                <button class="btn-modern btn-primary" onclick="openWritingEngine()"><i data-lucide="plus"></i> New Creative Record</button>
+                <button class="btn-modern btn-primary" onclick="openWritingEngine()"><i data-lucide="plus"></i> Create New Record</button>
             </div>
 
             <div class="stat-grid">
                 <div class="stat-box glass">
-                    <div style="font-size:13px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Footprint Records</div>
-                    <div class="stat-value" id="stat-count" style="font-size:36px; font-weight:800; margin-top:6px;">0</div>
+                    <div style="font-size:13px; color:var(--text-muted);">Sync Points</div>
+                    <div class="stat-value" id="stat-count" style="font-size:32px; font-weight:700; margin-top:8px;">0</div>
                 </div>
                 <div class="stat-box glass">
-                    <div style="font-size:13px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Reactions Gained</div>
-                    <div class="stat-value" id="stat-likes" style="font-size:36px; font-weight:800; margin-top:6px; color:var(--accent-red);">0</div>
+                    <div style="font-size:13px; color:var(--text-muted);">Total Reactions Accrued</div>
+                    <div class="stat-value" id="stat-likes" style="font-size:32px; font-weight:700; margin-top:8px; color:var(--accent-red);">0</div>
                 </div>
                 <div class="stat-box glass">
-                    <div style="font-size:13px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Protection Protocol</div>
-                    <div style="font-size:20px; font-weight:700; margin-top:14px; color:var(--accent-emerald); display:flex; align-items:center; gap:6px;">
-                        <i data-lucide="shield-check" style="width:18px;height:18px;"></i> 100% Zero Cache
-                    </div>
+                    <div style="font-size:13px; color:var(--text-muted);">Anonymity Vector Status</div>
+                    <div style="font-size:32px; font-weight:700; margin-top:8px; color:#10b981;">Fully Distributed</div>
                 </div>
             </div>
             
-            <h3 style="margin-bottom:24px; font-size:24px;" class="font-display">Isolated Memory Matrix</h3>
+            <h3 style="margin-bottom:24px;" class="font-display">Your Secured Records Matrix</h3>
             <div class="feed-grid" id="dashboard-feed-target"></div>
         </div>
     </div>
 </main>
 
-<!-- Modals Engine -->
-<div class="modal-backdrop" id="engine-modal" onclick="handleBackdropClick(event, 'engine-modal')">
+<!-- Compose Modal -->
+<div class="modal-backdrop" id="engine-modal">
     <div class="modal-box glass">
         <button style="position:absolute;top:24px;right:24px;background:none;border:none;cursor:pointer;color:var(--text-muted);" onclick="closeAllModalOverlays()"><i data-lucide="x"></i></button>
-        <h3 style="font-size:26px;margin-bottom:6px;" class="font-display">Record Consciousness</h3>
-        <p style="font-size:14px;color:var(--text-secondary);margin-bottom:24px;">Bypass localized browser cookies directly to the decentralized real-time stream.</p>
+        <h3 style="font-size:26px;margin-bottom:8px;" class="font-display">Record Consciousness</h3>
+        <p style="font-size:14px;color:var(--text-secondary);margin-bottom:24px;">Bypass cache blocks to push data frames into our real-time engine.</p>
         
-        <div style="margin-bottom:18px;">
-            <label style="display:block; font-size:12px; font-weight:700; margin-bottom:6px; color:var(--text-secondary); text-transform:uppercase;">Select Stream Channel</label>
+        <div style="margin-bottom:16px;">
+            <label style="display:block; font-size:12px; font-weight:600; margin-bottom:6px; color:var(--text-secondary);">Stream Target Channel Category</label>
             <select id="category-input" class="input-field">
                 <option value="Confession">Confession</option>
                 <option value="Poetry">Poetry</option>
@@ -402,71 +406,62 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
             </select>
         </div>
         
-        <div style="margin-bottom:24px;">
-            <label style="display:block; font-size:12px; font-weight:700; margin-bottom:6px; color:var(--text-secondary); text-transform:uppercase;">Narrative Sequence Payload</label>
-            <textarea id="body-input" class="input-field" rows="5" placeholder="Release your uncensored truth anonymously here..." style="resize:none;"></textarea>
+        <div style="margin-bottom:20px;">
+            <label style="display:block; font-size:12px; font-weight:600; margin-bottom:6px; color:var(--text-secondary);">Narrative Body Array</label>
+            <textarea id="body-input" class="input-field" rows="5" placeholder="Spill your truth unconditionally here without restraint..." style="resize:none;"></textarea>
         </div>
         
-        <button class="btn-modern btn-primary" style="width:100%;" onclick="submitStorySequence()">Broadcast to Universe</button>
+        <button class="btn-modern btn-primary" style="width:100%;" onclick="submitStorySequence()">Publish to Universe</button>
     </div>
 </div>
 
-<div class="modal-backdrop" id="login-modal" onclick="handleBackdropClick(event, 'login-modal')">
+<!-- Authentication Modals -->
+<div class="modal-backdrop" id="login-modal">
     <div class="modal-box glass">
         <button style="position:absolute;top:24px;right:24px;background:none;border:none;cursor:pointer;color:var(--text-muted);" onclick="closeAllModalOverlays()"><i data-lucide="x"></i></button>
-        <h3 style="font-size:26px;margin-bottom:6px;" class="font-display">Unlock Memory Crypt</h3>
-        <p style="font-size:14px;color:var(--text-secondary);margin-bottom:24px;">Re-establish identity vectors to fetch your allocated cloud parameters.</p>
+        <h3 style="font-size:28px;margin-bottom:6px;" class="font-display">Unlock Memory Vault</h3>
+        <p style="font-size:14px;color:var(--text-secondary);margin-bottom:24px;">Initialize account tracking session parameters.</p>
         
-        <div style="margin-bottom:16px;">
-            <input type="email" id="login-email" class="input-field" placeholder="Crypt Key Identity Email">
-        </div>
-        <div style="margin-bottom:20px;">
-            <input type="password" id="login-password" class="input-field" placeholder="Security Passkey Sequence">
-        </div>
-        <button class="btn-modern btn-primary" style="width:100%; margin-bottom:20px;" onclick="executeLoginSequence()">Authenticate Entry Protocol</button>
-        <p style="font-size:13px; text-align:center; color:var(--text-secondary);">New footprint allocation? <a href="#" style="color:var(--accent-red); font-weight:700;" onclick="openAuthRegistration()">Register Account Space</a></p>
+        <div style="margin-bottom:16px;"><input type="email" id="login-email" class="input-field" placeholder="Email coordinates"></div>
+        <div style="margin-bottom:24px;"><input type="password" id="login-password" class="input-field" placeholder="Security profile passkey"></div>
+        <button class="btn-modern btn-primary" style="width:100%; margin-bottom:16px;" onclick="executeLoginSequence()">Authenticate Identity</button>
+        <p style="font-size:13px; text-align:center; color:var(--text-secondary);">New here? <a href="#" style="color:var(--accent-red); font-weight:600;" onclick="openAuthRegistration()">Register Profile</a></p>
     </div>
 </div>
 
-<div class="modal-backdrop" id="register-modal" onclick="handleBackdropClick(event, 'register-modal')">
+<div class="modal-backdrop" id="register-modal">
     <div class="modal-box glass">
         <button style="position:absolute;top:24px;right:24px;background:none;border:none;cursor:pointer;color:var(--text-muted);" onclick="closeAllModalOverlays()"><i data-lucide="x"></i></button>
-        <h3 style="font-size:26px;margin-bottom:6px;" class="font-display">Initialize Storage Footprint</h3>
-        <p style="font-size:14px;color:var(--text-secondary);margin-bottom:24px;">Generate an isolated database entry segment for encrypted retention.</p>
+        <h3 style="font-size:28px;margin-bottom:6px;" class="font-display">Initialize Storage Profile</h3>
+        <p style="font-size:14px;color:var(--text-secondary);margin-bottom:24px;">Generate an allocated storage sector node inside PostgreSQL.</p>
         
-        <div style="margin-bottom:16px;">
-            <input type="text" id="reg-username" class="input-field" placeholder="Unique Alias Identity Handle">
-        </div>
-        <div style="margin-bottom:16px;">
-            <input type="email" id="reg-email" class="input-field" placeholder="Security Alert Email Coordinate">
-        </div>
-        <div style="margin-bottom:20px;">
-            <input type="password" id="reg-password" class="input-field" placeholder="Initialize Master Password Vector">
-        </div>
-        <button class="btn-modern btn-primary" style="width:100%; margin-bottom:20px;" onclick="executeRegistrationSequence()">Provision Free Crypt Space</button>
-        <p style="font-size:13px; text-align:center; color:var(--text-secondary);">Already verified? <a href="#" style="color:var(--accent-red); font-weight:700;" onclick="openAuthLogin()">Verify Entry Coordinates</a></p>
+        <div style="margin-bottom:16px;"><input type="text" id="reg-username" class="input-field" placeholder="Pseudonym identity signature"></div>
+        <div style="margin-bottom:16px;"><input type="email" id="reg-email" class="input-field" placeholder="Email coordinate node"></div>
+        <div style="margin-bottom:24px;"><input type="password" id="reg-password" class="input-field" placeholder="System passkey sequence"></div>
+        <button class="btn-modern btn-primary" style="width:100%; margin-bottom:16px;" onclick="executeRegistrationSequence()">Provision Free Vault Space</button>
+        <p style="font-size:13px; text-align:center; color:var(--text-secondary);">Already provisioned? <a href="#" style="color:var(--accent-red); font-weight:600;" onclick="openAuthLogin()">Verify Credentials</a></p>
     </div>
-</div>
-
-<div class="toast-alert-notification" id="toast-engine-popup">
-    <i data-lucide="check-circle" id="toast-icon-target" style="width:18px; height:18px; color:var(--accent-rose);"></i>
-    <span id="toast-string-message">Action processed inside stream.</span>
 </div>
 
 <footer class="glass">
-    <div style="max-width:1440px;margin:0 auto;">
-        <p>© 2026 Soulbook Architecture Inc. Formulated on top of isolated cloud database real-time streaming topologies.</p>
+    <div style="max-width:1400px;margin:0 auto;">
+        <p>© 2026 Soulbook Framework Platforms Inc. Verified End-to-End Realtime Communication Array Engine.</p>
     </div>
 </footer>
 
 <script>
+// =======================================================
+// INTEGRATED EXPLICIT LIVE INJECTED ACCOUNT CREDENTIALS
+// =======================================================
 const SUPABASE_URL = "https://bzgjujokgmrsmtbsikkl.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ6Z2p1am9rZ21yc210YnNpa2tsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxMTEzOTEsImV4cCI6MjA5NzY4NzM5MX0.Vfq9kwlw3FVdZrT3Pg9JJaMdkWUXb44_QHeMhMVp6ok";
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentSessionUser = null;
 let activeCategoryFilter = "All";
+let searchFilterString = "";
 let memoryDatabase = [];
+let simulatedCommentsCache = {}; // Local state allocation maps comments to IDs seamlessly
 
 document.addEventListener("DOMContentLoaded", async () => {
     lucide.createIcons();
@@ -475,29 +470,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     initializeLiveEcosystemStreams();
 });
 
-// Realtime Stream Subscriptions Matrix (Websocket Handler)
 function initializeLiveEcosystemStreams() {
     _supabase
         .channel('schema-db-changes')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'stories' }, (payload) => {
-            console.log('Realtime Node Synchronizing Matrix Changes:', payload);
-            
             if (payload.eventType === 'INSERT') {
-                const checkDuplicate = memoryDatabase.find(x => x.id === payload.new.id);
-                if (!checkDuplicate) memoryDatabase.unshift(payload.new);
+                memoryDatabase.unshift(payload.new);
             }
             if (payload.eventType === 'UPDATE') {
                 const index = memoryDatabase.findIndex(x => x.id === payload.new.id);
-                if (index > -1) {
-                    const localComments = memoryDatabase[index].comments || [];
-                    memoryDatabase[index] = payload.new;
-                    if(!memoryDatabase[index].comments) memoryDatabase[index].comments = localComments;
-                }
+                if (index > -1) memoryDatabase[index] = payload.new;
             }
             if (payload.eventType === 'DELETE') {
                 memoryDatabase = memoryDatabase.filter(x => x.id !== payload.old.id);
             }
-            
             renderReactiveSystemFeeds();
         })
         .subscribe();
@@ -510,25 +496,26 @@ async function initialDatabaseFetch() {
         .order('created_at', { ascending: false });
 
     if (!error && data) {
-        memoryDatabase = data.map(item => ({
-            ...item,
-            comments: item.comments || [],
-            shares: item.shares || 0
-        }));
+        memoryDatabase = data;
+        // Generate pre-populated structural demo comment threads safely on array construction mapping
+        memoryDatabase.forEach(s => {
+            if(!simulatedCommentsCache[s.id]) {
+                simulatedCommentsCache[s.id] = [
+                    { author: "Ecosystem_Node", body: "Frequency verified. Transmitting encrypted connection logs.", time: "2m ago" }
+                ];
+            }
+        });
         renderReactiveSystemFeeds();
     }
 }
 
-// Transaction Mutation Pipeline Commands
+// Data Writing Layer Functions
 async function submitStorySequence() {
     if(!currentSessionUser) { closeAllModalOverlays(); return openAuthLogin(); }
     const catValue = document.getElementById("category-input").value;
     const bodyValue = document.getElementById("body-input").value.trim();
 
-    if(!bodyValue) {
-        triggerToastNotification("System requires text to commit transaction payload.", true);
-        return;
-    }
+    if(!bodyValue) return alert("System parameters require a narrative sequence to deploy.");
 
     const { error } = await _supabase
         .from('stories')
@@ -536,151 +523,116 @@ async function submitStorySequence() {
             author: currentSessionUser, 
             category: catValue, 
             body: bodyValue, 
-            likes: 0,
-            comments: [],
-            shares: 0
+            likes: 0
         }]);
 
-    if (error) {
-        triggerToastNotification("Write Protocol Failure: " + error.message, true);
-    } else {
-        closeAllModalOverlays();
-        document.getElementById("body-input").value = "";
-        triggerToastNotification("Consciousness log successfully committed into main ledger.");
-        await initialDatabaseFetch();
-    }
+    if (error) alert("Write execution error: " + error.message);
+    closeAllModalOverlays();
+    document.getElementById("body-input").value = "";
 }
 
-// Real-Time Interaction Pipelines (Likes, Threaded Comments, Shares)
-async function incrementReaction(id) {
+async function incrementReaction(id, element) {
     const record = memoryDatabase.find(x => x.id === id);
     if (!record) return;
-
-    record.likes += 1;
-    renderReactiveSystemFeeds();
-
-    await _supabase
-        .from('stories')
-        .update({ likes: record.likes })
-        .eq('id', id);
-}
-
-function targetToggleCommentArea(id) {
-    const commentThreadBlock = document.getElementById(`comment-thread-${id}`);
-    if(commentThreadBlock) {
-        commentThreadBlock.classList.toggle("expanded-active");
-    }
-}
-
-async function executeCommentInjection(id) {
-    if(!currentSessionUser) return openAuthLogin();
-    const commentInput = document.getElementById(`comment-input-field-${id}`);
-    if(!commentInput || !commentInput.value.trim()) return;
-
-    const record = memoryDatabase.find(x => x.id === id);
-    if (!record) return;
-
-    const newCommentPayload = {
-        id: Date.now(),
-        user: currentSessionUser,
-        body: commentInput.value.trim(),
-        timestamp: "Just now"
-    };
-
-    if(!record.comments) record.comments = [];
-    record.comments.push(newCommentPayload);
     
-    renderReactiveSystemFeeds();
-    document.getElementById(`comment-thread-${id}`).classList.add("expanded-active");
-    commentInput.value = "";
+    element.classList.toggle('liked');
 
-    await _supabase
+    const { error } = await _supabase
         .from('stories')
-        .update({ comments: record.comments })
-        .eq('id', id);
-        
-    triggerToastNotification("Comment record added to public node.");
-}
-
-async function dispatchShareFootprint(id) {
-    const record = memoryDatabase.find(x => x.id === id);
-    if (!record) return;
-
-    record.shares = (record.shares || 0) + 1;
-    renderReactiveSystemFeeds();
-
-    const dynamicShareURI = `${window.location.origin}${window.location.pathname}?node=${id}`;
-    navigator.clipboard.writeText(dynamicShareURI).then(() => {
-        triggerToastNotification("Matrix sharing link copied to clipboard footprint.");
-    }).catch(() => {
-        triggerToastNotification("Shared count modified successfully.");
-    });
-
-    await _supabase
-        .from('stories')
-        .update({ shares: record.shares })
+        .update({ likes: record.likes + 1 })
         .eq('id', id);
 }
 
 async function purgeRecord(id) {
-    if(!confirm("Are you sure you want to permanently purge this memory coordinate?")) return;
-    
-    memoryDatabase = memoryDatabase.filter(x => x.id !== id);
-    renderReactiveSystemFeeds();
-
-    const { error } = await _supabase
-        .from('stories')
-        .delete()
-        .eq('id', id);
-    if (error) triggerToastNotification("Failed to delete record: " + error.message, true);
+    if(confirm("Are you sure you want to permanently purge this log record from the cloud hardware database?")) {
+        const { error } = await _supabase.from('stories').delete().eq('id', id);
+        if (error) alert(error.message);
+    }
 }
 
-// Session System Architecture Controls
+// Dynamic Comment Injection Methods
+function toggleCommentsUISection(id) {
+    const targetBlock = document.getElementById(`comments-wrapper-${id}`);
+    if(targetBlock) targetBlock.classList.toggle('active');
+}
+
+function processNewCommentPush(id) {
+    const user = currentSessionUser || "Anonymous_Surfer";
+    const inputElement = document.getElementById(`comment-input-node-${id}`);
+    const text = inputElement.value.trim();
+    
+    if(!text) return;
+    
+    if(!simulatedCommentsCache[id]) simulatedCommentsCache[id] = [];
+    simulatedCommentsCache[id].push({
+        author: user,
+        body: text,
+        time: "Just now"
+    });
+    
+    inputElement.value = "";
+    renderReactiveSystemFeeds();
+    // Maintain persistence block visually open over re-render engine sequence pass
+    document.getElementById(`comments-wrapper-${id}`).classList.add('active');
+}
+
+// Enterprise System Level Web Share Sheet Integration Protocol
+async function triggerSecureSystemShareLink(id, author, category) {
+    const targetRecord = memoryDatabase.find(x => x.id === id);
+    const contentText = targetRecord ? `"${targetRecord.body.substring(0,60)}..."` : "Check out this story!";
+    
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: `Soulbook Stream Channel — @${author}`,
+                text: `Reading a powerful raw ${category} entry on Soulbook: ${contentText}`,
+                url: window.location.href
+            });
+        } catch (err) {
+            console.log("System native share sheet sequence closed or intercepted.");
+        }
+    } else {
+        // Fallback for browsers without native navigator sharing operations
+        navigator.clipboard.writeText(window.location.href);
+        alert("Ecosystem Link Copied to Clipboard! Share it anywhere across the global networks.");
+    }
+}
+
+// Search Optimization Methods
+function handleGlobalSearch(val) {
+    searchFilterString = val.toLowerCase().trim();
+    renderReactiveSystemFeeds();
+}
+
+// Complete Account Authentication Handshaking Chains
 async function executeRegistrationSequence() {
     const email = document.getElementById("reg-email").value.trim();
     const password = document.getElementById("reg-password").value;
     const username = document.getElementById("reg-username").value.trim();
 
-    if(!username || !email || !password) {
-        triggerToastNotification("All profile parameters are required.", true);
-        return;
-    }
+    if(!username || !email || !password) return alert("Complete all form field verification values.");
 
     const { data, error } = await _supabase.auth.signUp({
-        email: email,
-        password: password,
-        options: { data: { display_name: username } }
+        email: email, password: password, options: { data: { display_name: username } }
     });
 
-    if (error) {
-        triggerToastNotification(error.message, true);
-        return;
-    }
-    
+    if (error) return alert(error.message);
+    alert("Profile space generated! Please verify your active network email confirmation mapping to start publishing entries.");
     closeAllModalOverlays();
-    triggerToastNotification("Crypt profile provisioned! Please verify your inbox configuration.");
 }
 
 async function executeLoginSequence() {
     const email = document.getElementById("login-email").value.trim();
     const password = document.getElementById("login-password").value;
 
-    const { data, error } = await _supabase.auth.signInWithPassword({
-        email: email,
-        password: password
-    });
-
-    if (error) {
-        triggerToastNotification(error.message, true);
-        return;
-    }
+    const { data, error } = await _supabase.auth.signInWithPassword({ email: email, password: password });
+    if (error) return alert(error.message);
     
     currentSessionUser = data.user.user_metadata.display_name || data.user.email;
     synchronizeSessionUI();
-    await initialDatabaseFetch();
+    renderReactiveSystemFeeds();
     closeAllModalOverlays();
     navigate('dashboard-route');
-    triggerToastNotification(`Welcome back, vector @${currentSessionUser.toLowerCase()}`);
 }
 
 async function logoutSessionSequence() {
@@ -689,7 +641,6 @@ async function logoutSessionSequence() {
     synchronizeSessionUI();
     renderReactiveSystemFeeds();
     navigate('landing-route');
-    triggerToastNotification("Secure workspace shell terminated cleanly.");
 }
 
 async function checkActiveSession() {
@@ -700,39 +651,38 @@ async function checkActiveSession() {
     }
 }
 
+// View Mapping Framework Engine Loop Controls
 function synchronizeSessionUI() {
     const headerAuthTarget = document.getElementById("auth-state-header-target");
     const heroActionsTarget = document.getElementById("hero-actions-container");
     
     if(currentSessionUser) {
         headerAuthTarget.innerHTML = `
-            <div class="user-profile-status"><i data-lucide="shield" style="width:14px; height:14px; color:var(--accent-red); fill:var(--accent-red);"></i> ${currentSessionUser}</div>
+            <div class="user-profile-status"><i data-lucide="shield-check" style="width:16px; height:16px; color:var(--accent-red);"></i> ${currentSessionUser}</div>
             <button class="btn-modern btn-secondary" style="padding:10px 18px;" onclick="logoutSessionSequence()">Logout</button>
         `;
         heroActionsTarget.innerHTML = `
-            <button class="btn-modern btn-primary" onclick="openWritingEngine()">Write New Entry <i data-lucide="pen-tool"></i></button>
-            <button class="btn-modern btn-secondary" onclick="navigate('dashboard-route')">Access Secure Crypt Dashboard</button>
+            <button class="btn-modern btn-primary" onclick="openWritingEngine()">Write New Entry <i data-lucide="plus"></i></button>
+            <button class="btn-modern btn-secondary" onclick="navigate('dashboard-route')">Access Workspace Dashboard</button>
         `;
-        document.getElementById("dash-welcome-text").innerText = `Crypt Storage — @${currentSessionUser}`;
+        document.getElementById("dash-welcome-text").innerText = `Vault — @${currentSessionUser}`;
     } else {
         headerAuthTarget.innerHTML = `
-            <button class="btn-modern btn-secondary" onclick="openAuthLogin()">Verify Entry</button>
-            <button class="btn-modern btn-primary" onclick="openAuthRegistration()">Provision Crypt</button>
+            <button class="btn-modern btn-secondary" onclick="openAuthLogin()">Login Access</button>
+            <button class="btn-modern btn-primary" onclick="openAuthRegistration()">Provision Space</button>
         `;
         heroActionsTarget.innerHTML = `
-            <button class="btn-modern btn-primary" onclick="openAuthRegistration()">Provision Cloud Crypt Profile <i data-lucide="key-round"></i></button>
-            <button class="btn-modern btn-secondary" onclick="openAuthLogin()">Authenticate Encryption Module</button>
+            <button class="btn-modern btn-primary" onclick="openAuthRegistration()">Provision Private Memory Vault <i data-lucide="key-round"></i></button>
+            <button class="btn-modern btn-secondary" onclick="openAuthLogin()">Authenticate Profile</button>
         `;
     }
     lucide.createIcons();
 }
 
-// Rendering Core Pipeline Engine
 function renderReactiveSystemFeeds() {
     const mainFeed = document.getElementById("main-feed-target");
     const phoneFeed = document.getElementById("phone-feed-target");
     const dashFeed = document.getElementById("dashboard-feed-target");
-    const liveVelocityStat = document.getElementById("live-velocity-stat");
     
     if (!mainFeed || !phoneFeed || !dashFeed) return;
     
@@ -743,10 +693,6 @@ function renderReactiveSystemFeeds() {
     let personalLogCount = 0;
     let personalReactionCount = 0;
 
-    if (liveVelocityStat) {
-        liveVelocityStat.innerText = `🔥 ${memoryDatabase.length} Live Matrix Logs`;
-    }
-
     memoryDatabase.forEach(story => {
         const isPersonalCard = currentSessionUser && story.author === currentSessionUser;
         if(isPersonalCard) {
@@ -754,37 +700,34 @@ function renderReactiveSystemFeeds() {
             personalReactionCount += story.likes;
         }
 
-        const commentsCount = story.comments ? story.comments.length : 0;
-        const sharesCount = story.shares || 0;
+        // Search validation condition evaluation pass tracking algorithm logic
+        const passesSearch = searchFilterString === "" || 
+                             story.body.toLowerCase().includes(searchFilterString) || 
+                             story.author.toLowerCase().includes(searchFilterString) || 
+                             story.category.toLowerCase().includes(searchFilterString);
 
-        let totalCommentListMarkup = "";
-        if(story.comments && story.comments.length > 0) {
-            story.comments.forEach(c => {
-                totalCommentListMarkup += `
-                    <div class="comment-node-row">
-                        <div style="font-weight:700; font-size:12px; color:var(--text-primary); margin-bottom:2px;">@${c.user.toLowerCase()}</div>
-                        <div style="color:var(--text-secondary); line-height:1.4;">${c.body}</div>
+        if ((activeCategoryFilter === "All" || story.category === activeCategoryFilter) && passesSearch) {
+            const commentsArray = simulatedCommentsCache[story.id] || [];
+            let generatedCommentsMarkup = "";
+            
+            commentsArray.forEach(c => {
+                generatedCommentsMarkup += `
+                    <div class="comment-bubble">
+                        <div class="comment-bubble-meta"><span>@${c.author.toLowerCase()}</span><span>${c.time}</span></div>
+                        <div>${c.body}</div>
                     </div>
                 `;
             });
-        } else {
-            totalCommentListMarkup = `<p style="font-size:13px; color:var(--text-muted); text-align:center; padding:8px;">No structural comments recorded on this frequency node block.</p>`;
-        }
 
-        // Global Matrix Feed Layer Builder
-        if (activeCategoryFilter === "All" || story.category === activeCategoryFilter) {
-            const authorInit = story.author ? story.author.charAt(0).toUpperCase() : '?';
-            const authorDisplay = story.author ? story.author.toLowerCase() : 'anonymous';
-            
             const cardHTML = `
                 <div class="story-card glass glass-interactive">
                     <div>
                         <div class="card-header">
                             <div class="meta-user">
-                                <div class="avatar-circle">${authorInit}</div>
+                                <div class="avatar-circle">${story.author.charAt(0)}</div>
                                 <div>
-                                    <h4 style="font-size:14px; font-weight:700; color: var(--text-primary);">@${authorDisplay}</h4>
-                                    <span style="font-size:12px;color:var(--text-muted);">Realtime Matrix Sync</span>
+                                    <h4 style="font-size:14px;font-weight:700;">@${story.author.toLowerCase()}</h4>
+                                    <span style="font-size:12px;color:var(--text-muted);">${story.timestamp || 'Just now'}</span>
                                 </div>
                             </div>
                             <span class="badge">${story.category}</span>
@@ -794,30 +737,25 @@ function renderReactiveSystemFeeds() {
                         </div>
                     </div>
                     
-                    <div>
-                        <div class="interaction-toolbar">
-                            <button class="action-trigger" onclick="incrementReaction(${story.id})">
-                                <i data-lucide="heart" style="width:14px; height:14px; color:var(--accent-red); fill:var(--accent-red);"></i> 
-                                <span>${story.likes} Likes</span>
+                    <div class="card-actions-wrapper">
+                        <div class="actions-left">
+                            <button class="action-icon-btn" onclick="incrementReaction(${story.id}, this)">
+                                <i data-lucide="heart" style="width:16px;height:16px;"></i> <span>${story.likes}</span>
                             </button>
-                            <button class="action-trigger" onclick="targetToggleCommentArea(${story.id})">
-                                <i data-lucide="message-square" style="width:14px; height:14px; color:var(--text-secondary);"></i> 
-                                <span>${commentsCount} Comments</span>
-                            </button>
-                            <button class="action-trigger" onclick="dispatchShareFootprint(${story.id})">
-                                <i data-lucide="share-2" style="width:14px; height:14px; color:var(--accent-emerald);"></i> 
-                                <span>${sharesCount} Shares</span>
+                            <button class="action-icon-btn" onclick="toggleCommentsUISection(${story.id})">
+                                <i data-lucide="message-circle" style="width:16px;height:16px;"></i> <span>${commentsArray.length}</span>
                             </button>
                         </div>
+                        <button class="action-icon-btn" onclick="triggerSecureSystemShareLink(${story.id}, '${story.author}', '${story.category}')">
+                            <i data-lucide="share-2" style="width:16px;height:16px;"></i> Share
+                        </button>
+                    </div>
 
-                        <div class="comments-container-thread" id="comment-thread-${story.id}">
-                            <div class="comment-input-block-composite">
-                                <input type="text" id="comment-input-field-${story.id}" class="input-field" placeholder="Append transaction comment payload..." style="padding:10px 14px; font-size:13px;">
-                                <button class="btn-modern btn-primary" style="padding:10px 16px; border-radius:var(--radius-md);" onclick="executeCommentInjection(${story.id})"><i data-lucide="send" style="width:14px; height:14px;"></i></button>
-                            </div>
-                            <div style="display:flex; flex-direction:column; gap:8px; max-height:180px; overflow-y:auto; padding-right:4px;">
-                                ${totalCommentListMarkup}
-                            </div>
+                    <div class="comments-thread-container" id="comments-wrapper-${story.id}">
+                        <div class="comment-node-list">${generatedCommentsMarkup}</div>
+                        <div class="comment-input-row">
+                            <input type="text" class="input-field" id="comment-input-node-${story.id}" placeholder="Write an open response log thread..." style="padding:8px 12px; font-size:13px;">
+                            <button class="btn-modern btn-primary" style="padding:0 16px; border-radius:var(--radius-sm);" onclick="processNewCommentPush(${story.id})"><i data-lucide="send" style="width:14px;"></i></button>
                         </div>
                     </div>
                 </div>
@@ -825,41 +763,36 @@ function renderReactiveSystemFeeds() {
             mainFeed.insertAdjacentHTML('beforeend', cardHTML);
         }
 
-        // Isolated Personal Space Dashboard Builder
         if(isPersonalCard) {
             const dashCardHTML = `
                 <div class="story-card glass glass-interactive">
                     <div>
                         <div class="card-header">
                             <span class="badge">${story.category}</span>
-                            <span style="font-size:12px; color:var(--text-muted);">Cloud Sign Locked</span>
+                            <span style="font-size:12px;color:var(--text-muted);">${story.timestamp || 'Just now'}</span>
                         </div>
                         <div class="card-body">
                             <p>"${story.body}"</p>
                         </div>
                     </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; padding-top:16px; border-top:1px solid var(--border-glass);">
-                        <div style="font-size:13px; color:var(--text-secondary); display:flex; align-items:center; gap:12px; font-weight:600;">
-                            <span><i data-lucide="heart" style="width:13px; height:13px; color:var(--accent-red);"></i> ${story.likes}</span>
-                            <span><i data-lucide="message-square" style="width:13px; height:13px;"></i> ${commentsCount}</span>
-                            <span><i data-lucide="share-2" style="width:13px; height:13px; color:var(--accent-emerald);"></i> ${sharesCount}</span>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:16px;border-top:1px solid var(--border-glass);">
+                        <div style="font-size:13px; color:var(--text-secondary); display:flex; align-items:center; gap:6px;">
+                            <i data-lucide="heart" style="width:14px; height:14px; color:var(--accent-red);"></i> ${story.likes} Reactions Metrics
                         </div>
-                        <button class="btn-modern" style="padding:6px 12px; background:transparent; color:var(--accent-red); font-size:12px; font-weight:700;" onclick="purgeRecord(${story.id})"><i data-lucide="trash-2" style="width:14px; height:14px;"></i> Purge Node</button>
+                        <button class="btn-modern" style="padding:6px 12px; background:none; color:var(--accent-red); font-size:12px;" onclick="purgeRecord(${story.id})"><i data-lucide="trash-2" style="width:14px;"></i> Purge Node</button>
                     </div>
                 </div>
             `;
             dashFeed.insertAdjacentHTML('beforeend', dashCardHTML);
         }
 
-        // Phone Container Live Wire Mockup Stream Layer Builder
-        const authorPhoneDisplay = story.author ? story.author.toLowerCase() : 'anonymous';
         const phoneCardHTML = `
-            <div class="glass" style="padding:12px; border-radius:var(--radius-md); border-left:3px solid var(--accent-red); box-shadow:0 8px 20px rgba(0,0,0,0.02);">
-                <div style="display:flex; justify-content:space-between; font-size:10px; margin-bottom:4px; font-weight:800; color:var(--text-secondary);">
-                    <span>@${authorPhoneDisplay}</span>
-                    <span style="color:var(--accent-red); text-transform:uppercase;">${story.category}</span>
+            <div class="glass" style="padding:14px;border-radius:var(--radius-md);box-shadow:var(--shadow-premium); border-left:3px solid var(--accent-red);">
+                <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:6px;font-weight:700;color:var(--text-secondary);">
+                    <span>@${story.author.toLowerCase()}</span>
+                    <span style="color:var(--accent-red);">${story.category}</span>
                 </div>
-                <p style="font-size:12px; line-height:1.4; color:var(--text-primary); font-style:italic; display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">"${story.body}"</p>
+                <p style="font-size:11px;line-height:1.45; color:var(--text-primary); font-style:italic;">"${story.body.substring(0, 50)}..."</p>
             </div>
         `;
         phoneFeed.insertAdjacentHTML('beforeend', phoneCardHTML);
@@ -868,28 +801,6 @@ function renderReactiveSystemFeeds() {
     document.getElementById("stat-count").innerText = personalLogCount;
     document.getElementById("stat-likes").innerText = personalReactionCount;
     lucide.createIcons();
-}
-
-function triggerToastNotification(msg, isError = false) {
-    const toast = document.getElementById("toast-engine-popup");
-    const stringMessage = document.getElementById("toast-string-message");
-    const icon = document.getElementById("toast-icon-target");
-    
-    if(toast && stringMessage) {
-        stringMessage.innerText = msg;
-        if(isError) {
-            toast.style.background = "#9f1239";
-            if(icon) icon.setAttribute("data-lucide", "alert-circle");
-        } else {
-            toast.style.background = "var(--accent-charcoal)";
-            if(icon) icon.setAttribute("data-lucide", "check-circle");
-        }
-        lucide.createIcons();
-        toast.classList.add("visible");
-        setTimeout(() => {
-            toast.classList.remove("visible");
-        }, 3500);
-    }
 }
 
 function filterFeedEngine(cat) {
@@ -903,12 +814,10 @@ function filterFeedEngine(cat) {
 
 function protectedDashboardRoute() { if(!currentSessionUser) { openAuthLogin(); } else { navigate('dashboard-route'); } }
 function openWritingEngine() { if(!currentSessionUser) { openAuthLogin(); } else { document.getElementById("engine-modal").classList.add("active"); } }
-
 function navigate(viewId) {
     document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
     document.getElementById(viewId).classList.add('active');
     document.querySelectorAll('.desktop-link, .dock-item').forEach(l => l.classList.remove('active'));
-    
     if(viewId === 'landing-route') {
         document.getElementById('nav-home').classList.add('active');
         document.getElementById('dock-home').classList.add('active');
@@ -923,17 +832,10 @@ function toggleCommandDrawer() {
     document.getElementById("master-drawer").classList.toggle("open");
     document.getElementById("drawer-toggle").classList.toggle("open");
 }
-
 function openAuthLogin() { closeAllModalOverlays(); document.getElementById("login-modal").classList.add("active"); }
 function openAuthRegistration() { closeAllModalOverlays(); document.getElementById("register-modal").classList.add("active"); }
 function closeAllModalOverlays() { document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('active')); }
 function toggleThemeSystem() { document.body.classList.toggle("dark-theme"); }
-
-function handleBackdropClick(e, elementId) {
-    if(e.target.id === elementId) {
-        closeAllModalOverlays();
-    }
-}
 </script>
 </body>
 </html>
