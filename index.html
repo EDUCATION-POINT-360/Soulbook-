@@ -160,10 +160,14 @@ h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
 
 /* Top Nav Desktop Layout */
 .desktop-nav { position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-glass); }
-.desktop-nav-container { max-width: 1440px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 16px 4%; }
+.desktop-nav-container { max-width: 1440px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 12px 4%; }
+
+/* --- APP LOGO BRANDING CONTAINER --- */
 .logo-area { display: flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 700; color: var(--text-primary); cursor: pointer; transition: var(--transition-smooth); }
 .logo-area:hover { transform: scale(1.02); }
-.logo-dot { width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--grad-primary); display: grid; place-items: center; color: white; box-shadow: 0 8px 20px rgba(225, 29, 72, 0.25); }
+.app-branding-logo { height: 42px; width: auto; object-fit: contain; border-radius: var(--radius-sm); }
+/* ----------------------------------- */
+
 .desktop-links { display: flex; align-items: center; gap: 28px; }
 .desktop-link { color: var(--text-secondary); text-decoration: none; font-size: 15px; font-weight: 600; position: relative; padding: 6px 0; transition: var(--transition-smooth); }
 .desktop-link:hover, .desktop-link.active { color: var(--accent-red); }
@@ -227,12 +231,17 @@ h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
 .card-media-box { margin-top: 14px; border-radius: var(--radius-sm); overflow: hidden; max-height: 240px; background: #000; display: flex; justify-content: center; align-items: center; }
 .card-media-box img, .card-media-box video { width: 100%; height: auto; max-height: 240px; object-fit: contain; }
 
-/* Comments Dynamic Panel styling */
+/* Nested Comments Loop Layout Systems */
 .comments-panel-area { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border-glass); display: flex; flex-direction: column; gap: 10px; }
-.comments-list-box { display: flex; flex-direction: column; gap: 8px; max-height: 180px; overflow-y: auto; }
-.comment-bubble-node { background: rgba(0,0,0,0.02); padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; border: 1px solid var(--border-glass); }
+.comments-list-box { display: flex; flex-direction: column; gap: 12px; max-height: 320px; overflow-y: auto; padding-right: 4px; }
+.comment-bubble-wrapper { display: flex; flex-direction: column; gap: 6px; }
+.comment-bubble-node { background: rgba(0,0,0,0.02); padding: 12px 14px; border-radius: var(--radius-sm); font-size: 13px; border: 1px solid var(--border-glass); position: relative; }
 .dark-theme .comment-bubble-node { background: rgba(255,255,255,0.02); }
 .comment-node-meta { font-weight: 700; font-size: 11px; color: var(--accent-red); margin-bottom: 3px; }
+.comment-actions-row { display: flex; gap: 12px; margin-top: 6px; }
+.comment-action-btn { background: none; border: none; font-size: 11px; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: var(--transition-smooth); }
+.comment-action-btn:hover { color: var(--accent-red); }
+.nested-replies-container { padding-left: 20px; border-left: 2px solid var(--border-glass); display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
 .comment-input-inline-group { display: flex; gap: 8px; margin-top: 6px; }
 
 /* Segmented Filtering Infrastructure */
@@ -281,7 +290,8 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
 <header class="desktop-nav glass">
     <div class="desktop-nav-container">
         <div class="logo-area" onclick="navigate('landing-route')">
-            <div class="logo-dot"><i data-lucide="feather" style="width:20px;height:20px;"></i></div>
+            <!-- ⚠️ اپنی مرضی کا لوگو لگانے کے لیے نیچے موجود 'src' کا لنک تبدیل کر دیں -->
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=100&auto=format&fit=crop&q=80" alt="Soulbook Logo" class="app-branding-logo">
             <span class="font-display">Soulbook</span>
         </div>
         
@@ -491,7 +501,6 @@ let currentSessionUser = null;
 let activeCategoryFilter = "All";
 let memoryDatabase = [];
 
-// Base64 or Object Media String Allocation Node
 let dynamicProcessedMediaRaw = null;
 let dynamicMediaType = null;
 
@@ -502,7 +511,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     initializeLiveEcosystemStreams();
 });
 
-// Dynamic File Verification Algorithm (Enforces max 60 seconds constraint)
 function validateMediaPayload(input) {
     const file = input.files[0];
     if (!file) return;
@@ -580,10 +588,10 @@ async function submitStorySequence() {
         category: catValue, 
         body: bodyValue, 
         likes: 0,
-        liked_by: [], // Storage Array Node containing users who interacted
+        liked_by: [], 
         media_url: dynamicProcessedMediaRaw, 
         media_type: dynamicMediaType,
-        comments: [] // Multi-node comments storage buffer array
+        comments: [] 
     };
 
     const { error } = await _supabase
@@ -602,7 +610,6 @@ async function submitStorySequence() {
     }
 }
 
-// Strict Account Profile Intersected One-Time Like Toggle System
 async function incrementReaction(id) {
     if(!currentSessionUser) return openAuthLogin();
     
@@ -613,11 +620,9 @@ async function incrementReaction(id) {
 
     const userIndex = record.liked_by.indexOf(currentSessionUser);
     if (userIndex === -1) {
-        // User has not liked yet -> Increment
         record.likes += 1;
         record.liked_by.push(currentSessionUser);
     } else {
-        // User clicked again -> Decrement (Unlike)
         record.likes = Math.max(0, record.likes - 1);
         record.liked_by.splice(userIndex, 1);
     }
@@ -630,35 +635,71 @@ async function incrementReaction(id) {
         .eq('id', id);
 }
 
-// Dynamic Multi-Node Inline Comments Integration Protocol
-async function injectCommentToken(id) {
-    if(!currentSessionUser) return openAuthLogin();
-    const commentInput = document.getElementById(`inline-comment-field-${id}`);
-    const text = commentInput.value.trim();
+// Infinite Recursive Comments Renderer Engine Module
+function generateNestedCommentsTree(commentsArray, storyId, parentId = null) {
+    let markup = "";
+    const targetComments = commentsArray.filter(c => c.parent_id === parentId);
 
+    targetComments.forEach(c => {
+        const nestedRepliesMarkup = generateNestedCommentsTree(commentsArray, storyId, c.comment_id);
+        markup += `
+            <div class="comment-bubble-wrapper" id="comment-node-${c.comment_id}">
+                <div class="comment-bubble-node">
+                    <div class="comment-node-meta">@${c.author.toLowerCase()}</div>
+                    <div style="color:var(--text-primary); font-size:13px;">${c.body}</div>
+                    <div class="comment-actions-row">
+                        <button class="comment-action-btn" onclick="toggleReplyBoxInline('${storyId}', '${c.comment_id}')">Reply</button>
+                    </div>
+                    
+                    <!-- Hidden Dynamic Reply Input Injection Interface Box -->
+                    <div id="reply-box-${storyId}-${c.comment_id}" class="comment-input-inline-group" style="display:none; margin-top:8px;">
+                        <input type="text" id="reply-field-${storyId}-${c.comment_id}" class="input-field" placeholder="Reply to @${c.author.toLowerCase()}..." style="padding:8px 12px; font-size:12px;">
+                        <button class="btn-modern btn-primary" style="padding:0 12px; border-radius:var(--radius-sm);" onclick="injectCommentToken('${storyId}', '${c.comment_id}')"><i data-lucide="corner-down-left" style="width:12px;height:12px;"></i></button>
+                    </div>
+                </div>
+                ${nestedRepliesMarkup ? `<div class="nested-replies-container">${nestedRepliesMarkup}</div>` : ''}
+            </div>
+        `;
+    });
+    return markup;
+}
+
+function toggleReplyBoxInline(storyId, commentId) {
+    const el = document.getElementById(`reply-box-${storyId}-${commentId}`);
+    if(el) el.style.display = el.style.display === "none" ? "flex" : "none";
+}
+
+async function injectCommentToken(storyId, parentId = null) {
+    if(!currentSessionUser) return openAuthLogin();
+    
+    let targetInputField = parentId ? document.getElementById(`reply-field-${storyId}-${parentId}`) : document.getElementById(`inline-comment-field-${storyId}`);
+    const text = targetInputField.value.trim();
     if(!text) return;
 
-    const record = memoryDatabase.find(x => x.id === id);
+    const record = memoryDatabase.find(x => x.id == storyId);
     if (!record) return;
-
     if(!record.comments) record.comments = [];
-    
+
+    // Create unique dynamic token identifier for new node element references
+    const uniqueCommentId = "token_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+
     record.comments.push({
+        comment_id: uniqueCommentId,
+        parent_id: parentId ? String(parentId) : null,
         author: currentSessionUser,
         body: text,
         created_at: new Date().toISOString()
     });
 
-    commentInput.value = "";
+    targetInputField.value = "";
     renderReactiveSystemFeeds();
 
     await _supabase
         .from('stories')
         .update({ comments: record.comments })
-        .eq('id', id);
+        .eq('id', storyId);
 }
 
-// Global Execution Web Share API Wrapper Module
 async function executeGlobalShareInterface(id, author, category) {
     const record = memoryDatabase.find(x => x.id === id);
     const bodySnippet = record ? record.body.substring(0, 50) : "";
@@ -675,7 +716,7 @@ async function executeGlobalShareInterface(id, author, category) {
         }
     } else {
         navigator.clipboard.writeText(window.location.href);
-        alert("Ecosystem Path URL Copied to Clipboard Node! Distribute across standard platforms.");
+        alert("Ecosystem Path URL Copied to Clipboard Node!");
     }
 }
 
@@ -809,7 +850,6 @@ function renderReactiveSystemFeeds() {
             personalReactionCount += story.likes;
         }
 
-        // Processing Optional Injected Structural Media Element
         let parsedMediaMarkUp = "";
         if (story.media_url) {
             if (story.media_type === 'image') {
@@ -819,24 +859,14 @@ function renderReactiveSystemFeeds() {
             }
         }
 
-        // Rendering Dynamic Dynamic Feed Comments Markup String Matrix Array
-        let commentsArrayMarkup = "";
-        if (story.comments && story.comments.length > 0) {
-            story.comments.forEach(c => {
-                commentsArrayMarkup += `
-                    <div class="comment-bubble-node">
-                        <div class="comment-node-meta">@${c.author.toLowerCase()}</div>
-                        <div style="color:var(--text-primary); font-size:13px;">${c.body}</div>
-                    </div>
-                `;
-            });
-        }
+        // Processing Infinite Loop Generation Recursively via Root Comments Mapping Block
+        const cleanCommentsList = story.comments || [];
+        const builtInfiniteCommentsTreeHTML = generateNestedCommentsTree(cleanCommentsList, story.id, null);
 
         const userHasLiked = currentSessionUser && story.liked_by && story.liked_by.includes(currentSessionUser);
         const activeLikeClass = userHasLiked ? "user-liked" : "";
         const heartFillAttribute = userHasLiked ? "var(--accent-red)" : "none";
 
-        // Processing Global Feed Rendering Layer
         if (activeCategoryFilter === "All" || story.category === activeCategoryFilter) {
             const authorInit = story.author ? story.author.charAt(0).toUpperCase() : '?';
             const authorDisplay = story.author ? story.author.toLowerCase() : 'anonymous';
@@ -861,10 +891,10 @@ function renderReactiveSystemFeeds() {
                     </div>
 
                     <div class="comments-panel-area">
-                        <div class="comments-list-box">${commentsArrayMarkup}</div>
+                        <div class="comments-list-box">${builtInfiniteCommentsTreeHTML}</div>
                         <div class="comment-input-inline-group">
-                            <input type="text" id="inline-comment-field-${story.id}" class="input-field" placeholder="Add a public comment..." style="padding:10px 14px; font-size:13px;">
-                            <button class="btn-modern btn-primary" style="padding:0 16px; border-radius:var(--radius-sm);" onclick="injectCommentToken(${story.id})"><i data-lucide="message-square" style="width:14px;height:14px;"></i></button>
+                            <input type="text" id="inline-comment-field-${story.id}" class="input-field" placeholder="Write a root comment..." style="padding:10px 14px; font-size:13px;">
+                            <button class="btn-modern btn-primary" style="padding:0 16px; border-radius:var(--radius-sm);" onclick="injectCommentToken('${story.id}', null)"><i data-lucide="message-square" style="width:14px;height:14px;"></i></button>
                         </div>
                     </div>
 
@@ -883,7 +913,6 @@ function renderReactiveSystemFeeds() {
             mainFeed.insertAdjacentHTML('beforeend', cardHTML);
         }
 
-        // Processing Profile Isolated Dashboard Layer
         if(isPersonalCard) {
             const dashCardHTML = `
                 <div class="story-card glass glass-interactive">
@@ -908,7 +937,6 @@ function renderReactiveSystemFeeds() {
             dashFeed.insertAdjacentHTML('beforeend', dashCardHTML);
         }
 
-        // Live Processing Mockup Ingestion Frame
         const authorPhoneDisplay = story.author ? story.author.toLowerCase() : 'anonymous';
         const phoneCardHTML = `
             <div class="glass" style="padding:12px; border-radius:var(--radius-md); border-left:3px solid var(--accent-red); box-shadow:0 8px 20px rgba(0,0,0,0.02);">
