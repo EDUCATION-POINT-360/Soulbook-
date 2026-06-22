@@ -206,7 +206,7 @@ h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
 .card-body p { font-size: 16px; line-height: 1.7; color: var(--text-primary); font-weight: 400; word-break: break-word; }
 
 /* Dynamic Interactions Toolbar Components */
-.interaction-toolbar { display: flex; items: center; gap: 8px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-glass); flex-wrap: wrap; }
+.interaction-toolbar { display: flex; align-items: center; gap: 8px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-glass); flex-wrap: wrap; }
 .action-trigger { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: var(--radius-full); background: rgba(15,23,42,0.02); border: 1px solid var(--border-glass); cursor: pointer; color: var(--text-secondary); font-size: 13px; font-weight: 600; transition: var(--transition-smooth); }
 .action-trigger:hover { background: rgba(225,29,72,0.05); border-color: var(--accent-rose); color: var(--accent-red); transform: scale(1.03); }
 .action-trigger.liked-active { background: rgba(225,29,72,0.1); color: var(--accent-red); border-color: var(--accent-rose); }
@@ -449,7 +449,7 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
 </div>
 
 <div class="toast-alert-notification" id="toast-engine-popup">
-    <i data-lucide="check-circle" style="width:18px; height:18px; color:var(--accent-rose);"></i>
+    <i data-lucide="check-circle" id="toast-icon-target" style="width:18px; height:18px; color:var(--accent-rose);"></i>
     <span id="toast-string-message">Action processed inside stream.</span>
 </div>
 
@@ -489,7 +489,6 @@ function initializeLiveEcosystemStreams() {
             if (payload.eventType === 'UPDATE') {
                 const index = memoryDatabase.findIndex(x => x.id === payload.new.id);
                 if (index > -1) {
-                    // Retain locally initialized comments if none are returned in payload
                     const localComments = memoryDatabase[index].comments || [];
                     memoryDatabase[index] = payload.new;
                     if(!memoryDatabase[index].comments) memoryDatabase[index].comments = localComments;
@@ -526,7 +525,10 @@ async function submitStorySequence() {
     const catValue = document.getElementById("category-input").value;
     const bodyValue = document.getElementById("body-input").value.trim();
 
-    if(!bodyValue) return alert("System requires structural text to commit transaction log payload.");
+    if(!bodyValue) {
+        triggerToastNotification("System requires text to commit transaction payload.", true);
+        return;
+    }
 
     const { error } = await _supabase
         .from('stories')
@@ -540,7 +542,7 @@ async function submitStorySequence() {
         }]);
 
     if (error) {
-        alert("Write Protocol Failure: " + error.message);
+        triggerToastNotification("Write Protocol Failure: " + error.message, true);
     } else {
         closeAllModalOverlays();
         document.getElementById("body-input").value = "";
@@ -554,7 +556,6 @@ async function incrementReaction(id) {
     const record = memoryDatabase.find(x => x.id === id);
     if (!record) return;
 
-    // Optimistic UI updates
     record.likes += 1;
     renderReactiveSystemFeeds();
 
@@ -589,7 +590,6 @@ async function executeCommentInjection(id) {
     if(!record.comments) record.comments = [];
     record.comments.push(newCommentPayload);
     
-    // Optimistic interface frame rendering update
     renderReactiveSystemFeeds();
     document.getElementById(`comment-thread-${id}`).classList.add("expanded-active");
     commentInput.value = "";
@@ -609,7 +609,6 @@ async function dispatchShareFootprint(id) {
     record.shares = (record.shares || 0) + 1;
     renderReactiveSystemFeeds();
 
-    // Generate Shareable URL Link
     const dynamicShareURI = `${window.location.origin}${window.location.pathname}?node=${id}`;
     navigator.clipboard.writeText(dynamicShareURI).then(() => {
         triggerToastNotification("Matrix sharing link copied to clipboard footprint.");
@@ -624,7 +623,7 @@ async function dispatchShareFootprint(id) {
 }
 
 async function purgeRecord(id) {
-    if(!confirm("Are you sure you want to permanently purge this memory coordinate from the cloud ledger?")) return;
+    if(!confirm("Are you sure you want to permanently purge this memory coordinate?")) return;
     
     memoryDatabase = memoryDatabase.filter(x => x.id !== id);
     renderReactiveSystemFeeds();
@@ -633,7 +632,7 @@ async function purgeRecord(id) {
         .from('stories')
         .delete()
         .eq('id', id);
-    if (error) alert("Failed to complete record deletion: " + error.message);
+    if (error) triggerToastNotification("Failed to delete record: " + error.message, true);
 }
 
 // Session System Architecture Controls
@@ -642,7 +641,10 @@ async function executeRegistrationSequence() {
     const password = document.getElementById("reg-password").value;
     const username = document.getElementById("reg-username").value.trim();
 
-    if(!username || !email || !password) return alert("All profile registration parameters are required.");
+    if(!username || !email || !password) {
+        triggerToastNotification("All profile parameters are required.", true);
+        return;
+    }
 
     const { data, error } = await _supabase.auth.signUp({
         email: email,
@@ -650,9 +652,13 @@ async function executeRegistrationSequence() {
         options: { data: { display_name: username } }
     });
 
-    if (error) return alert(error.message);
-    alert("Crypt system provisioned! Please inspect your activation inbox to finalize registration verification parameters.");
+    if (error) {
+        triggerToastNotification(error.message, true);
+        return;
+    }
+    
     closeAllModalOverlays();
+    triggerToastNotification("Crypt profile provisioned! Please verify your inbox configuration.");
 }
 
 async function executeLoginSequence() {
@@ -664,13 +670,17 @@ async function executeLoginSequence() {
         password: password
     });
 
-    if (error) return alert(error.message);
+    if (error) {
+        triggerToastNotification(error.message, true);
+        return;
+    }
     
     currentSessionUser = data.user.user_metadata.display_name || data.user.email;
     synchronizeSessionUI();
     await initialDatabaseFetch();
     closeAllModalOverlays();
     navigate('dashboard-route');
+    triggerToastNotification(`Welcome back, vector @${currentSessionUser.toLowerCase()}`);
 }
 
 async function logoutSessionSequence() {
@@ -679,6 +689,7 @@ async function logoutSessionSequence() {
     synchronizeSessionUI();
     renderReactiveSystemFeeds();
     navigate('landing-route');
+    triggerToastNotification("Secure workspace shell terminated cleanly.");
 }
 
 async function checkActiveSession() {
@@ -859,11 +870,21 @@ function renderReactiveSystemFeeds() {
     lucide.createIcons();
 }
 
-function triggerToastNotification(msg) {
+function triggerToastNotification(msg, isError = false) {
     const toast = document.getElementById("toast-engine-popup");
     const stringMessage = document.getElementById("toast-string-message");
+    const icon = document.getElementById("toast-icon-target");
+    
     if(toast && stringMessage) {
         stringMessage.innerText = msg;
+        if(isError) {
+            toast.style.background = "#9f1239";
+            if(icon) icon.setAttribute("data-lucide", "alert-circle");
+        } else {
+            toast.style.background = "var(--accent-charcoal)";
+            if(icon) icon.setAttribute("data-lucide", "check-circle");
+        }
+        lucide.createIcons();
         toast.classList.add("visible");
         setTimeout(() => {
             toast.classList.remove("visible");
