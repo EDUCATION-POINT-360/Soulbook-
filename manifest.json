@@ -1,0 +1,21 @@
+{
+  "short_name": "Soulbook",
+  "name": "Soulbook - Record Consciousness",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/JjMHTZ4b/1782151350379-removebg-preview.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://i.ibb.co/JjMHTZ4b/1782151350379-removebg-preview.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#1E0B36",
+  "theme_color": "#1E0B36",
+  "display": "standalone",
+  "orientation": "portrait"
+}
