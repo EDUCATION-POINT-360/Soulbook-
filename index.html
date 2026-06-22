@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-
+<link rel="manifest" href="/manifest.json">
 <script src="https://unpkg.com/lucide@latest"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -510,6 +510,77 @@ document.addEventListener("DOMContentLoaded", async () => {
     await initialDatabaseFetch();
     initializeLiveEcosystemStreams();
 });
+  // 1. PWA سروس ورکر کو رجسٹر کرنا اور اجازت مانگنا
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+      console.log('ServiceWorker registered successfully');
+      
+      // نوٹیفکیشن کی اجازت مانگنا
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          console.log('Notification permission granted.');
+        }
+      });
+    });
+  });
+}
+
+// 2. مقامی طور پر نوٹیفکیشن دکھانے کا فنکشن (موبائل پش اور ان-ایپ الرٹ دونوں)
+function triggerLocalNotification(title, message) {
+  // ویب سائٹ کے اندر پاپ اپ الرٹ دکھانا
+  alert(`${title}: ${message}`); 
+
+  // اگر ایپ بیک گراؤنڈ میں ہے یا موبائل لاک ہے تو پش نوٹیفکیشن بھیجنا
+  if (Notification.permission === 'granted' && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.ready.then(registration => {
+      registration.showNotification(title, {
+        body: message,
+        icon: '/logo.png'
+      });
+    });
+  }
+}
+
+// 3. Supabase Realtime لسنر (ہر ایکشن کو مانیٹر کرنے کے لیے)
+// فرض کریں 'supabase' آپ کا کلائنٹ انیشلائزڈ ہے
+supabase
+  .channel('public:stories')
+  .on('postgres_changes', { event: '*', pattern: 'public:stories' }, (payload) => {
+    console.log('Change received!', payload);
+
+    // کیس 1: اگر کوئی نئی پوسٹ ایڈ ہوئی ہے (INSERT)
+    if (payload.eventType === 'INSERT') {
+      triggerLocalNotification(
+        '🚀 New Broadcast Universe!', 
+        `${payload.new.author || 'کسی'} نے ایک نئی کہانی شیئر کی ہے!`
+      );
+    }
+
+    // کیس 2: اگر کوئی تبدیلی ہوئی ہے (UPDATE - جیسے لائک یا کمنٹ)
+    if (payload.eventType === 'UPDATE') {
+      const oldRow = payload.old;
+      const newRow = payload.new;
+
+      // چیک کریں اگر لائکس کی تعداد بڑھ گئی ہے
+      if (newRow.likes > (oldRow.likes || 0)) {
+        triggerLocalNotification(
+          '❤️ Post Liked!', 
+          `آپ کی پوسٹ کو ایک نیا لائک ملا ہے!`
+        );
+      }
+
+      // چیک کریں اگر کمنٹس کی ارے یا jsonb اپڈیٹ ہوئی ہے
+      if (JSON.stringify(newRow.comments) !== JSON.stringify(oldRow.comments)) {
+        triggerLocalNotification(
+          '💬 New Comment!', 
+          `کسی نے آپ کی کہانی پر کمنٹ یا ریپلائی کیا ہے!`
+        );
+      }
+    }
+  })
+  .subscribe();
+  
 
 function validateMediaPayload(input) {
     const file = input.files[0];
