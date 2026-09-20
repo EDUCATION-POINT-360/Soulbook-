@@ -304,7 +304,7 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
         <nav class="desktop-links">
             <a href="#" class="desktop-link active" id="nav-home" onclick="navigate('landing-route')">Global Matrix Feed</a>
             <a href="#" class="desktop-link" id="nav-dash" onclick="protectedDashboardRoute()">My Space</a>
-            <a href="#" class="desktop-link" id="nav-chat" onclick="event.preventDefault(); openChatRoute()"><i data-lucide="message-circle" style="width:15px;height:15px;vertical-align:-2px;"></i> Chats</a>
+            <a href="#" class="desktop-link" id="nav-chat" onclick="event.preventDefault(); return openChatRoute()"><i data-lucide="message-circle" style="width:15px;height:15px;vertical-align:-2px;"></i> Chats</a>
             <button class="btn-modern btn-secondary" style="padding:10px; border-radius:50%;" onclick="toggleThemeSystem()" aria-label="Theme Toggle"><i data-lucide="moon" style="width:18px;height:18px;"></i></button>
             <div id="auth-state-header-target" style="display:flex; gap:12px; align-items:center;"></div>
         </nav>
@@ -335,7 +335,7 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
     <a href="#" class="dock-item active" id="dock-home" onclick="navigate('landing-route')"><i data-lucide="compass"></i>Feed</a>
     <a href="#" class="dock-item" onclick="openWritingEngine()"><i data-lucide="plus-circle"></i>Compose</a>
     <a href="#" class="dock-item" id="dock-dash" onclick="protectedDashboardRoute()"><i data-lucide="user"></i>Profile</a>
-    <a href="#" class="dock-item" id="dock-chat" onclick="event.preventDefault(); openChatRoute()"><i data-lucide="message-circle"></i>Chats</a>
+    <a href="#" class="dock-item" id="dock-chat" onclick="event.preventDefault(); return openChatRoute()"><i data-lucide="message-circle"></i>Chats</a>
     <a href="#" class="dock-item" onclick="toggleThemeSystem()"><i data-lucide="moon"></i>Theme</a>
 </nav>
 
@@ -570,19 +570,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     await initialDatabaseFetch();
     initializeLiveEcosystemStreams();
 });
-  // 1. PWA سروس ورکر کو رجسٹر کرنا اور اجازت مانگنا
-if ('serviceWorker' in navigator && 'PushManager' in window) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js').then(function(registration) {
-      console.log('ServiceWorker registered successfully');
-      
-      // نوٹیفکیشن کی اجازت مانگنا
-      Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-          console.log('Notification permission granted.');
-        }
-      });
-    });
+  // Cache safety: remove legacy service workers/caches so deployed HTML/JS cannot stay stale.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    try {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r => r.unregister()));
+      if (window.caches) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k => caches.delete(k)));
+      }
+      console.log('Soulbook cache safety: legacy service workers and caches cleared.');
+    } catch (e) { console.warn('Cache cleanup skipped:', e); }
   });
 }
 
@@ -1210,9 +1209,20 @@ function updatePresenceUI(){if(activeChatUser){const onlineAllowed=activeChatUse
 function formatLastSeen(v){if(!v)return'Offline';const d=new Date(v);return`last seen ${d.toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}`;}
 
 async function openChatRoute(){
-  if(!currentUserId){openAuthLogin();return;}
-  navigate('chat-route');
-  await initializeChatSystem();
+  try{
+    if(!currentUserId){
+      const {data:{session}}=await _supabase.auth.getSession();
+      if(session?.user) currentUserId=session.user.id;
+    }
+    if(!currentUserId){openAuthLogin();return false;}
+    navigate('chat-route');
+    await initializeChatSystem();
+    return false;
+  }catch(err){
+    console.error('Chat route failed:',err);
+    alert('Chat could not be opened. Please refresh once and try again.');
+    return false;
+  }
 }
 
 async function loadChatList(){
@@ -1267,11 +1277,12 @@ function stopTyping(){if(chatMessageChannel)chatMessageChannel.send({type:'broad
 async function markConversationRead(){if(!activeConversationId)return;await _supabase.from('messages').update({delivered_at:new Date().toISOString(),read_at:new Date().toISOString()}).eq('conversation_id',activeConversationId).neq('sender_id',currentUserId).is('read_at',null);}
 async function openActiveUserProfile(){if(!activeChatUser)return;renderProfileModal(activeChatUser,false);document.getElementById('profile-modal').classList.add('active');}
 async function openMyProfile(){
-  if(!currentUserId){
-    const {data:{session}}=await _supabase.auth.getSession();
-    if(session?.user){currentUserId=session.user.id;}
-  }
-  if(!currentUserId){openAuthLogin();return;}
+  try{
+    if(!currentUserId){
+      const {data:{session}}=await _supabase.auth.getSession();
+      if(session?.user){currentUserId=session.user.id;}
+    }
+    if(!currentUserId){openAuthLogin();return false;}
   // Open immediately; do not block the UI on chat/presence queries.
   const modal=document.getElementById('profile-modal');
   if(currentProfile){renderProfileModal(currentProfile,true);modal.classList.add('active');return;}
@@ -1284,6 +1295,14 @@ async function openMyProfile(){
     if(ensured) renderProfileModal(ensured,true);
     else document.getElementById('profile-modal-content').innerHTML='<div style="padding:24px;text-align:center;color:var(--accent-red)">Profile could not be loaded. Please refresh and try again.</div>';
   }
+  }catch(err){
+    console.error('Profile modal failed:',err);
+    const modal=document.getElementById('profile-modal');
+    modal?.classList.add('active');
+    const content=document.getElementById('profile-modal-content');
+    if(content) content.innerHTML='<div style="padding:24px;text-align:center;color:var(--accent-red)">Could not load profile. Check your connection and refresh.</div>';
+  }
+  return false;
 } 
 
 // Inline HTML handlers need explicit window bindings in all browsers/webviews.
@@ -1299,6 +1318,17 @@ window.handleMessageKeydown=handleMessageKeydown;
 window.handleChatAttachment=handleChatAttachment;
 window.insertChatEmoji=insertChatEmoji;
 window.filterChatList=filterChatList;
+
+// Direct event wiring fallback: works even when an embedded webview/host blocks inline handlers.
+document.addEventListener('DOMContentLoaded',()=>{
+  const chatIds=['nav-chat','dock-chat'];
+  chatIds.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openChatRoute();});}
+  });
+  const profileButtons=document.querySelectorAll('[onclick*="openMyProfile"]');
+  profileButtons.forEach(el=>el.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openMyProfile();}));
+});
 
 _supabase.auth.onAuthStateChange((_event, session)=>{
   if(session?.user){
