@@ -1,34 +1,37 @@
-// جب بیک گراؤنڈ میں نوٹیفکیشن موصول ہو
-self.addEventListener('push', function(event) {
-  let data = { title: 'Soulbook Update', body: 'کچھ نیا ہوا ہے!' };
-  
-  if (event.data) {
-    try {
-      data = event.data.json();
-    } catch (e) {
-      data.body = event.data.text();
-    }
-  }
+// Soulbook Service Worker
+// Prevent stale/cached app files from breaking the latest deployment.
 
-  const options = {
-    body: data.body,
-    icon: '/logo.png',
-    badge: '/logo.png',
-    vibrate: [100, 50, 100],
-    data: {
-      url: '/'
-    }
-  };
+const CACHE_NAME = "soulbook-no-cache-v3";
 
+self.addEventListener("install", (event) => {
+  // Activate the new service worker immediately.
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", (event) => {
   event.waitUntil(
-    self.registration.showNotification(data.title, options)
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => caches.delete(cacheName))
+      );
+    }).then(() => {
+      // Take control of all currently open pages.
+      return self.clients.claim();
+    })
   );
 });
 
-// نوٹیفکیشن پر کلک کرنے سے ایپ اوپن کرنا
-self.addEventListener('notificationclick', function(event) {
-  event.notification.close();
-  event.waitUntil(
-    clients.openWindow(event.notification.data.url)
+self.addEventListener("fetch", (event) => {
+  // Always request the latest version from the network.
+  // This prevents old HTML/JS from being served from cache.
+  if (event.request.method !== "GET") return;
+
+  event.respondWith(
+    fetch(event.request, {
+      cache: "no-store"
+    }).catch(() => {
+      // If offline, fall back to the browser's normal cache.
+      return caches.match(event.request);
+    })
   );
 });
