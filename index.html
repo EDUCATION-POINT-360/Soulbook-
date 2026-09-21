@@ -285,7 +285,121 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
 @media(max-width:850px){.chat-shell{width:100%;height:calc(100vh - 115px);margin:15px 0;border-radius:0;grid-template-columns:1fr}.chat-list-panel{border-right:0}.chat-window{display:none}.chat-shell.chat-open .chat-list-panel{display:none}.chat-shell.chat-open .chat-window{display:flex}.mobile-chat-back{display:grid}.message-bubble{max-width:84%}.desktop-links .desktop-link{display:none}.desktop-links .desktop-link:first-child{display:block}.hero-section{grid-template-columns:1fr}.hero-feature-panel{min-height:240px}.mobile-dock-nav{display:flex!important}.chat-header{height:64px}.message-list{padding:16px}.message-composer{padding-bottom:calc(12px + env(safe-area-inset-bottom))}}
 @media(min-width:851px){.mobile-dock-nav{display:none!important}}
 
-.emoji-picker,.gif-picker{position:absolute;bottom:72px;left:12px;z-index:20;background:white;border:1px solid var(--border-glass);border-radius:18px;box-shadow:0 18px 50px rgba(15,23,42,.16);padding:12px;max-width:min(360px,90vw)}.emoji-picker{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}.emoji-picker button,.gif-picker button{border:0;background:transparent;cursor:pointer;border-radius:10px;padding:7px;font-size:22px}.emoji-picker button:hover,.gif-picker button:hover{background:rgba(225,29,72,.08)}.gif-picker{display:flex;flex-direction:column;gap:8px}.gif-picker input{padding:9px;border:1px solid var(--border-glass);border-radius:10px}.gif-picker small{color:var(--text-muted)}.gif-card{width:110px;height:80px;object-fit:cover;border-radius:10px}.voice-recording{background:#fee2e2!important;color:#be123c!important}.message-media{max-width:300px;max-height:320px;border-radius:12px;display:block;margin-bottom:5px}.message-audio{width:260px;max-width:100%}.chat-auth-bar{display:flex;gap:8px;padding:0 16px 10px;align-items:center}.chat-auth-bar .btn-modern{padding:8px 12px;font-size:12px}.chat-row-status{font-size:10px;color:#10b981}.chat-list-panel{position:relative}.message-composer{position:relative}</style>
+.emoji-picker{position:absolute;bottom:72px;left:12px;z-index:20;background:white;border:1px solid var(--border-glass);border-radius:18px;box-shadow:0 18px 50px rgba(15,23,42,.16);padding:12px;max-width:min(360px,90vw)}.emoji-picker{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}.emoji-picker button{border:0;background:transparent;cursor:pointer;border-radius:10px;padding:7px;font-size:22px}.emoji-picker button:hover{background:rgba(225,29,72,.08)}.voice-recording{background:#fee2e2!important;color:#be123c!important}.message-media{max-width:300px;max-height:320px;border-radius:12px;display:block;margin-bottom:5px}.message-audio{width:260px;max-width:100%}.chat-auth-bar{display:flex;gap:8px;padding:0 16px 10px;align-items:center}.chat-auth-bar .btn-modern{padding:8px 12px;font-size:12px}.chat-row-status{font-size:10px;color:#10b981}.chat-list-panel{position:relative}.message-composer{position:relative}</style>
+
+<style id="soulbook-chat-final-css">
+/* Final WhatsApp-style chat UI */
+#chat-route{background:var(--bg-main);min-height:calc(100vh - 70px)}
+#chat-route .chat-shell{width:min(1320px,100%);height:calc(100vh - 110px);margin:20px auto;display:grid;grid-template-columns:360px minmax(0,1fr);overflow:hidden;border:1px solid var(--border-glass);border-radius:22px;background:var(--bg-surface-solid);box-shadow:0 20px 60px rgba(15,23,42,.10)}
+#chat-route .chat-list-panel{background:var(--bg-surface-solid);border-right:1px solid var(--border-glass);min-width:0}
+#chat-route .chat-list-head{padding:20px 18px 12px;display:flex;align-items:center;justify-content:space-between}
+#chat-route .chat-list-head h2{font-size:25px;line-height:1}
+#chat-route .chat-list-head span{display:block;margin-top:7px;font-size:11px;color:var(--text-muted)}
+#chat-route .chat-search-wrap{margin:8px 14px 10px;border-radius:12px;background:var(--bg-main)}
+#chat-route .chat-list{padding:4px 8px 18px;overflow:auto}
+#chat-route .chat-section-label{padding:12px 10px 7px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted)}
+#chat-route .chat-row{padding:11px 10px;border-radius:13px;gap:11px}
+#chat-route .chat-row:hover,#chat-route .chat-row.active{background:rgba(225,29,72,.075)}
+#chat-route .chat-row .avatar-circle{width:46px;height:46px;flex:0 0 46px}
+#chat-route .chat-row-info{min-width:0}
+#chat-route .chat-row-name{font-size:13px}
+#chat-route .chat-row-preview{font-size:11px;margin-top:4px}
+#chat-route .chat-row-status{font-size:9px;font-weight:800}
+#chat-route .chat-window{background:#efeae2;position:relative}
+#chat-route .chat-window:before{content:"";position:absolute;inset:0;opacity:.35;background-image:radial-gradient(rgba(100,80,60,.09) 1px,transparent 1px);background-size:18px 18px;pointer-events:none}
+#chat-route .chat-empty,#chat-route #chat-active{position:relative;z-index:1}
+#chat-route .chat-header{height:68px;padding:9px 15px;background:rgba(255,255,255,.92);border-bottom:1px solid rgba(15,23,42,.08);backdrop-filter:blur(12px)}
+#chat-route .chat-header .avatar-circle{width:42px;height:42px;flex:0 0 42px}
+#chat-route .chat-header-info strong{font-size:14px}
+#chat-route .chat-header-info span{font-size:10px}
+#chat-route .message-list{position:relative;z-index:1;padding:22px clamp(12px,3vw,55px);gap:5px;background:transparent}
+#chat-route .message-bubble{max-width:min(70%,520px);padding:7px 9px 5px;border-radius:9px;box-shadow:0 1px 2px rgba(15,23,42,.08)}
+#chat-route .message-bubble.mine{background:#dcf8c6;border-bottom-right-radius:2px}
+#chat-route .message-bubble.theirs{background:#fff;border-bottom-left-radius:2px}
+#chat-route .message-text{font-size:13px;line-height:1.45}
+#chat-route .message-meta{font-size:8px;margin-top:3px}
+#chat-route .message-media{max-width:min(320px,65vw);max-height:360px;border-radius:8px}
+#chat-route .message-audio{width:min(280px,65vw)}
+#chat-route .typing-indicator{position:relative;z-index:1;background:transparent;padding:0 22px;color:#64748b}
+#chat-route .message-composer{position:relative;z-index:2;padding:8px 10px calc(8px + env(safe-area-inset-bottom));gap:5px;background:#f7f7f7;border-top:1px solid rgba(15,23,42,.08)}
+#chat-route .message-composer textarea{min-height:42px;max-height:100px;border-radius:21px;border-color:#e5e7eb;padding:11px 14px;background:#fff;font-size:13px}
+#chat-route .icon-btn{width:38px;height:38px;flex:0 0 38px}
+#chat-route .send-btn{width:40px;height:40px;flex:0 0 40px;border-radius:50%}
+#chat-route .voice-recording{background:#fee2e2!important;color:#be123c!important;border:1px solid #fecaca}
+#chat-route .chat-availability{display:flex;gap:8px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none}
+#chat-route .chat-availability::-webkit-scrollbar{display:none}
+#chat-route .availability-chip{display:flex;align-items:center;gap:7px;min-width:max-content;padding:7px 9px;border:1px solid var(--border-glass);background:var(--bg-surface-solid);border-radius:999px;cursor:pointer}
+#chat-route .availability-chip .avatar-circle{width:28px;height:28px;font-size:9px}
+#chat-route .availability-chip strong{font-size:10px}
+#chat-route .availability-chip small{display:block;color:#10b981;font-size:8px}
+#chat-route .chat-suggestion{padding:10px 12px;margin:5px 8px;border:1px dashed var(--border-glass);border-radius:12px;background:rgba(225,29,72,.025)}
+#chat-route .chat-suggestion strong{font-size:11px}
+#chat-route .chat-suggestion p{font-size:10px;color:var(--text-muted);margin:3px 0 8px}
+#chat-route .chat-suggestion .btn-modern{padding:7px 10px;font-size:10px}
+#chat-route .emoji-picker{bottom:58px;left:8px;max-height:290px;overflow:auto}
+#chat-route .emoji-picker{grid-template-columns:repeat(8,1fr)}
+@media(max-width:850px){
+ #chat-route{min-height:calc(100vh - 100px)}
+ #chat-route .chat-shell{width:100%;height:calc(100vh - 105px);margin:0;border-radius:0;border:0;grid-template-columns:1fr}
+ #chat-route .chat-list-panel{display:flex}
+ #chat-route .chat-window{display:none}
+ #chat-route .chat-shell.chat-open .chat-list-panel{display:none}
+ #chat-route .chat-shell.chat-open .chat-window{display:flex}
+ #chat-route .message-bubble{max-width:84%}
+ #chat-route .message-media{max-width:72vw}
+ #chat-route .mobile-chat-back{display:grid}
+}
+</style>
+<style id="soulbook-chat-v4-css">
+.chat-notification-badge{position:absolute;top:-6px;right:-8px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;background:#e11d48;color:#fff;font-size:9px;font-weight:900;place-items:center;line-height:1;z-index:50;box-shadow:0 2px 8px rgba(225,29,72,.35)}
+.chat-row{width:100%;display:flex;align-items:center;text-align:left;border:0;background:transparent;cursor:pointer;position:relative;color:inherit}.chat-unread-count{margin-left:auto;min-width:20px;height:20px;padding:0 5px;border-radius:999px;display:grid;place-items:center;background:#16a34a;color:#fff;font-size:9px;font-weight:900}.chat-no-users,.chat-loading,.chat-error{padding:28px 18px;text-align:center;color:var(--text-muted);font-size:12px}.chat-error{color:var(--accent-red)}
+.message-bubble{position:relative}.message-actions{position:absolute;right:5px;top:-17px;display:none;gap:3px;background:rgba(255,255,255,.96);border:1px solid rgba(15,23,42,.08);border-radius:10px;padding:2px;box-shadow:0 4px 14px rgba(15,23,42,.12);z-index:8}.message-bubble:hover .message-actions,.message-bubble:focus-within .message-actions{display:flex}.message-actions button,.reaction-popover button{border:0;background:transparent;cursor:pointer;border-radius:7px;padding:4px;font-size:13px}.message-actions button:hover,.reaction-popover button:hover{background:rgba(15,23,42,.06)}.reaction-popover{position:absolute;right:8px;top:-47px;display:flex;gap:2px;padding:4px;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:12px;box-shadow:0 8px 25px rgba(15,23,42,.14);z-index:15}.message-reactions{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}.reaction-pill{border:1px solid rgba(15,23,42,.1);background:#fff;border-radius:999px;padding:2px 6px;font-size:10px;cursor:pointer}.reaction-pill.mine{background:#fce7f3;border-color:#f9a8d4}.deleted-message{display:inline-flex;align-items:center;gap:4px;color:#64748b;font-style:italic;font-size:11px}.deleted-message svg{width:12px;height:12px}.message-sticker{font-size:64px;line-height:1;padding:4px 10px;filter:drop-shadow(0 3px 5px rgba(0,0,0,.08))}.sticker-picker{position:absolute;bottom:58px;left:45px;z-index:25;width:min(350px,90vw);max-height:290px;overflow:auto;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:12px;background:#fff;border:1px solid var(--border-glass);border-radius:18px;box-shadow:0 18px 50px rgba(15,23,42,.18)}.sticker-choice{border:1px solid rgba(15,23,42,.06);background:#fafafa;border-radius:12px;cursor:pointer;padding:7px;display:flex;flex-direction:column;align-items:center;gap:2px}.sticker-choice:hover{background:#fdf2f8;transform:translateY(-1px)}.sticker-choice span{font-size:30px}.sticker-choice small{font-size:8px;color:var(--text-muted)}
+.soulbook-live-toast{position:fixed;right:18px;top:82px;z-index:9999;display:flex;flex-direction:column;gap:8px;max-width:min(330px,calc(100vw - 36px))}.soulbook-toast-item{background:rgba(17,24,39,.95);color:#fff;border-radius:14px;padding:11px 13px;box-shadow:0 15px 35px rgba(0,0,0,.2);display:flex;flex-direction:column;gap:2px;animation:soulToastIn .2s ease}.soulbook-toast-item strong{font-size:12px}.soulbook-toast-item span{font-size:11px;opacity:.82}@keyframes soulToastIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.profile-manager-head{display:flex;align-items:center;gap:14px;margin-bottom:15px}.profile-manager-head h3{margin:0;font-size:20px}.profile-manager-head span,.profile-manager-head small{display:block;color:var(--text-muted);font-size:11px;margin-top:3px}.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.profile-stats>div{padding:12px;border:1px solid var(--border-glass);border-radius:12px;text-align:center;background:rgba(15,23,42,.025)}.profile-stats strong{display:block;font-size:16px}.profile-stats span{display:block;color:var(--text-muted);font-size:9px;margin-top:3px}.profile-manager-tabs{display:flex;gap:6px;border-bottom:1px solid var(--border-glass);margin:15px 0}.profile-manager-tabs button{border:0;background:transparent;padding:9px 10px;cursor:pointer;font-weight:800;color:var(--text-muted);border-bottom:2px solid transparent}.profile-manager-tabs button.active{color:var(--text-primary);border-bottom-color:var(--accent-red)}.profile-privacy-grid{margin-top:18px;display:grid;gap:8px}.profile-privacy-grid h4{margin:0 0 4px}.profile-privacy-grid label{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px}.profile-privacy-grid select{padding:8px 10px;border:1px solid var(--border-glass);border-radius:9px;background:var(--bg-surface-solid)}.profile-posts-list{display:grid;gap:8px}.profile-post-item{padding:11px 12px;border:1px solid var(--border-glass);border-radius:12px}.profile-post-item>div{display:flex;justify-content:space-between;gap:8px}.profile-post-item strong{font-size:11px}.profile-post-item small{font-size:9px;color:var(--text-muted)}.profile-post-item p{font-size:11px;line-height:1.45;margin:6px 0 0;color:var(--text-secondary)}.profile-empty-posts,.profile-loading,.profile-view-bio{padding:15px;color:var(--text-muted);font-size:12px}.chat-section-label{display:flex;align-items:center;gap:5px}.chat-section-label span{opacity:.6}
+@media(max-width:850px){.message-actions{display:flex;opacity:.85;right:3px;top:-19px}.sticker-picker{left:5px;bottom:62px;grid-template-columns:repeat(4,1fr)}.profile-stats{grid-template-columns:repeat(3,1fr)}.soulbook-live-toast{top:72px;right:10px}}
+</style>
+
+<style id="soulbook-v6-mobile-fix">
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+body{padding-bottom:env(safe-area-inset-bottom,0px)}
+footer.glass{width:100%;box-sizing:border-box;min-height:72px;padding:18px clamp(14px,4vw,40px);margin:0;position:relative;z-index:2}
+footer.glass>div{width:100%;max-width:1440px;margin:auto!important}
+footer.glass p{margin:0;text-align:center;line-height:1.55;font-size:12px;overflow-wrap:anywhere}
+#chat-route{width:100%;box-sizing:border-box;padding:clamp(8px,2vw,24px)}
+#chat-route .chat-shell{width:min(1200px,100%);height:min(760px,calc(100dvh - 150px));min-height:560px;margin:0 auto;display:grid;grid-template-columns:340px minmax(0,1fr);overflow:hidden;border-radius:24px;position:relative}
+#chat-route .chat-list-panel{min-width:0;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.08)}
+#chat-route .chat-list{min-height:0;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#chat-route .chat-window{min-width:0;min-height:0;display:flex;overflow:hidden}
+#chat-active{min-width:0;min-height:0;flex:1}
+#message-list{min-height:0;flex:1;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:18px clamp(10px,3vw,28px)}
+#chat-route .message-composer{position:relative;flex:none;display:flex;align-items:flex-end;gap:6px;padding:8px max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));margin:0;background:rgba(8,8,10,.96);border-top:1px solid rgba(255,255,255,.07)}
+#chat-route #message-input{min-width:0;max-height:110px;resize:none;line-height:1.4}
+#chat-route .chat-header{flex:none}
+#chat-route .chat-row{min-height:68px}
+#chat-route .chat-search-wrap{flex:none}
+.chat-loading-once{padding:30px;text-align:center;color:var(--text-muted);font-size:13px}
+.chat-empty-history{padding:28px;text-align:center;color:var(--text-muted)}
+.message-bubble.optimistic{opacity:.88}
+.message-bubble.send-failed{opacity:.7}
+.chat-notification-badge{position:absolute;top:-4px;right:-4px;min-width:17px;height:17px;padding:0 4px;border-radius:99px;background:#ef4444;color:#fff;font-size:10px;font-weight:800;display:none;place-items:center;border:2px solid var(--bg,#08080a);z-index:5}
+@media(max-width:800px){
+ #chat-route{padding:0!important}
+ #chat-route .chat-shell{height:calc(100dvh - 72px);min-height:0;width:100%;border-radius:0;grid-template-columns:1fr;box-shadow:none}
+ #chat-route .chat-list-panel{display:flex;border-right:0}
+ #chat-route .chat-window{display:none}
+ #chat-route .chat-shell.chat-open .chat-list-panel{display:none}
+ #chat-route .chat-shell.chat-open .chat-window{display:flex;width:100%;height:100%}
+ #chat-route .chat-header{padding-top:max(8px,env(safe-area-inset-top))}
+ #chat-route .mobile-chat-back{display:grid!important}
+ #chat-route .chat-row{min-height:70px;padding-inline:12px}
+ #chat-route .message-bubble{max-width:min(82%,430px)}
+ #chat-route .message-composer{padding-bottom:max(8px,env(safe-area-inset-bottom))}
+ #chat-route .message-composer .icon-btn{flex:0 0 40px}
+ #chat-route .send-btn{flex:0 0 44px}
+ footer.glass{padding-bottom:max(18px,env(safe-area-inset-bottom))}
+}
+@media(min-width:801px){#chat-route .mobile-chat-back{display:none!important}}
+</style>
 </head>
 <body>
 
@@ -306,6 +420,8 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
             <a href="#" class="desktop-link active" id="nav-home" onclick="navigate('landing-route')">Global Matrix Feed</a>
             <a href="#" class="desktop-link" id="nav-dash" onclick="event.preventDefault(); openMyProfile()">My Profile</a>
             <a href="#" class="desktop-link" id="nav-chat" onclick="event.preventDefault(); return openChatRoute()"><i data-lucide="message-circle" style="width:15px;height:15px;vertical-align:-2px;"></i> Chats</a>
+            <a href="#" class="desktop-link" onclick="event.preventDefault(); window.SoulbookFinal.channels()"><i data-lucide="radio" style="width:15px;height:15px;vertical-align:-2px;"></i> Channels</a>
+            <a href="#" class="desktop-link" onclick="event.preventDefault(); window.SoulbookFinal.news()"><i data-lucide="newspaper" style="width:15px;height:15px;vertical-align:-2px;"></i> News</a>
             <button class="btn-modern btn-secondary" style="padding:10px; border-radius:50%;" onclick="toggleThemeSystem()" aria-label="Theme Toggle"><i data-lucide="moon" style="width:18px;height:18px;"></i></button>
             <div id="auth-state-header-target" style="display:flex; gap:12px; align-items:center;"></div>
         </nav>
@@ -326,6 +442,8 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
         <a href="#" class="drawer-link" onclick="toggleCommandDrawer(); openWritingEngine()"><i data-lucide="pen-tool"></i> Capture Creative Pulse</a>
         <a href="#" class="drawer-link" onclick="toggleCommandDrawer(); toggleThemeSystem()"><i data-lucide="sun"></i> Invert Visualization Theme</a>
         <a href="#" class="drawer-link" onclick="toggleCommandDrawer(); openAppSettings()"><i data-lucide="settings"></i> Settings</a>
+        <a href="#" class="drawer-link" onclick="toggleCommandDrawer(); SoulbookV8.channels()"><i data-lucide="radio"></i> Channels & Topics</a>
+        <a href="#" class="drawer-link" onclick="toggleCommandDrawer(); SoulbookV8.openNews()"><i data-lucide="newspaper"></i> News Hub</a>
     </div>
     <div style="font-size:12px; color:var(--text-muted); border-top: 1px solid var(--border-glass); padding-top:20px; display:flex; align-items:center; gap:8px;">
         <span style="width:6px; height:6px; border-radius:50%; background:var(--accent-emerald);"></span> Zero-Knowledge Shield Verified
@@ -335,10 +453,11 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
 <!-- Mobile Quick-Dock Platform Nav -->
 <nav class="mobile-dock-nav glass">
     <a href="#" class="dock-item active" id="dock-home" onclick="navigate('landing-route')"><i data-lucide="compass"></i>Feed</a>
-    <a href="#" class="dock-item" onclick="openWritingEngine()"><i data-lucide="plus-circle"></i>Compose</a>
+    <a href="#" class="dock-item" onclick="window.SoulbookFinal.post()"><i data-lucide="plus-circle"></i>Compose</a>
     <a href="#" class="dock-item" id="dock-dash" onclick="event.preventDefault(); openMyProfile()"><i data-lucide="user"></i>Profile</a>
     <a href="#" class="dock-item" id="dock-chat" onclick="event.preventDefault(); return openChatRoute()"><i data-lucide="message-circle"></i>Chats</a>
-    <a href="#" class="dock-item" onclick="toggleThemeSystem()"><i data-lucide="moon"></i>Theme</a>
+    <a href="#" class="dock-item" onclick="event.preventDefault(); SoulbookV8.channels()"><i data-lucide="radio"></i>Channels</a>
+    <a href="#" class="dock-item" onclick="event.preventDefault(); SoulbookV8.openNews()"><i data-lucide="newspaper"></i>News</a>
 </nav>
 
 <!-- Landing Stream Interface -->
@@ -385,10 +504,13 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
   <div class="chat-shell glass">
     <aside class="chat-list-panel">
       <div class="chat-list-head">
-        <div><h2 class="font-display">Chats</h2><span id="chat-status-label">Private & real-time</span></div>
-        <button class="icon-btn" onclick="openUserSearch()" aria-label="Find user"><i data-lucide="user-plus"></i></button>
+        <div><h2 class="font-display">Chats</h2><span id="chat-status-label">People & real-time</span></div>
+        <div style="display:flex;gap:4px;align-items:center">
+          <button class="icon-btn" onclick="openUserSearch()" aria-label="Find user" title="Find user"><i data-lucide="user-plus"></i></button>
+          <button class="icon-btn" onclick="window.SoulChat.account()" aria-label="Account" title="Account"><i data-lucide="log-in"></i></button>
+        </div>
       </div>
-      <div class="chat-search-wrap"><i data-lucide="search"></i><input id="chat-search" class="chat-search" placeholder="Search chats or usernames..." oninput="filterChatList(this.value)"></div>
+      <div class="chat-search-wrap"><i data-lucide="search"></i><input id="chat-search" class="chat-search" placeholder="Search people or chats..." oninput="filterChatList(this.value)"></div>
       <div id="chat-list" class="chat-list"></div>
     </aside>
     <section class="chat-window">
@@ -403,12 +525,10 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
         <div id="message-list" class="message-list"></div>
         <div id="typing-indicator" class="typing-indicator"></div>
         <form class="message-composer" onsubmit="sendChatMessage(event)">
-          <label class="icon-btn attach-btn" title="Photo, video or audio"><i data-lucide="paperclip"></i><input type="file" id="chat-file-input" accept="image/*,video/*,audio/*" hidden onchange="handleChatAttachment(this)"></label>
+          <label class="icon-btn attach-btn" title="Add a photo"><i data-lucide="paperclip"></i><input type="file" id="chat-file-input" accept="image/*" hidden onchange="handleChatAttachment(this)"></label>
           <button type="button" class="icon-btn" title="Emoji" onclick="toggleEmojiPicker()">😊</button>
-          <button type="button" class="icon-btn" title="GIF" onclick="openGifPicker()">GIF</button>
-          <button type="button" class="icon-btn" id="voice-note-btn" title="Hold to record voice note" onmousedown="startVoiceNote()" onmouseup="stopVoiceNote()" ontouchstart="startVoiceNote(event)" ontouchend="stopVoiceNote(event)"><i data-lucide="mic"></i></button>
+          
           <div id="emoji-picker" class="emoji-picker" style="display:none"></div>
-          <div id="gif-picker" class="gif-picker" style="display:none"></div>
           <textarea id="message-input" rows="1" placeholder="Type a message..." oninput="handleTyping()" onkeydown="handleMessageKeydown(event)"></textarea>
           <button type="submit" class="send-btn" aria-label="Send"><i data-lucide="send"></i></button>
         </form>
@@ -455,7 +575,7 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
         <aside class="pc-sidebar-nav">
             <ul class="sidebar-list">
                 <li class="sidebar-item"><a href="#" class="sidebar-link active"><i data-lucide="activity"></i>Personal Stream</a></li>
-                <li class="sidebar-item"><a href="#" class="sidebar-link" onclick="openWritingEngine()"><i data-lucide="plus-square"></i>Compose Log</a></li>
+                <li class="sidebar-item"><a href="#" class="sidebar-link" onclick="window.SoulbookFinal.post()"><i data-lucide="plus-square"></i>Compose Log</a></li>
                 <li class="sidebar-item"><a href="#" class="sidebar-link" onclick="logoutSessionSequence()" style="color:var(--accent-red);"><i data-lucide="log-out"></i>Terminate Session</a></li>
             </ul>
             <div class="glass" style="padding:22px;border-radius:var(--radius-md);text-align:center;">
@@ -470,7 +590,7 @@ footer { border-top: 1px solid var(--border-glass); padding: 50px 4%; text-align
                     <h1 style="font-size:36px;" class="font-display" id="dash-welcome-text">Workspace Vault</h1>
                     <p style="color:var(--text-secondary);">Manage your isolated storage footprint and data configurations.</p>
                 </div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-modern btn-secondary" onclick="openMyProfile()"><i data-lucide="user-cog"></i> Profile & Privacy</button><button class="btn-modern btn-primary" onclick="openWritingEngine()"><i data-lucide="plus"></i> New Creative Record</button></div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-modern btn-secondary" onclick="openMyProfile()"><i data-lucide="user-cog"></i> Profile & Privacy</button><button class="btn-modern btn-primary" onclick="window.SoulbookFinal.post()"><i data-lucide="plus"></i> New Creative Record</button></div>
             </div>
 
             <div class="stat-grid">
@@ -743,6 +863,7 @@ async function submitStorySequence() {
     if(!bodyValue) return alert("System requires structural text to commit transaction log payload.");
 
     const payloadObject = { 
+        user_id: window.currentUserId || null,
         author: currentSessionUser, 
         category: catValue, 
         body: bodyValue, 
@@ -753,19 +874,23 @@ async function submitStorySequence() {
         comments: [] 
     };
 
-    const { error } = await _supabase
+    const { data: insertedStory, error } = await _supabase
         .from('stories')
-        .insert([payloadObject]);
+        .insert([payloadObject])
+        .select('*')
+        .single();
 
     if (error) {
-        alert("Write Protocol Failure: " + error.message);
+        alert("Could not publish confession: " + error.message);
     } else {
         closeAllModalOverlays();
         document.getElementById("body-input").value = "";
         document.getElementById("media-file-input").value = "";
         dynamicProcessedMediaRaw = null;
         dynamicMediaType = null;
-        await initialDatabaseFetch();
+        memoryDatabase.unshift(insertedStory);
+        renderReactiveSystemFeeds();
+        try { window.__storyLiveChannel?.send({type:'broadcast',event:'story',payload:{story:insertedStory}}); } catch(_) {}
     }
 }
 
@@ -965,7 +1090,7 @@ function synchronizeSessionUI() {
             <button class="btn-modern btn-secondary" style="padding:10px 18px;" onclick="logoutSessionSequence()">Logout</button>
         `;
         heroActionsTarget.innerHTML = `
-            <button class="btn-modern btn-primary" onclick="openWritingEngine()">Write New Entry <i data-lucide="pen-tool"></i></button>
+            <button class="btn-modern btn-primary" onclick="window.SoulbookFinal.post()">Write New Entry <i data-lucide="pen-tool"></i></button>
             <button class="btn-modern btn-secondary" onclick="navigate('dashboard-route')">Access Secure Crypt Dashboard</button>
         `;
         document.getElementById("dash-welcome-text").innerText = `Crypt Storage — @${currentSessionUser}`;
@@ -1426,161 +1551,400 @@ const _originalNavigate = navigate;
 navigate = function(viewId){_originalNavigate(viewId);if(viewId==='chat-route'){document.getElementById('nav-chat')?.classList.add('active');document.getElementById('dock-chat')?.classList.add('active');}if(viewId==='landing-route')document.querySelectorAll('.desktop-link,.dock-item').forEach(x=>x.classList.remove('active'));if(viewId==='landing-route'){document.getElementById('nav-home')?.classList.add('active');document.getElementById('dock-home')?.classList.add('active');}if(viewId==='chat-route'){document.getElementById('nav-chat')?.classList.add('active');document.getElementById('dock-chat')?.classList.add('active');}};
 
 </script>
+<script id="soulbook-chat-v5-js">
+(() => {
+  'use strict';
+  const sup = () => window._supabase || window.supabaseClient || _supabase;
+  const uid = () => window.currentUserId || (typeof currentUserId !== 'undefined' ? currentUserId : null);
+  const esc = v => (typeof escapeHtml === 'function' ? escapeHtml(String(v ?? '')) : String(v ?? '').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])));
+  const activeCid = () => window.activeConversationId || null;
+  const setActiveCid = v => { window.activeConversationId = v || null; };
+  const setActiveUser = v => { window.activeChatUser = v || null; };
+  const STICKERS=[['😀','Happy'],['😂','LOL'],['😍','Love'],['🥰','Cute'],['😎','Cool'],['🤗','Hug'],['🥳','Party'],['🤩','Wow'],['😭','Crying'],['😡','Angry'],['🥹','Emotional'],['👍','Thumbs up'],['👏','Clap'],['🙏','Thanks'],['🔥','Fire'],['❤️','Love'],['💯','100'],['✨','Sparkle'],['🎉','Celebrate'],['🤝','Deal'],['🙌','Yay'],['💪','Strong'],['🌸','Flower'],['⭐','Star'],['☕','Coffee'],['📚','Study']];
+  const REACTIONS=['❤️','👍','😂','😮','😢','😡','🔥','👏'];
+  const state={users:[],profiles:new Map(),conversations:new Map(),presence:null,directoryChannel:null,notificationChannel:null,messageChannel:null,typingTimer:null,typingUiTimer:null,voice:null,voiceStream:null,voiceChunks:[],loaded:false,loading:false,loadPromise:null,outbox:[],outboxTimer:null};
+  const OUTBOX_KEY=()=>`soulbook_chat_outbox_${uid()||'guest'}`;
+  const isChatRoute=()=>document.getElementById('chat-route')?.classList.contains('active');
+  const isNearBottom=()=>{const b=document.getElementById('message-list');return !b||b.scrollHeight-b.scrollTop-b.clientHeight<100;};
+  const scrollBottom=force=>{const b=document.getElementById('message-list');if(b&&(force||isNearBottom())) requestAnimationFrame(()=>{b.scrollTop=b.scrollHeight;});};
+  const avatar=p=>typeof avatarMarkup==='function'?avatarMarkup(p):`<div class="avatar-circle">${esc((p?.display_name||p?.username||'U').charAt(0).toUpperCase())}</div>`;
+  function toast(title,body){let box=document.getElementById('soulbook-live-toast');if(!box){box=document.createElement('div');box.id='soulbook-live-toast';box.className='soulbook-live-toast';document.body.appendChild(box);}const x=document.createElement('div');x.className='soulbook-toast-item';x.innerHTML=`<strong>${esc(title)}</strong><span>${esc(body)}</span>`;box.appendChild(x);setTimeout(()=>x.remove(),4500);}
+  async function browserNotify(title,body){try{if(!('Notification'in window)||!document.hidden)return;if(Notification.permission==='default')await Notification.requestPermission();if(Notification.permission==='granted')new Notification(title,{body,tag:'soulbook-message'});}catch(_){} }
+  function ensureBadge(){['nav-chat','dock-chat'].forEach(id=>{const e=document.getElementById(id);if(!e)return;let b=e.querySelector('.chat-notification-badge');if(!b){b=document.createElement('span');b.className='chat-notification-badge';e.style.position='relative';e.appendChild(b);}});}
+  function setBadge(n){ensureBadge();const x=Math.max(0,Number(n)||0);document.querySelectorAll('.chat-notification-badge').forEach(b=>{b.textContent=x>99?'99+':String(x);b.style.display=x?'grid':'none';});}
+  async function auth(){const r=await sup().auth.getSession();const u=r.data?.session?.user;if(!u)return null;window.currentUserId=u.id;try{currentUserId=u.id;}catch(_){}if(typeof ensureProfileForUser==='function')await ensureProfileForUser(u).catch(()=>{});return u;}
+  function userOnline(id){return !!state.presence && Object.values(state.presence.presenceState?.()||{}).flat().some(x=>x.user_id===id);}
+  async function getProfiles(){const me=uid();if(!me)return[];const {data,error}=await sup().from('profiles').select('id,username,display_name,avatar_url,bio,last_seen,privacy,created_at').neq('id',me).order('display_name',{ascending:true});if(error)throw error;return(data||[]).filter(p=>p.privacy?.profile!=='nobody');}
+  async function loadUsersOnce(){if(state.loadPromise)return state.loadPromise;state.loadPromise=(async()=>{const me=await auth();if(!me)return;const users=await getProfiles();state.users=users;state.profiles.clear();users.forEach(p=>state.profiles.set(p.id,p));await refreshConversationMeta();renderDirectory(document.getElementById('chat-search')?.value||'');await refreshUnread();state.loaded=true;})().catch(e=>{console.error(e);const b=document.getElementById('chat-list');if(b)b.innerHTML=`<div class="chat-error">${esc(e.message||'Could not load chats')}</div>`;}).finally(()=>{state.loadPromise=null;});return state.loadPromise;}
+  async function refreshConversationMeta(){const me=uid();if(!me)return;const {data:members,error}=await sup().from('conversation_members').select('conversation_id,joined_at').eq('user_id',me);if(error)throw error;state.conversations.clear();const ids=(members||[]).map(x=>x.conversation_id);if(!ids.length)return;const {data:others}=await sup().from('conversation_members').select('conversation_id,user_id').in('conversation_id',ids).neq('user_id',me);const other={};(others||[]).forEach(x=>other[x.conversation_id]=x.user_id);const {data:msgs}=await sup().from('messages').select('id,conversation_id,sender_id,content,message_type,created_at,read_at,deleted_at').in('conversation_id',ids).order('created_at',{ascending:false}).limit(Math.min(1000,Math.max(100,ids.length*30)));const latest={},unread={};(msgs||[]).forEach(m=>{if(!latest[m.conversation_id])latest[m.conversation_id]=m;if(m.sender_id!==me&&!m.read_at)unread[m.conversation_id]=(unread[m.conversation_id]||0)+1;});(members||[]).forEach(m=>state.conversations.set(m.conversation_id,{conversation_id:m.conversation_id,user_id:other[m.conversation_id],last:latest[m.conversation_id]||null,unread:unread[m.conversation_id]||0}));}
+  async function refreshUnread(){const me=uid();if(!me){setBadge(0);return;}const {count,error}=await sup().from('notifications').select('id',{count:'exact',head:true}).eq('recipient_id',me).eq('is_read',false);if(!error){setBadge(count||0);return;}let n=0;state.conversations.forEach(x=>n+=x.unread||0);setBadge(n);}
+  function preview(m){if(!m)return'Start a conversation';if(m.deleted_at)return'Message deleted';if(m.message_type==='sticker')return'🪄 Sticker';if(m.message_type==='audio')return'🎤 Voice note';if(m.message_type==='video')return'🎥 Video';if(m.message_type==='image')return'📷 Photo';if(m.message_type==='file')return'📎 File';return String(m.content||'Message').slice(0,70);}
+  function renderDirectory(q=''){const box=document.getElementById('chat-list');if(!box)return;const s=String(q||'').trim().toLowerCase().replace(/^@/,'');const all=state.users.filter(p=>!s||p.username.toLowerCase().includes(s)||p.display_name.toLowerCase().includes(s));const metaFor=p=>[...state.conversations.values()].find(x=>x.user_id===p.id);const online=all.filter(p=>userOnline(p.id));const recent=all.filter(p=>metaFor(p)).sort((a,b)=>new Date(metaFor(b)?.last?.created_at||0)-new Date(metaFor(a)?.last?.created_at||0));const recentIds=new Set(recent.map(p=>p.id));const row=p=>{const m=metaFor(p),u=m?.unread||0;return`<button type="button" class="chat-row" data-user-id="${esc(p.id)}"><div class="avatar-wrap">${avatar(p)}<span class="presence-dot ${userOnline(p.id)?'online':''}"></span></div><div class="chat-row-info"><div class="chat-row-top"><span class="chat-row-name">${esc(p.display_name)}</span><span class="chat-row-time">${m?.last?.created_at?new Date(m.last.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):''}</span></div><div class="chat-row-preview">@${esc(p.username)} · ${esc(preview(m?.last))}</div></div>${u?`<span class="chat-unread-count">${u>99?'99+':u}</span>`:''}</button>`};let html='';if(!s&&online.length)html+=`<div class="chat-section-label">Available now <span>${online.length}</span></div>${online.slice(0,16).map(row).join('')}`;if(!s&&recent.length)html+=`<div class="chat-section-label">Recent chats</div>${recent.map(row).join('')}`;html+=`<div class="chat-section-label">${s?'Search results':'People on Soulbook'} <span>${all.length}</span></div>${all.filter(p=>s||!recentIds.has(p.id)).map(row).join('')}`;box.innerHTML=html||'<div class="chat-no-users">No users found.</div>';const label=document.getElementById('chat-status-label');if(label)label.textContent=`${state.users.length} users · live`;lucide?.createIcons?.();}
+  let directoryDebounce=0;function scheduleDirectory(){clearTimeout(directoryDebounce);directoryDebounce=setTimeout(()=>{if(state.loaded)renderDirectory(document.getElementById('chat-search')?.value||'');},150);}
+  async function startPresence(){if(!uid())return;if(state.presence)return;state.presence=sup().channel('soulbook-presence-v5',{config:{presence:{key:uid()}}});state.presence.on('presence',{event:'sync'},scheduleDirectory);state.presence.subscribe(async st=>{if(st==='SUBSCRIBED'){try{await state.presence.track({user_id:uid(),online_at:new Date().toISOString()});}catch(_){}}});}
+  function removeLegacyChannels(){try{const client=sup();const chans=client.getChannels?.()||[];chans.forEach(c=>{const n=c.topic||'';if(n.includes('conversation:')||n.includes('soulbook-message-')||n.includes('soulbook-reaction-')||n.includes('soulbook-chat-directory')||n.includes('soulbook-notifications'))client.removeChannel(c);});}catch(_){} }
+  function subscribeDirectory(){if(state.directoryChannel||!uid())return;state.directoryChannel=sup().channel('soulbook-directory-v5').on('postgres_changes',{event:'INSERT',schema:'public',table:'profiles'},p=>{if(p.new?.id!==uid()){state.profiles.set(p.new.id,p.new);state.users=[...state.profiles.values()];scheduleDirectory();}}).on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles'},p=>{if(p.new?.id===uid())return;state.profiles.set(p.new.id,p.new);state.users=[...state.profiles.values()];if(window.activeChatUser?.id===p.new.id){setActiveUser(p.new);updateHeader(p.new);}scheduleDirectory();}).on('postgres_changes',{event:'DELETE',schema:'public',table:'profiles'},p=>{state.profiles.delete(p.old?.id);state.users=[...state.profiles.values()];scheduleDirectory();}).subscribe();}
+  function subscribeNotifications(){if(state.notificationChannel||!uid())return;const ch=sup().channel(`soulbook-live-${uid()}`).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages'},async p=>{const m=p.new;if(!m||m.sender_id===uid())return;patchConversationPreview(m);if(m.conversation_id===activeCid()&&isChatRoute()){await receiveMessage(m);return;}let n=0;document.querySelectorAll('.chat-notification-badge').forEach(b=>n=Number(b.textContent)||0);setBadge(n+1);const actor=state.profiles.get(m.sender_id)?.display_name||'New message';toast(actor,'New message received');browserNotify(actor,'You received a new message');}).on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications',filter:`recipient_id=eq.${uid()}`},p=>{setBadge((Number(document.querySelector('.chat-notification-badge')?.textContent)||0)+1);if(p.new?.type)toast('New notification',String(p.new.type).replace(/_/g,' '));}).subscribe();state.notificationChannel=ch;}
+  function patchConversationPreview(m){if(!m?.conversation_id)return;let x=state.conversations.get(m.conversation_id);if(x){x.last=m;if(m.sender_id!==uid()&&!m.read_at)x.unread=(x.unread||0)+1;}scheduleDirectory();}
+  async function markConversationRead(cid){if(!cid||!uid())return;const now=new Date().toISOString();await sup().from('messages').update({delivered_at:now,read_at:now}).eq('conversation_id',cid).neq('sender_id',uid()).is('read_at',null);await sup().from('notifications').update({is_read:true}).eq('recipient_id',uid()).eq('reference_id',cid).eq('is_read',false);const x=state.conversations.get(cid);if(x)x.unread=0;await refreshUnread();scheduleDirectory();}
+  async function open(){const route=document.getElementById('chat-route');if(!route)return false;document.querySelectorAll('.app-view').forEach(v=>v.classList.remove('active'));route.classList.add('active');document.querySelectorAll('.desktop-link,.dock-item').forEach(x=>x.classList.remove('active'));document.getElementById('nav-chat')?.classList.add('active');document.getElementById('dock-chat')?.classList.add('active');ensureBadge();const me=await auth();if(!me){document.getElementById('chat-list').innerHTML='<div class="chat-no-users"><strong>Sign in to use Chat</strong><br><button class="btn-modern btn-primary" onclick="openAuthLogin()">Sign in</button></div>';return false;}removeLegacyChannels();await startPresence();subscribeDirectory();subscribeNotifications();if(!state.loaded)await loadUsersOnce();else renderDirectory(document.getElementById('chat-search')?.value||'');return false;}
+  async function startChat(otherId){const me=await auth();if(!me)return openAuthLogin();if(otherId===uid())return;const p=state.profiles.get(otherId)||state.users.find(x=>x.id===otherId);if(p?.privacy?.messages==='nobody')return toast('Chat unavailable','This user is not accepting messages');const {data,error}=await sup().rpc('create_direct_conversation',{other_user_id:otherId});if(error)return toast('Chat error',error.message);const cid=typeof data==='string'?data:data?.id||data;const profile=p||state.profiles.get(otherId);const existing=state.conversations.get(cid);if(!existing)state.conversations.set(cid,{conversation_id:cid,user_id:otherId,last:null,unread:0});await openConversation(cid,profile);closeAllModalOverlays();scheduleDirectory();}
+  function updateHeader(p){const a=document.getElementById('active-chat-avatar');if(a)a.innerHTML=avatar(p);const n=document.getElementById('active-chat-name');if(n)n.textContent=p?.display_name||'User';const s=document.getElementById('active-chat-presence');if(s)s.textContent=userOnline(p?.id)?'online':(p?.privacy?.last_seen==='nobody'?'Offline':p?.last_seen?`last seen ${new Date(p.last_seen).toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}`:'Offline');}
+  async function signedUrl(path){if(!path||/^https?:/i.test(path))return path;const r=await sup().storage.from('chat-media').createSignedUrl(path,3600);return r.data?.signedUrl||null;}
+  async function getMessages(cid){const {data,error}=await sup().from('messages').select('id,conversation_id,sender_id,content,message_type,attachment_url,created_at,updated_at,delivered_at,read_at,deleted_at').eq('conversation_id',cid).order('created_at',{ascending:true}).limit(300);if(error)throw error;return data||[];}
+  async function getReactions(ids){if(!ids.length)return[];const {data,error}=await sup().from('message_reactions').select('id,message_id,user_id,reaction,created_at').in('message_id',ids);if(error)throw error;return data||[];}
+  function parsePayload(m){const c=String(m?.content||'');if(c.startsWith('__SB_STICKER__:'))return{kind:'sticker',value:c.slice(15)};if(c.startsWith('__SB_MEDIA__:'))return{kind:c.slice(13).split('|')[0]||'file'};return null;}
+  async function messageHtml(m,reactions=[]){const mine=m.sender_id===uid(),metaPayload=parsePayload(m);let body='';if(m.deleted_at)body='<span class="deleted-message">🚫 Message deleted</span>';else if(metaPayload?.kind==='sticker')body=`<div class="message-sticker">${esc(metaPayload.value||'✨')}</div>`;else if(m.attachment_url){const u=await signedUrl(m.attachment_url),kind=metaPayload?.kind||m.message_type;if(kind==='video')body=`<video class="message-media" controls playsinline preload="metadata" src="${esc(u||'')}"></video>`;else if(kind==='audio')body=`<audio class="message-audio" controls preload="metadata" src="${esc(u||'')}"></audio>`;else if(kind==='image')body=`<img class="message-media" loading="lazy" src="${esc(u||'')}" alt="Photo">`;else body=`<a class="chat-file-link" href="${esc(u||'')}" target="_blank" rel="noopener">📎 Open file</a>`;}if(m.content&&!metaPayload&&!m.deleted_at)body+=`<div class="message-text">${esc(m.content)}</div>`;const rr=reactions.filter(r=>r.message_id===m.id),groups={};rr.forEach(r=>(groups[r.reaction]??=[]).push(r.user_id));const reactionHtml=Object.entries(groups).map(([e,users])=>`<button type="button" class="reaction-pill ${users.includes(uid())?'mine':''}" onclick="window.SoulChat.react('${m.id}','${e}')">${e}${users.length>1?' '+users.length:''}</button>`).join('');const meta=m.sender_id===uid()?(m.read_at?'✓✓':m.delivered_at?'✓✓':'✓'):'';return`<div class="message-bubble ${mine?'mine':'theirs'}" data-message-id="${esc(m.id)}"><div class="message-actions"><button type="button" onclick="window.SoulChat.reactionMenu('${m.id}')" title="React">☺</button>${mine&&!m.deleted_at?`<button type="button" onclick="window.SoulChat.deleteMessage('${m.id}')" title="Delete">🗑</button>`:''}</div>${body}<div class="message-meta"><span>${new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span><span>${meta}</span></div>${reactionHtml?`<div class="message-reactions">${reactionHtml}</div>`:''}<div class="reaction-popover" id="reaction-${esc(m.id)}" style="display:none">${REACTIONS.map(e=>`<button type="button" onclick="window.SoulChat.react('${m.id}','${e}')">${e}</button>`).join('')}</div></div>`;}
+  async function replaceMessageNode(m,reactions=[]){const box=document.getElementById('message-list');if(!box)return;const old=box.querySelector(`[data-message-id="${CSS.escape(m.id)}"]`),html=await messageHtml(m,reactions);if(old)old.outerHTML=html;else box.insertAdjacentHTML('beforeend',html);lucide?.createIcons?.();}
+  async function renderHistory(cid){const box=document.getElementById('message-list');if(!box)return;try{const data=await getMessages(cid),reactions=await getReactions(data.map(x=>x.id)),html=[];for(const m of data)html.push(await messageHtml(m,reactions));box.innerHTML=html.join('')||'<div class="chat-empty-history">No messages yet. Say hello 👋</div>';scrollBottom(true);}catch(e){box.innerHTML=`<div class="chat-error">${esc(e.message||'Could not load messages')}</div>`;}}
+  async function refreshBubble(id){const m=await sup().from('messages').select('id,conversation_id,sender_id,content,message_type,attachment_url,created_at,updated_at,delivered_at,read_at,deleted_at').eq('id',id).maybeSingle();if(!m.data)return;const rr=await sup().from('message_reactions').select('id,message_id,user_id,reaction').eq('message_id',id);await replaceMessageNode(m.data,rr.data||[]);}
+  function subscribeConversation(cid){if(state.messageChannel){sup().removeChannel(state.messageChannel);state.messageChannel=null;}const ch=sup().channel(`room:${cid}:messages-v52`);ch.on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:`conversation_id=eq.${cid}`},async p=>receiveMessage(p.new)).on('postgres_changes',{event:'UPDATE',schema:'public',table:'messages',filter:`conversation_id=eq.${cid}`},async p=>replaceMessageNode(p.new,await getReactions([p.new.id]))).on('postgres_changes',{event:'DELETE',schema:'public',table:'messages',filter:`conversation_id=eq.${cid}`},p=>document.querySelector(`[data-message-id="${CSS.escape(p.old.id)}"]`)?.remove()).on('postgres_changes',{event:'INSERT',schema:'public',table:'message_reactions'},async p=>{if(p.new?.message_id)await refreshBubble(p.new.message_id);}).on('postgres_changes',{event:'DELETE',schema:'public',table:'message_reactions'},async p=>{if(p.old?.message_id)await refreshBubble(p.old.message_id);}).on('broadcast',{event:'typing'},({payload})=>{if(payload?.user_id===uid())return;const e=document.getElementById('typing-indicator');if(!e)return;e.textContent=payload?.stop?'':`${esc(window.activeChatUser?.display_name||'User')} is typing…`;clearTimeout(state.typingUiTimer);if(!payload?.stop)state.typingUiTimer=setTimeout(()=>e.textContent='',1400);}).subscribe();state.messageChannel=ch;}
+  async function receiveMessage(m){if(activeCid()!==m.conversation_id)return;const box=document.getElementById('message-list');if(!box||box.querySelector(`[data-message-id="${CSS.escape(m.id)}"]`))return;const near=isNearBottom();box.querySelector('.chat-empty-history')?.remove();box.insertAdjacentHTML('beforeend',await messageHtml(m,[]));lucide?.createIcons?.();if(near)scrollBottom(true);if(m.sender_id!==uid())await markConversationRead(m.conversation_id);patchConversationPreview(m);}
+  async function openConversation(cid,profile){const me=await auth();if(!me)return;if(!profile){const meta=state.conversations.get(cid);profile=state.profiles.get(meta?.user_id);if(!profile){const {data}=await sup().from('conversation_members').select('user_id,profiles(id,username,display_name,avatar_url,bio,last_seen,privacy)').eq('conversation_id',cid).neq('user_id',uid()).maybeSingle();profile=data?.profiles;}}if(!profile)return;setActiveCid(cid);setActiveUser(profile);document.querySelector('#chat-route .chat-shell')?.classList.add('chat-open');document.getElementById('chat-empty').style.display='none';document.getElementById('chat-active').style.display='flex';updateHeader(profile);const box=document.getElementById('message-list');if(box&&box.dataset.cid!==cid){box.dataset.cid=cid;box.innerHTML='<div class="chat-loading-once">Loading…</div>';await renderHistory(cid);}subscribeConversation(cid);await markConversationRead(cid);scheduleDirectory();lucide?.createIcons?.();}
+  function optimisticBubble(payload,status='sending'){const box=document.getElementById('message-list');if(!box)return;box.querySelector('.chat-empty-history')?.remove();const m={...payload,id:payload.id||crypto.randomUUID(),created_at:payload.created_at||new Date().toISOString()},parsed=parsePayload(m),body=parsed?.kind==='sticker'?`<div class="message-sticker">${esc(parsed.value)}</div>`:`<div class="message-text">${esc(m.content||'')}</div>`;box.insertAdjacentHTML('beforeend',`<div class="message-bubble mine optimistic" data-message-id="${esc(m.id)}">${body}<div class="message-meta"><span>${new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span><span class="send-state">${status==='failed'?'!':'◷'}</span></div></div>`);scrollBottom(true);return box.querySelector(`[data-message-id="${CSS.escape(m.id)}"]`);}
+  function loadOutbox(){try{state.outbox=JSON.parse(localStorage.getItem(OUTBOX_KEY())||'[]');}catch(_){state.outbox=[];}}
+  function saveOutbox(){try{localStorage.setItem(OUTBOX_KEY(),JSON.stringify(state.outbox));}catch(_){} }
+  async function persistMessage(item){const payload={id:item.id,conversation_id:item.conversation_id,sender_id:uid(),content:item.content||null,message_type:item.message_type||'text',attachment_url:item.attachment_url||null};const r=await sup().from('messages').upsert(payload,{onConflict:'id'}).select('id,conversation_id,sender_id,content,message_type,attachment_url,created_at,updated_at,delivered_at,read_at,deleted_at').single();if(r.error)throw r.error;return r.data;}
+  async function flushOutbox(){if(!uid()||!navigator.onLine||!state.outbox.length)return;for(const item of [...state.outbox]){try{const row=await persistMessage(item);state.outbox=state.outbox.filter(x=>x.id!==item.id);saveOutbox();const node=document.querySelector(`[data-message-id="${CSS.escape(item.id)}"]`);if(node)node.outerHTML=await messageHtml(row,[]);patchConversationPreview(row);}catch(e){console.warn('outbox retry',e);}}scheduleDirectory();}
+  function sendItem(item){optimisticBubble(item,'sending');patchConversationPreview(item);state.outbox.push(item);saveOutbox();void flushOutbox();}
+  async function sendText(e){e?.preventDefault();const i=document.getElementById('message-input'),text=i?.value.trim();if(!text||!activeCid()||!uid())return;const item={id:crypto.randomUUID(),conversation_id:activeCid(),content:text,message_type:'text',created_at:new Date().toISOString()};i.value='';if(typeof autoResizeMessageInput==='function')autoResizeMessageInput(i);stopTyping();sendItem(item);}
+  async function sendSticker(sticker){if(!activeCid()||!uid())return;const item={id:crypto.randomUUID(),conversation_id:activeCid(),content:`__SB_STICKER__:${sticker}`,message_type:'text',created_at:new Date().toISOString()};document.getElementById('sticker-picker')?.style.setProperty('display','none');sendItem(item);}
+  function emoji(){const p=document.getElementById('emoji-picker'),s=document.getElementById('sticker-picker');if(!p)return;s&&(s.style.display='none');p.innerHTML=['😀','😂','😍','🥰','😎','😭','😡','👍','👎','❤️','🔥','✨','🎉','🙏','👏','💯','😊','😉','🤝','🙌','💔','😴','🤔','😅','🤣','🥹','🤩','😇','🥳','🤗','😮','😢','😱','🤯','💪','👀','💖','💙','💚','💛','🖤','🤍','🌸','🌹','⭐','☀️','🌙','☕','⚽','🎮','🎵','📚'].map(x=>`<button type="button" onclick="window.SoulChat.addEmoji('${x}')">${x}</button>`).join('');p.style.display=p.style.display==='none'?'grid':'none';}
+  function addEmoji(x){const i=document.getElementById('message-input');if(!i)return;i.value+=(i.value?' ':'')+x;i.focus();if(typeof autoResizeMessageInput==='function')autoResizeMessageInput(i);}
+  function stickers(){const p=document.getElementById('sticker-picker'),e=document.getElementById('emoji-picker');if(!p)return;e&&(e.style.display='none');p.innerHTML=STICKERS.map(([x,n])=>`<button type="button" class="sticker-choice" onclick="window.SoulChat.sendSticker('${x}')"><span>${x}</span><small>${n}</small></button>`).join('');p.style.display=p.style.display==='none'?'grid':'none';}
+  async function attachment(input){const file=input?.files?.[0];if(!file||!activeCid()||!uid())return;const kind=file.type.startsWith('image/')?'image':file.type.startsWith('video/')?'video':file.type.startsWith('audio/')?'audio':'file';if(file.size>25*1024*1024){toast('File too large','Maximum 25MB');input.value='';return;}const id=crypto.randomUUID(),path=`${uid()}/${activeCid()}/${id}-${file.name.replace(/[^a-zA-Z0-9._-]/g,'')}`;const node=optimisticBubble({id,conversation_id:activeCid(),content:`__SB_MEDIA__:${kind}`,message_type:kind==='image'?'image':'file',created_at:new Date().toISOString()},'sending');try{const up=await sup().storage.from('chat-media').upload(path,file,{contentType:file.type,upsert:false});if(up.error)throw up.error;state.outbox.push({id,conversation_id:activeCid(),content:`__SB_MEDIA__:${kind}`,message_type:kind==='image'?'image':'file',attachment_url:path,created_at:new Date().toISOString()});saveOutbox();await flushOutbox();}catch(e){node?.classList.add('send-failed');const st=node?.querySelector('.send-state');if(st)st.textContent='!';toast('Upload failed',e.message||'Could not upload');}finally{input.value='';}}
+  async function voiceToggle(){if(!activeCid()||!uid())return;if(state.voice){state.voice.stop();document.getElementById('voice-note-btn')?.classList.remove('voice-recording');return;}try{state.voiceStream=await navigator.mediaDevices.getUserMedia({audio:true});state.voice=new MediaRecorder(state.voiceStream);state.voiceChunks=[];state.voice.ondataavailable=e=>e.data.size&&state.voiceChunks.push(e.data);state.voice.onstop=async()=>{const blob=new Blob(state.voiceChunks,{type:'audio/webm'});state.voiceStream?.getTracks().forEach(t=>t.stop());state.voice=null;const id=crypto.randomUUID(),path=`${uid()}/${activeCid()}/${id}.webm`;try{const up=await sup().storage.from('chat-media').upload(path,blob,{contentType:'audio/webm',upsert:false});if(up.error)throw up.error;sendItem({id,conversation_id:activeCid(),content:'__SB_MEDIA__:audio',message_type:'file',attachment_url:path,created_at:new Date().toISOString()});}catch(e){toast('Voice note failed',e.message||'Could not send');}};state.voice.start();document.getElementById('voice-note-btn')?.classList.add('voice-recording');toast('Recording','Tap mic again to send');}catch(_){toast('Microphone unavailable','Please allow microphone access.');}}
+  function typing(){if(typeof autoResizeMessageInput==='function')autoResizeMessageInput(document.getElementById('message-input'));if(!state.messageChannel)return;state.messageChannel.send({type:'broadcast',event:'typing',payload:{user_id:uid()}});clearTimeout(state.typingTimer);state.typingTimer=setTimeout(stopTyping,800);}
+  function stopTyping(){clearTimeout(state.typingTimer);if(state.messageChannel)state.messageChannel.send({type:'broadcast',event:'typing',payload:{user_id:uid(),stop:true}});}
+  function keydown(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendText(e);}}
+  function reactionMenu(id){const p=document.getElementById(`reaction-${id}`);if(p)p.style.display=p.style.display==='none'?'flex':'none';}
+  async function react(id,e){document.getElementById(`reaction-${id}`)?.style.setProperty('display','none');const q=await sup().from('message_reactions').select('id').eq('message_id',id).eq('user_id',uid()).eq('reaction',e).maybeSingle();if(q.data?.id)await sup().from('message_reactions').delete().eq('id',q.data.id);else{const r=await sup().from('message_reactions').insert({message_id:id,user_id:uid(),reaction:e});if(r.error)return toast('Reaction failed',r.error.message);}const bubble=document.querySelector(`[data-message-id="${CSS.escape(id)}"]`);if(bubble){const rr=await sup().from('message_reactions').select('id,message_id,user_id,reaction').eq('message_id',id);const m=await sup().from('messages').select('id,conversation_id,sender_id,content,message_type,attachment_url,created_at,updated_at,delivered_at,read_at,deleted_at').eq('id',id).single();if(m.data)bubble.outerHTML=await messageHtml(m.data,rr.data||[]);lucide?.createIcons?.();}}
+  async function deleteMessage(id){if(!confirm('Delete this message for everyone?'))return;const {error}=await sup().rpc('delete_message_for_everyone',{message_id:id});if(error)return toast('Delete failed',error.message);const n=document.querySelector(`[data-message-id="${CSS.escape(id)}"]`);if(n)n.outerHTML=`<div class="message-bubble mine" data-message-id="${esc(id)}"><div class="deleted-message">🚫 Message deleted</div><div class="message-meta"><span>${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span><span>✓✓</span></div></div>`;}
+  function filter(v){renderDirectory(v);}
+  async function openUserSearch(){closeAllModalOverlays();const m=document.getElementById('user-search-modal');if(m)m.classList.add('active');const i=document.getElementById('user-search-input');if(i){i.value='';searchUsers('');setTimeout(()=>i.focus(),50);}}
+  function searchUsers(v){const box=document.getElementById('user-search-results');if(!box)return;const q=String(v||'').trim().toLowerCase().replace(/^@/,'');const users=q?state.users.filter(u=>u.username.toLowerCase().includes(q)||u.display_name.toLowerCase().includes(q)):state.users.slice(0,30);box.innerHTML=users.map(u=>`<div class="user-result"><div class="avatar-wrap">${avatar(u)}<span class="presence-dot ${userOnline(u.id)?'online':''}"></span></div><div class="user-result-info"><strong>${esc(u.display_name)}</strong><span>@${esc(u.username)} · ${userOnline(u.id)?'online':'offline'}</span></div><button class="btn-modern btn-primary" style="padding:8px 12px" onclick="window.SoulChat.start('${u.id}')">Chat</button></div>`).join('')||'<div style="padding:12px;color:var(--text-muted)">No user found.</div>';lucide?.createIcons?.();}
+  function close(){if(state.messageChannel){sup().removeChannel(state.messageChannel);state.messageChannel=null;}setActiveCid(null);setActiveUser(null);document.querySelector('#chat-route .chat-shell')?.classList.remove('chat-open');document.getElementById('chat-active').style.display='none';document.getElementById('chat-empty').style.display='flex';}
+  async function account(){if(uid()){if(confirm('Sign out of Soulbook?'))await logoutSessionSequence();}else openAuthLogin();}
+  async function openMyProfile(){closeAllModalOverlays();const modal=document.getElementById('profile-modal'),c=document.getElementById('profile-modal-content');if(!modal||!c)return;modal.classList.add('active');const me=await auth();if(!me){c.innerHTML='<div style="padding:25px;text-align:center"><strong>Sign in required</strong><br><button class="btn-modern btn-primary" onclick="closeAllModalOverlays();openAuthLogin()">Sign in</button></div>';return;}c.innerHTML='<div class="profile-loading">Loading your profile…</div>';const {data:p,error}=await sup().from('profiles').select('id,username,display_name,avatar_url,bio,last_seen,privacy,created_at').eq('id',uid()).single();if(error)return c.innerHTML=`<div class="chat-error">${esc(error.message)}</div>`;const {data:posts}=await sup().from('stories').select('id,body,category,created_at,media_url,media_type,user_id,author').order('created_at',{ascending:false}).limit(500);const mine=(posts||[]).filter(x=>x.user_id===uid()||(!x.user_id&&(x.author===p.display_name||x.author===p.username))).slice(0,100);renderProfile(p,mine);}
+  function renderProfile(p,posts){const pr=p.privacy||{};const list=posts.length?posts.map(x=>`<article class="profile-post-item"><div><strong>${esc(x.category||'Post')}</strong><small>${x.created_at?new Date(x.created_at).toLocaleString([], {dateStyle:'medium',timeStyle:'short'}):''}</small></div><p>${esc((x.body||'').slice(0,220))}${(x.body||'').length>220?'…':''}</p></article>`).join(''):'<div class="profile-empty-posts">No posts yet.</div>';const c=document.getElementById('profile-modal-content');c.innerHTML=`<div class="profile-manager"><div class="profile-manager-head">${avatar(p,'avatar-circle')}<div><h3>${esc(p.display_name)}</h3><span>@${esc(p.username)}</span></div></div><div class="profile-stats"><div><strong>${posts.length}</strong><span>Posts</span></div><div><strong>${posts.length?new Date(posts[0].created_at).toLocaleDateString([], {dateStyle:'medium'}):'—'}</strong><span>Latest post</span></div><div><strong>${p.bio?'Yes':'No'}</strong><span>Bio</span></div></div><div class="profile-manager-tabs"><button class="active" onclick="window.SoulProfileTab('profile')">Profile</button><button onclick="window.SoulProfileTab('posts')">My posts (${posts.length})</button></div><section id="profile-tab-profile"><div class="profile-form-grid"><label>Display name<input id="profile-display-name" class="input-field" value="${esc(p.display_name)}"></label><label>Bio<textarea id="profile-bio" class="input-field" rows="3">${esc(p.bio||'')}</textarea></label><label>Profile picture<input id="profile-avatar-file" type="file" class="input-field" accept="image/*"></label><label>Avatar URL<input id="profile-avatar-url" class="input-field" value="${esc(p.avatar_url||'')}" placeholder="https://..."></label><button class="btn-modern btn-primary" onclick="window.SoulChat.saveProfile()">Save profile</button></div><div class="profile-privacy-grid"><h4>Privacy</h4><label>Last seen<select id="privacy-lastseen"><option value="everyone">Everyone</option><option value="nobody">Nobody</option></select></label><label>Online status<select id="privacy-online"><option value="everyone">Everyone</option><option value="nobody">Nobody</option></select></label><label>Who can message me<select id="privacy-messages"><option value="everyone">Everyone</option><option value="nobody">Nobody</option></select></label></div></section><section id="profile-tab-posts" style="display:none"><div class="profile-posts-list">${list}</div></section></div>`;document.getElementById('privacy-lastseen').value=pr.last_seen||'everyone';document.getElementById('privacy-online').value=pr.online_status||'everyone';document.getElementById('privacy-messages').value=pr.messages||'everyone';lucide?.createIcons?.();window.SoulProfileTab=t=>{document.querySelectorAll('.profile-manager-tabs button').forEach(b=>b.classList.toggle('active',b.textContent.toLowerCase().startsWith(t==='posts'?'my posts':'profile')));document.getElementById('profile-tab-profile').style.display=t==='profile'?'block':'none';document.getElementById('profile-tab-posts').style.display=t==='posts'?'block':'none';};}
+  async function saveProfile(){const p=window.currentProfile||window.__currentProfile;if(!p)return;const privacy={...(p.privacy||{}),last_seen:document.getElementById('privacy-lastseen').value,online_status:document.getElementById('privacy-online').value,messages:document.getElementById('privacy-messages').value};let avatar=document.getElementById('profile-avatar-url').value.trim()||null;const f=document.getElementById('profile-avatar-file')?.files?.[0];if(f){const path=`${uid()}/${crypto.randomUUID()}-${f.name.replace(/[^a-zA-Z0-9._-]/g,'')}`;const up=await sup().storage.from('avatars').upload(path,f,{contentType:f.type,upsert:false});if(up.error)return toast('Avatar upload failed',up.error.message);avatar=sup().storage.from('avatars').getPublicUrl(path).data.publicUrl;}const {data,error}=await sup().from('profiles').update({display_name:document.getElementById('profile-display-name').value.trim()||p.display_name,bio:document.getElementById('profile-bio').value.trim(),avatar_url:avatar,privacy}).eq('id',uid()).select().single();if(error)return toast('Profile update failed',error.message);window.currentProfile=data;state.profiles.set(uid(),data);toast('Profile updated','Saved successfully');}
+  function install(){ensureBadge();const list=document.getElementById('chat-list');if(list&&!list.dataset.v5){list.dataset.v5='1';list.addEventListener('click',e=>{const row=e.target.closest('.chat-row');if(row){e.preventDefault();startChat(row.dataset.userId);}});}let composer=document.querySelector('.message-composer');if(composer&&!document.getElementById('sticker-btn')){const b=document.createElement('button');b.id='sticker-btn';b.type='button';b.className='icon-btn';b.title='Stickers';b.textContent='🪄';composer.querySelector('button[title="Emoji"]')?.after(b);b.addEventListener('click',stickers);}if(composer&&!document.getElementById('sticker-picker')){const p=document.createElement('div');p.id='sticker-picker';p.className='sticker-picker';p.style.display='none';composer.appendChild(p);}removeLegacyChannels();loadOutbox();if(uid())setTimeout(()=>{startPresence();subscribeDirectory();subscribeNotifications();loadUsersOnce();flushOutbox();},80);window.addEventListener('online',flushOutbox);window.addEventListener('focus',()=>{if(uid()){refreshUnread();flushOutbox();}});document.addEventListener('visibilitychange',()=>{if(!document.hidden&&uid())refreshUnread();});}
+  window.SoulChat={open,load:loadUsersOnce,start:startChat,openConversation,emoji,addEmoji,stickers,sendSticker,attachment,voiceToggle,sendText,typing,stopTyping,deleteMessage,react,reactionMenu,close,account,saveProfile};
+  window.openChatRoute=open;window.openUserSearch=openUserSearch;window.searchUsers=searchUsers;window.filterChatList=filter;window.sendChatMessage=sendText;window.handleTyping=typing;window.stopTyping=stopTyping;window.handleMessageKeydown=keydown;window.handleChatAttachment=attachment;window.startVoiceNote=voiceToggle;window.toggleEmojiPicker=emoji;window.addChatEmoji=addEmoji;window.closeActiveChat=close;window.openMyProfile=openMyProfile;window.saveMyProfile=saveProfile;window.openActiveUserProfile=async()=>{if(window.activeChatUser){const m=document.getElementById('profile-modal'),c=document.getElementById('profile-modal-content');if(m&&c){closeAllModalOverlays();m.classList.add('active');c.innerHTML=`<div class="profile-manager-head">${avatar(window.activeChatUser,'avatar-circle')}<div><h3>${esc(window.activeChatUser.display_name)}</h3><span>@${esc(window.activeChatUser.username)}</span></div></div><p class="profile-view-bio">${esc(window.activeChatUser.bio||'No bio yet.')}</p><button class="btn-modern btn-primary" onclick="closeAllModalOverlays();window.SoulChat.start('${window.activeChatUser.id}')">Message</button>`;}}};
+  try{window.initializeChatSystem=async()=>{await open();};initializeChatSystem=window.initializeChatSystem;}catch(_){}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
+})();
+</script>
+
+<style id="soulbook-v52-mobile-css">
+#chat-route{min-height:calc(100dvh - 72px);padding-bottom:env(safe-area-inset-bottom)}#chat-route .chat-shell{height:calc(100dvh - 105px);max-height:none}#chat-route .chat-window{min-height:0}#chat-route .message-list{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}#chat-route .message-composer{padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right));padding-bottom:max(8px,env(safe-area-inset-bottom))}#chat-route .message-composer textarea{min-width:0}.chat-loading-once{margin:auto;color:var(--text-muted);font-size:12px}.message-sticker{font-size:46px;line-height:1;padding:4px 2px}.chat-file-link{display:inline-block;padding:8px 10px;border-radius:10px;background:rgba(15,23,42,.06);color:inherit;text-decoration:none;font-size:12px}footer{padding:clamp(28px,6vw,52px) 4% calc(96px + env(safe-area-inset-bottom));min-height:120px}@media(max-width:850px){body{overflow-x:hidden}#chat-route{min-height:calc(100dvh - 64px)}#chat-route .chat-shell{height:calc(100dvh - 64px);margin:0;border-radius:0;box-shadow:none}#chat-route .chat-list-panel,#chat-route .chat-window{height:100%;min-height:0}#chat-route .chat-header{flex:0 0 62px}#chat-route .message-list{min-height:0;flex:1;padding:14px 10px 8px}#chat-route .message-composer{flex:0 0 auto;gap:3px}#chat-route .message-composer textarea{font-size:14px;max-height:92px;padding:10px 12px}#chat-route .icon-btn{width:36px;height:36px;flex-basis:36px}#chat-route .send-btn{width:40px;height:40px;flex-basis:40px}#chat-route .message-bubble{max-width:88%;padding:7px 9px}.mobile-dock-nav{left:8px!important;right:8px!important;bottom:max(8px,env(safe-area-inset-bottom))!important;height:58px!important;border-radius:18px!important;padding:0 6px!important}.mobile-dock-nav .dock-item{min-width:52px;font-size:9px}footer{padding-bottom:calc(82px + env(safe-area-inset-bottom));font-size:12px}}
+</style><style id="soulbook-v52-gif-removal">[title*="GIF"],#gif-btn,.gif-btn,.gif-picker{display:none!important}</style>
+<script id="soulbook-v52-story-live">(()=>{const sb=()=>window._supabase||window.supabaseClient||window.supabase;function start(){try{const c=sb();if(!c||window.__storyLiveChannel)return;window.__storyLiveChannel=c.channel('soulbook-stories-live-v52').on('broadcast',{event:'story'},({payload})=>{const story=payload?.story;if(!story)return;window.memoryDatabase=window.memoryDatabase||[];if(!window.memoryDatabase.some(x=>x.id===story.id)){window.memoryDatabase.unshift(story);if(typeof renderReactiveSystemFeeds==='function')renderReactiveSystemFeeds();}}).subscribe();}catch(e){console.warn('story live channel',e)}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();})();</script>
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});if(window.caches)caches.keys().then(keys=>keys.forEach(k=>caches.delete(k))).catch(()=>{});});}
 </script>
 
-<script>
-/* Soulbook WhatsApp-style realtime chat layer */
-(function(){
-  const EMOJIS=['😀','😂','😍','🥰','😎','😭','😡','👍','👎','❤️','🔥','✨','🎉','🙏','👏','💯','😊','😉','😘','🤝','🙌','💔','😴','🤔','😅','🤣','🥹','🤩','😇','🥳','🤗','😮','😢','😱','🤯','💪','👀','💖','💙','💚','💛','🖤','🤍','🌸','🌹','⭐','☀️','🌙','🍕','🍔','☕','⚽','🎮','🎵','📚'];
-  let voiceRecorder=null, voiceChunks=[], voiceStream=null, voiceStartedAt=0;
-  window.SOULBOOK_GIF_API_KEY=window.SOULBOOK_GIF_API_KEY||'';
-
-  function currentUser(){return currentUserId||null;}
-  function esc(v){return escapeHtml(String(v??''));}
-
-  async function loadAllChatUsers(){
-    const list=document.getElementById('chat-list'); if(!list||!currentUser()) return;
-    list.innerHTML='<div style="padding:25px;text-align:center;color:var(--text-muted)">Loading users…</div>';
-    const {data:users,error}=await _supabase.from('profiles').select('id,username,display_name,avatar_url,bio,last_seen,privacy').neq('id',currentUser()).order('display_name',{ascending:true});
-    if(error){list.innerHTML='<div style="padding:20px;color:var(--accent-red)">'+esc(error.message)+'</div>';return;}
-    const profiles=(users||[]).filter(u=>u.privacy?.profile!=='nobody');
-    let convMap={}, latest={};
-    try{
-      const {data:members}=await _supabase.from('conversation_members').select('conversation_id,user_id').eq('user_id',currentUser());
-      const ids=(members||[]).map(x=>x.conversation_id);
-      if(ids.length){
-        const {data:others}=await _supabase.from('conversation_members').select('conversation_id,user_id').in('conversation_id',ids).neq('user_id',currentUser());
-        (others||[]).forEach(x=>convMap[x.user_id]=x.conversation_id);
-        const {data:msgs}=await _supabase.from('messages').select('conversation_id,content,message_type,created_at,sender_id,read_at,deleted_at').in('conversation_id',ids).order('created_at',{ascending:false}).limit(1000);
-        (msgs||[]).forEach(m=>{if(!latest[m.conversation_id])latest[m.conversation_id]=m;});
-      }
-    }catch(e){console.warn('conversation metadata',e)}
-    chatListCache=profiles.map(p=>({profile:p,conversation_id:convMap[p.id]||null,last:latest[convMap[p.id]]||null,unread:0}));
-    renderChatList(document.getElementById('chat-search')?.value||'');
-    const label=document.getElementById('chat-status-label'); if(label) label.textContent=`${profiles.length} users • real-time`;
-  }
-
-  window.renderChatList=function(filter=''){
-    const box=document.getElementById('chat-list'); if(!box)return;
-    const q=filter.toLowerCase().replace(/^@/,'');
-    const rows=(chatListCache||[]).filter(x=>!q||x.profile.username.toLowerCase().includes(q)||x.profile.display_name.toLowerCase().includes(q));
-    box.innerHTML=rows.length?rows.map(x=>{
-      const online=isUserOnline(x.profile.id);
-      let preview='Start chat'; if(x.last){ if(x.last.deleted_at) preview='Message deleted'; else if(x.last.message_type==='audio') preview='🎤 Voice note'; else if(x.last.message_type==='video') preview='🎥 Video'; else if(x.last.message_type==='image') preview='📷 Photo'; else if(x.last.message_type==='gif') preview='GIF'; else preview=esc(x.last.content||'Message'); }
-      return `<div class="chat-row ${x.conversation_id===activeConversationId?'active':''}" onclick="startConversation('${x.profile.id}')"><div class="avatar-wrap">${avatarMarkup(x.profile)}<span class="presence-dot ${online?'online':''}"></span></div><div class="chat-row-info"><div class="chat-row-top"><span class="chat-row-name">${esc(x.profile.display_name)}</span><span class="chat-row-status">${online?'online':''}</span></div><div class="chat-row-preview">@${esc(x.profile.username)} • ${preview}</div></div></div>`;
-    }).join(''):'<div style="padding:35px 20px;text-align:center;color:var(--text-muted)">No users found.</div>';
-    lucide.createIcons();
-  };
-
-  window.loadChatList=async function(){return loadAllChatUsers();};
-
-  window.searchUsers=async function(value){
-    const box=document.getElementById('user-search-results'); if(!box)return;
-    const q=value.trim().replace(/^@/,'');
-    if(!q){box.innerHTML='<div style="padding:12px;color:var(--text-muted)">Start typing a username or display name.</div>';return;}
-    const {data,error}=await _supabase.from('profiles').select('id,username,display_name,avatar_url,bio,last_seen,privacy').neq('id',currentUser()).or(`username.ilike.%${q}%,display_name.ilike.%${q}%`).limit(20);
-    if(error){box.innerHTML='<div style="padding:12px;color:var(--accent-red)">'+esc(error.message)+'</div>';return;}
-    const users=(data||[]).filter(u=>u.privacy?.profile!=='nobody');
-    box.innerHTML=users.length?users.map(u=>`<div class="user-result"><div class="avatar-circle">${avatarMarkup(u)}</div><div class="user-result-info"><strong>${esc(u.display_name)}</strong><span>@${esc(u.username)}</span></div><button class="btn-modern btn-primary" style="padding:8px 12px" onclick="startConversation('${u.id}')">Chat</button></div>`).join(''):'<div style="padding:12px;color:var(--text-muted)">No user found.</div>';
-    lucide.createIcons();
-  };
-
-  window.startConversation=async function(otherUserId){
-    if(!currentUser()){closeAllModalOverlays();openAuthLogin();return;}
-    if(otherUserId===currentUser())return;
-    const {data,error}=await _supabase.rpc('create_direct_conversation',{other_user_id:otherUserId});
-    if(error){alert('Could not start chat: '+error.message);return;}
-    const cid=typeof data==='string'?data:data?.id||data;
-    closeAllModalOverlays();
-    if(!document.getElementById('chat-route').classList.contains('active')) await openChatRoute();
-    await openConversation(cid);
-    await loadAllChatUsers();
-  };
-
-  async function subscribeUserDirectory(){
-    if(!currentUser()||window.__soulbookDirectoryChannel)return;
-    window.__soulbookDirectoryChannel=_supabase.channel('soulbook-user-directory')
-      .on('postgres_changes',{event:'*',schema:'public',table:'profiles'},()=>{ if(document.getElementById('chat-route')?.classList.contains('active')) loadAllChatUsers().catch(()=>{}); })
-      .subscribe();
-  }
-
-  window.openChatRoute=async function(){
-    const route=document.getElementById('chat-route'); if(!route)return;
-    document.querySelectorAll('.app-view').forEach(v=>v.classList.remove('active'));
-    route.classList.add('active');
-    document.getElementById('nav-chat')?.classList.add('active');document.getElementById('dock-chat')?.classList.add('active');
-    const list=document.getElementById('chat-list');
-    if(!currentUser()){if(list)list.innerHTML='<div style="padding:30px;text-align:center"><strong>Sign in to Chat</strong><p style="color:var(--text-muted)">Create an account or sign in to see available users.</p><button class="btn-modern btn-primary" onclick="openAuthLogin()">Sign in</button></div>';return;}
-    try{await ensureProfileForUser((await _supabase.auth.getUser()).data.user);await subscribeUserDirectory();await loadAllChatUsers();}catch(e){console.error(e);if(list)list.innerHTML='<div style="padding:25px;color:var(--accent-red)">Chat data error: '+esc(e.message)+'</div>';}
-    lucide.createIcons();
-  };
-
-  window.openUserSearch=function(){
-    if(!currentUser()){openAuthLogin();return;}
-    closeAllModalOverlays();const m=document.getElementById('user-search-modal');m.classList.add('active');
-    const input=document.getElementById('user-search-input');if(input){input.value='';setTimeout(()=>input.focus(),50);}
-  };
-
-  window.openMyProfile=async function(){
-    closeAllModalOverlays();const modal=document.getElementById('profile-modal');modal.classList.add('active');const c=document.getElementById('profile-modal-content');
-    if(!currentUser()){c.innerHTML='<div style="padding:25px;text-align:center"><strong>Sign in required</strong><p style="color:var(--text-muted)">Please sign in to manage your profile and privacy.</p><button class="btn-modern btn-primary" onclick="closeAllModalOverlays();openAuthLogin()">Sign in</button></div>';return;}
-    c.innerHTML='<div style="padding:25px;text-align:center;color:var(--text-muted)">Loading profile…</div>';
-    try{const p=await loadCurrentProfile(currentUser());currentProfile=p;renderProfileModal(p,true);lucide.createIcons();}catch(e){c.innerHTML='<div style="padding:25px;text-align:center;color:var(--accent-red)">Profile error: '+esc(e.message)+'</div>';}
-  };
-
-  window.openAppSettings=function(){
-    closeAllModalOverlays();const m=document.getElementById('settings-modal');if(m)m.classList.add('active');lucide.createIcons();
-  };
-
-  window.toggleEmojiPicker=function(){
-    const p=document.getElementById('emoji-picker');if(!p)return;const g=document.getElementById('gif-picker');if(g)g.style.display='none';
-    if(p.style.display==='none'){p.innerHTML=EMOJIS.map(e=>`<button type="button" onclick="addChatEmoji('${e}')">${e}</button>`).join('');p.style.display='grid';}else p.style.display='none';
-  };
-  window.addChatEmoji=function(e){const i=document.getElementById('message-input');i.value+=(i.value?' ':'')+e;i.focus();handleTyping();};
-  window.openGifPicker=function(){
-    const g=document.getElementById('gif-picker'),p=document.getElementById('emoji-picker');if(!g)return;if(p)p.style.display='none';
-    g.innerHTML=`<input id="gif-url-input" placeholder="Paste a GIF URL (or add a GIPHY API key)" onkeydown="if(event.key==='Enter')sendGifUrl()"><small>GIF search needs a GIPHY API key. You can also paste any direct GIF URL.</small><button class="btn-modern btn-primary" onclick="sendGifUrl()">Send GIF</button>`;g.style.display='flex';document.getElementById('gif-url-input').focus();
-  };
-  window.sendGifUrl=async function(){const url=document.getElementById('gif-url-input')?.value.trim();if(!url)return;if(!activeConversationId)return;const {error}=await _supabase.from('messages').insert({conversation_id:activeConversationId,sender_id:currentUser(),content:null,message_type:'gif',attachment_url:url});if(error)alert(error.message);else{document.getElementById('gif-picker').style.display='none';}};
-
-  window.handleChatAttachment=async function(input){const file=input.files?.[0];if(!file)return;if(!activeConversationId||!currentUser())return;await uploadChatFile(file,file.type.startsWith('video/')?'video':file.type.startsWith('audio/')?'audio':'image');input.value='';};
-  async function uploadChatFile(file,type){
-    if(file.size>50*1024*1024){alert('Maximum attachment size is 50MB.');return;}
-    const path=`${currentUser()}/${activeConversationId}/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,'')}`;
-    const up=await _supabase.storage.from('chat-media').upload(path,file,{contentType:file.type,upsert:false});if(up.error){alert(up.error.message);return;}
-    const {error}=await _supabase.from('messages').insert({conversation_id:activeConversationId,sender_id:currentUser(),content:null,message_type:type,attachment_url:path});if(error)alert(error.message);
-  }
-
-  window.startVoiceNote=async function(e){
-    if(e)e.preventDefault();if(!activeConversationId||!currentUser()||voiceRecorder)return;
-    try{voiceStream=await navigator.mediaDevices.getUserMedia({audio:true});const mime=MediaRecorder.isTypeSupported('audio/webm;codecs=opus')?'audio/webm;codecs=opus':'audio/webm';voiceRecorder=new MediaRecorder(voiceStream,{mimeType:mime});voiceChunks=[];voiceStartedAt=Date.now();voiceRecorder.ondataavailable=x=>{if(x.data.size)voiceChunks.push(x.data)};voiceRecorder.onstop=async()=>{const blob=new Blob(voiceChunks,{type:mime});voiceStream?.getTracks().forEach(t=>t.stop());voiceStream=null;const file=new File([blob],`voice-${Date.now()}.webm`,{type:mime});voiceRecorder=null;document.getElementById('voice-note-btn')?.classList.remove('voice-recording');if(blob.size)await uploadChatFile(file,'audio');};voiceRecorder.start();document.getElementById('voice-note-btn')?.classList.add('voice-recording');}catch(err){alert('Microphone permission is required for voice notes.');}
-  };
-  window.stopVoiceNote=function(e){if(e)e.preventDefault();if(voiceRecorder&&Date.now()-voiceStartedAt>300)voiceRecorder.stop();};
-
-  const oldRenderMessage=window.renderMessage;
-  window.renderMessage=async function(m){
-    const mine=m.sender_id===currentUser();let body='';
-    if(m.deleted_at)body='<span style="font-style:italic;color:var(--text-muted)">Message deleted</span>';
-    else if(m.message_type==='gif'&&m.attachment_url)body=`<img class="message-media" src="${esc(m.attachment_url)}" alt="GIF">`;
-    else if(m.attachment_url){let url=m.attachment_url;if(!/^https?:/i.test(url)){const signed=await _supabase.storage.from('chat-media').createSignedUrl(url,3600);if(!signed.error)url=signed.data.signedUrl;}if(m.message_type==='video')body=`<video class="message-media" controls playsinline src="${esc(url)}"></video>`;else if(m.message_type==='audio')body=`<audio class="message-audio" controls src="${esc(url)}"></audio>`;else body=`<img class="message-media" src="${esc(url)}" alt="Photo">`;}
-    if(m.content)body+=`<div class="message-text">${esc(m.content)}</div>`;
-    const checks=mine?(m.read_at?'✓✓':m.delivered_at?'✓✓':'✓'):'';
-    return `<div class="message-bubble ${mine?'mine':'theirs'}" data-message-id="${m.id}">${body}<div class="message-meta"><span>${new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span><span>${checks}</span></div></div>`;
-  };
-
-  window.sendChatMessage=async function(e){e.preventDefault();if(!activeConversationId||!currentUser())return;const i=document.getElementById('message-input');const text=i.value.trim();if(!text)return;const {error}=await _supabase.from('messages').insert({conversation_id:activeConversationId,sender_id:currentUser(),content:text,message_type:'text'});if(error){alert(error.message);return;}i.value='';autoResizeMessageInput(i);stopTyping();};
 
 
-  const _soulbookOriginalLogout=window.logoutSessionSequence;
-  window.logoutSessionSequence=async function(){
-    try{if(window.__soulbookDirectoryChannel){_supabase.removeChannel(window.__soulbookDirectoryChannel);window.__soulbookDirectoryChannel=null;}}catch(e){}
-    return _soulbookOriginalLogout();
-  };
 
-  // Keep user directory fresh while Chat is open.
-  setInterval(()=>{if(document.getElementById('chat-route')?.classList.contains('active')&&currentUser())loadAllChatUsers().catch(()=>{});},15000);
+
+<script id="soulbook-v6-hard-fixes">
+(()=>{
+ 'use strict';
+ const sb=()=>window._supabase||window.supabaseClient||window.supabase;
+ const getUid=()=>window.currentUserId||(typeof currentUserId!=='undefined'?currentUserId:null);
+ const esc2=v=>typeof escapeHtml==='function'?escapeHtml(String(v??'')):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+ async function session(){const r=await sb().auth.getSession();return r.data?.session||null;}
+ async function ensureUid(){const s=await session();if(s?.user){window.currentUserId=s.user.id;try{currentUserId=s.user.id}catch(_){}return s.user;}return null;}
+
+ // STORY/CONFESSION: always take auth.uid() from the live Supabase session.
+ window.submitStorySequence=async function(){
+   const s=await ensureUid();
+   if(!s){closeAllModalOverlays?.();return openAuthLogin?.();}
+   const cat=(document.getElementById('category-input')?.value||'Confession').trim();
+   const body=(document.getElementById('body-input')?.value||'').trim();
+   if(!body){alert('Please write your confession first.');return;}
+   const media=window.dynamicProcessedMediaRaw??(typeof dynamicProcessedMediaRaw!=='undefined'?dynamicProcessedMediaRaw:null);
+   const mediaType=window.dynamicMediaType??(typeof dynamicMediaType!=='undefined'?dynamicMediaType:null);
+   const profile=window.currentProfile||currentProfile;
+   const author=profile?.display_name||s.user_metadata?.display_name||s.email?.split('@')[0]||'Soulbook User';
+   const payload={user_id:s.user.id,author,category:cat,body,likes:0,liked_by:[],media_url:media,media_type:mediaType,comments:[]};
+   const {data,error}=await sb().from('stories').insert(payload).select('*').single();
+   if(error){console.error('story insert',error);alert('Could not publish confession: '+error.message);return;}
+   window.memoryDatabase=window.memoryDatabase||[];
+   if(!window.memoryDatabase.some(x=>x.id===data.id))window.memoryDatabase.unshift(data);
+   if(typeof renderReactiveSystemFeeds==='function')renderReactiveSystemFeeds();
+   document.getElementById('body-input').value='';
+   const mf=document.getElementById('media-file-input');if(mf)mf.value='';
+   try{dynamicProcessedMediaRaw=null;dynamicMediaType=null}catch(_){}
+   closeAllModalOverlays?.();
+   try{window.__storyLiveChannel?.send({type:'broadcast',event:'story',payload:{story:data}})}catch(_){ }
+ };
+
+ // CHAT: do not depend on the notifications table for unread state.
+ const C=window.SoulChat;
+ if(!C)return;
+ const oldDelete=C.deleteMessage;
+ C.deleteMessage=async function(id){
+   if(!id||!getUid())return;
+   if(!confirm('Delete this message for everyone?'))return;
+   const {data,error}=await sb().from('messages').update({deleted_at:new Date().toISOString(),content:null,attachment_url:null,updated_at:new Date().toISOString()}).eq('id',id).eq('sender_id',getUid()).select('id,conversation_id,sender_id,content,message_type,attachment_url,created_at,updated_at,delivered_at,read_at,deleted_at').maybeSingle();
+   if(error){console.error('delete message',error);return window.SoulChat._toast?window.SoulChat._toast('Delete failed',error.message):alert('Delete failed: '+error.message);}
+   if(!data){alert('You can only delete your own messages.');return;}
+   const n=document.querySelector(`[data-message-id="${CSS.escape(id)}"]`);if(n){const meta=n.querySelector('.message-meta');n.innerHTML='<div class="deleted-message">🚫 Message deleted</div>'+(meta?meta.outerHTML:'');}
+ };
+ // Patch the exposed object and globals used by inline handlers.
+ window.deleteChatMessage=C.deleteMessage;
+
+ // Avoid old global functions being used by inline handlers.
+ if(typeof window.openChatRoute==='function'){
+   const open=window.SoulChat.open;
+   window.openChatRoute=open;
+   window.initializeChatSystem=async()=>open();
+ }
+ window.openUserSearch=window.SoulChat.openUserSearch||window.openUserSearch;
+
+ // Make confession modal usable on small screens.
+ const modalStyle=document.createElement('style');
+ modalStyle.textContent=`
+ #story-modal .modal-box,#engine-modal .modal-box{width:min(680px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto}
+ @media(max-width:600px){#story-modal .modal-box,#engine-modal .modal-box{width:calc(100vw - 16px);max-height:calc(100dvh - 16px);border-radius:22px;padding:18px}.modal-backdrop{padding:8px}}
+ `;document.head.appendChild(modalStyle);
+})();
+</script>
+<style id="soulbook-v7-design-layer">
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap');
+:root{--sb7-radius:22px}
+body{font-family:Inter,system-ui,sans-serif}
+[dir="rtl"],.urdu-text,.urdu-text *{font-family:'Noto Nastaliq Urdu',serif;line-height:2.05}
+.sb7-panel{width:min(920px,calc(100vw - 24px));max-height:min(88dvh,820px);overflow:auto;background:var(--bg-card,#11131a);color:var(--text-primary,#fff);border:1px solid var(--border-glass,rgba(255,255,255,.1));border-radius:24px;padding:22px;box-shadow:0 24px 80px rgba(0,0,0,.35)}
+.sb7-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:16px}.sb7-card{padding:18px;border:1px solid var(--border-glass,rgba(255,255,255,.1));border-radius:18px;background:rgba(255,255,255,.035)}.sb7-card h4{margin:0 0 7px}.sb7-card p{margin:0;color:var(--text-muted);font-size:13px;line-height:1.55}.sb7-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.sb7-close{border:0;background:transparent;color:inherit;font-size:22px;cursor:pointer}.sb7-news a{display:block;color:inherit;text-decoration:none}.sb7-news a:hover{background:rgba(255,255,255,.04)}
+#chat-route .message-composer .attach-btn{order:1}#chat-route .message-composer textarea{order:2}#chat-route .message-composer .icon-btn:not(.attach-btn){order:3}#chat-route .message-composer .send-btn{order:4}
+#chat-route .message-composer{position:relative;display:flex;align-items:flex-end;gap:6px}.sb7-note{font-size:11px;color:var(--text-muted);margin-top:7px}
+@media(max-width:850px){.sb7-panel{padding:16px;width:calc(100vw - 16px);border-radius:20px}.sb7-grid{grid-template-columns:1fr 1fr}.mobile-dock-nav{overflow-x:auto}.mobile-dock-nav .dock-item{flex:0 0 auto}}
+</style>
+<div class="modal-backdrop" id="soulbook-v7-modal" style="display:none;z-index:10000" onclick="SoulbookV7.backdrop(event)"><div class="sb7-panel" id="soulbook-v7-content"></div></div>
+<script id="soulbook-v7-final-layer">
+(()=>{
+ 'use strict';
+ const S=()=>window._supabase||window.supabaseClient||window.supabase;
+ const uid=()=>window.currentUserId||null;
+ const esc=v=>typeof window.escapeHtml==='function'?window.escapeHtml(String(v??'')):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+ const modal=(html)=>{const m=document.getElementById('soulbook-v7-modal'),c=document.getElementById('soulbook-v7-content');if(!m||!c)return;c.innerHTML=html;m.style.display='flex';try{window.lucide?.createIcons?.()}catch(_){}};
+ const close=()=>{const m=document.getElementById('soulbook-v7-modal');if(m)m.style.display='none'};
+ const textDir=t=>/[\u0600-\u06ff]/.test(t)?'rtl':'ltr';
+ function channels(){
+   modal(`<div class="sb7-head"><div><h2 style="margin:0">Channels & Topics</h2><p class="sb7-note">Explore Soulbook conversations by topic. Public posts remain separate from private chats.</p></div><button class="sb7-close" onclick="SoulbookV7.close()">×</button></div><div class="sb7-grid">
+   ${['Confessions','Poetry','Life Lessons','Overthinking','Education','Technology','World','Pakistan'].map(x=>`<button class="sb7-card" style="text-align:left;color:inherit;cursor:pointer" onclick="SoulbookV7.topic('${x}')"><h4>${x}</h4><p>Open the ${x.toLowerCase()} stream.</p></button>`).join('')}</div>`);
+ }
+ async function topic(cat){close();if(typeof window.filterFeedEngine==='function'){window.navigate?.('landing-route');setTimeout(()=>window.filterFeedEngine(cat),60)}}
+ function news(){
+   modal(`<div class="sb7-head"><div><h2 style="margin:0">News Hub</h2><p class="sb7-note">Quick access to major international and regional news sources.</p></div><button class="sb7-close" onclick="SoulbookV7.close()">×</button></div><div class="sb7-grid sb7-news">
+   ${[['Reuters','https://www.reuters.com/','International reporting'],['BBC News','https://www.bbc.com/news','World and regional news'],['Dawn','https://www.dawn.com/','Pakistan and international coverage'],['Al Jazeera','https://www.aljazeera.com/','Global news'],['Google News','https://news.google.com/','Live news aggregation'],['The Guardian','https://www.theguardian.com/international','International coverage']].map(([n,u,d])=>`<a class="sb7-card" href="${u}" target="_blank" rel="noopener"><h4>${n} ↗</h4><p>${d}</p></a>`).join('')}</div>`);
+ }
+ // Only image + text are exposed in the composer. Existing legacy handlers remain internally available but are unreachable from the UI.
+ window.handleChatAttachment=async function(input){const f=input?.files?.[0];if(!f)return;if(!f.type.startsWith('image/')){input.value='';return alert('Only pictures can be sent in Chat.');}if(f.size>12*1024*1024){input.value='';return alert('Please choose an image up to 12 MB.');}try{if(window.SoulChat?.attachment)return window.SoulChat.attachment(input);}finally{setTimeout(()=>{if(input)input.value=''},300)}};
+ window.startVoiceNote=()=>alert('Voice messages are disabled. Soulbook Chat supports text, pictures, emoji and reactions.');
+ window.SoulbookV7={openChannels:channels,openNews:news,topic,close,backdrop:e=>{if(e.target?.id==='soulbook-v7-modal')close()}};
+ // Make the chat UI explicitly text/photo only and remove any legacy media buttons.
+ function sanitizeChat(){document.querySelectorAll('#chat-route button,[id*=voice],[class*=voice],[title*=video],[title*=audio],[title*=GIF],[title*=gif]').forEach(el=>{if(el.id==='voice-note-btn'||/voice|gif/i.test((el.id||'')+' '+(el.className||'')+' '+(el.title||'')))el.remove()});const i=document.getElementById('chat-file-input');if(i){i.accept='image/*';i.removeAttribute('multiple')}document.querySelectorAll('#chat-route input[type=file]').forEach(x=>x.accept='image/*');}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sanitizeChat,{once:true});else sanitizeChat();
+ // Detect Urdu and apply the Urdu display font automatically to common user content.
+ function fontPass(){document.querySelectorAll('.message-text,.story-body,.post-body,[data-post-body]').forEach(el=>{const t=el.textContent||'';el.classList.toggle('urdu-text',/[\u0600-\u06ff]/.test(t));el.dir=/[\u0600-\u06ff]/.test(t)?'rtl':'ltr'});}
+ new MutationObserver(fontPass).observe(document.body,{subtree:true,childList:true});fontPass();
+})();
+</script>
+
+<style id="soulbook-v8-core">
+/* V8: full chat surface + user directory + channels/news workspace */
+#chat-route{padding:0!important;min-height:calc(100dvh - 70px)!important}
+#chat-route .chat-shell{width:100%!important;height:calc(100dvh - 70px)!important;max-width:none!important;min-height:0!important;margin:0!important;border-radius:0!important;border-left:0!important;border-right:0!important;box-shadow:none!important;grid-template-columns:360px minmax(0,1fr)!important}
+#chat-route .chat-list-panel{min-height:0!important;height:100%!important}
+#chat-route .chat-window{height:100%!important;min-height:0!important}
+#chat-route #chat-active{min-height:0!important;overflow:hidden!important}
+#chat-route #message-list{min-height:0!important;flex:1 1 auto!important;overflow-y:auto!important;overflow-x:hidden!important;padding:18px 20px 10px!important}
+#chat-route .message-composer{flex:0 0 auto!important;min-height:62px!important;padding:9px 12px calc(9px + env(safe-area-inset-bottom))!important;background:var(--bg-surface-solid,#fff)!important;z-index:50!important}
+#chat-route .message-composer textarea{min-width:0!important;min-height:42px!important;max-height:110px!important}
+#chat-route .chat-list{min-height:0!important;flex:1 1 auto!important}
+#chat-route .chat-empty{height:100%!important}
+.sb8-user-row{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:14px;cursor:pointer}
+.sb8-user-row:hover,.sb8-user-row.active{background:rgba(225,29,72,.08)}
+.sb8-user-row .sb8-info{min-width:0;flex:1}.sb8-user-row .sb8-name{font-weight:800;font-size:14px}.sb8-user-row .sb8-handle{font-size:11px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb8-badge{display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:#e11d48;color:#fff;font-size:10px;font-weight:800}
+.sb8-reactions{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}.sb8-reaction{border:1px solid rgba(15,23,42,.08);background:rgba(255,255,255,.7);border-radius:999px;padding:2px 6px;font-size:11px;cursor:pointer}.sb8-reaction.active{border-color:#e11d48;background:#fff1f2}
+.sb8-context{position:fixed;z-index:20000;min-width:150px;padding:6px;background:#fff;border:1px solid rgba(15,23,42,.1);border-radius:14px;box-shadow:0 18px 50px rgba(15,23,42,.18)}.sb8-context button{display:block;width:100%;border:0;background:transparent;text-align:left;padding:9px;border-radius:9px;cursor:pointer}.sb8-context button:hover{background:#f8fafc}
+.sb8-workspace{width:min(1280px,calc(100% - 28px));margin:22px auto;min-height:calc(100dvh - 125px);display:grid;grid-template-columns:290px minmax(0,1fr);gap:16px}.sb8-side,.sb8-main{border:1px solid var(--border-glass);border-radius:22px;background:var(--bg-surface-solid,#fff);overflow:hidden}.sb8-side{padding:14px}.sb8-side button{width:100%;text-align:left;border:0;background:transparent;padding:11px 12px;border-radius:12px;cursor:pointer}.sb8-side button:hover,.sb8-side button.active{background:rgba(225,29,72,.08)}.sb8-main{padding:18px;overflow:auto}.sb8-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.sb8-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}.sb8-card{border:1px solid var(--border-glass);border-radius:18px;padding:16px;background:rgba(255,255,255,.6)}.sb8-card h3,.sb8-card h4{margin:0 0 6px}.sb8-card p{color:var(--text-secondary);font-size:13px;line-height:1.55;margin:0 0 10px}.sb8-pill{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:rgba(225,29,72,.08);font-size:10px;font-weight:800}.sb8-form{display:grid;gap:10px;margin-bottom:18px}.sb8-form textarea,.sb8-form input{width:100%;box-sizing:border-box}.sb8-post{border-top:1px solid var(--border-glass);padding:15px 0}.sb8-post img{max-width:100%;max-height:420px;border-radius:14px;display:block;margin-top:10px}.sb8-channel-head{display:flex;gap:12px;align-items:center}.sb8-avatar{width:42px;height:42px;border-radius:14px;overflow:hidden;display:grid;place-items:center;background:#fee2e2;flex:none}.sb8-avatar img{width:100%;height:100%;object-fit:cover}.sb8-empty{padding:40px 18px;text-align:center;color:var(--text-muted)}
+@media(max-width:850px){#chat-route{min-height:calc(100dvh - 64px)!important}#chat-route .chat-shell{height:calc(100dvh - 64px)!important;grid-template-columns:1fr!important}.sb8-workspace{width:100%;margin:0;min-height:calc(100dvh - 70px);grid-template-columns:1fr}.sb8-side{display:none}.sb8-main{border-radius:0;border-left:0;border-right:0}.sb8-grid{grid-template-columns:1fr}.sb8-top{align-items:flex-start}.sb8-card{padding:14px}}
+</style>
+<script id="soulbook-v8-core">
+(()=>{
+'use strict';
+const sb=()=>window._supabase||window.supabaseClient||window.supabase;
+const me=()=>window.currentUserId||null;
+const esc=v=>typeof window.escapeHtml==='function'?window.escapeHtml(String(v??'')):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const toast=(t,b)=>{let x=document.getElementById('sb8-toast');if(!x){x=document.createElement('div');x.id='sb8-toast';x.style='position:fixed;right:16px;bottom:88px;z-index:30000';document.body.appendChild(x)}const d=document.createElement('div');d.style='background:#111827;color:white;padding:11px 14px;border-radius:12px;margin-top:7px;box-shadow:0 10px 30px #0002;font-size:12px';d.innerHTML='<b>'+esc(t)+'</b><div>'+esc(b||'')+'</div>';x.appendChild(d);setTimeout(()=>d.remove(),3500)};
+const initials=p=>esc((p?.display_name||p?.username||'U').trim().slice(0,1).toUpperCase());
+const avatar=p=>p?.avatar_url?'<div class="sb8-avatar"><img src="'+esc(p.avatar_url)+'" alt=""></div>':'<div class="sb8-avatar">'+initials(p)+'</div>';
+let chat={users:[],active:null,channel:null,dirChannel:null,reactionChannel:null,typing:null};
+function currentUser(){return window.currentProfile||null}
+async function session(){const r=await sb().auth.getSession();if(r.data?.session?.user){window.currentUserId=r.data.session.user.id;return r.data.session.user}return null}
+async function loadUsers(){const u=await session();if(!u)return[];const {data,error}=await sb().from('profiles').select('id,username,display_name,bio,avatar_url,privacy').neq('id',u.id).order('display_name',{ascending:true});if(error){toast('Users',error.message);return[]}chat.users=data||[];renderUsers(document.getElementById('chat-search')?.value||'');return chat.users}
+function renderUsers(q=''){const box=document.getElementById('chat-list');if(!box)return;const z=(q||'').toLowerCase().replace(/^@/,'');const rows=chat.users.filter(p=>(p.username||'').toLowerCase().includes(z)||(p.display_name||'').toLowerCase().includes(z));box.innerHTML=rows.length?rows.map(p=>'<div class="sb8-user-row '+(chat.active?.user?.id===p.id?'active':'')+'" data-user="'+esc(p.id)+'"><div class="avatar-wrap">'+avatar(p)+'</div><div class="sb8-info"><div class="sb8-name">'+esc(p.display_name||p.username)+'</div><div class="sb8-handle">@'+esc(p.username||'user')+'</div></div></div>').join(''):'<div class="sb8-empty">No other Soulbook users found.</div>';box.querySelectorAll('[data-user]').forEach(x=>x.onclick=()=>openChat(x.dataset.user));}
+async function getProfile(id){const {data}=await sb().from('profiles').select('id,username,display_name,bio,avatar_url,privacy').eq('id',id).maybeSingle();return data}
+async function openChat(otherId){if(!otherId||otherId===me()){toast('Chat','You cannot start a chat with your own account.');return}const other=chat.users.find(x=>x.id===otherId)||await getProfile(otherId);if(!other)return;let r=await sb().rpc('create_direct_conversation',{other_user_id:otherId});if(r.error){toast('Chat could not open',r.error.message);return}const cid=r.data;chat.active={cid,user:other};window.activeConversationId=cid;window.activeChatUser=other;const shell=document.querySelector('#chat-route .chat-shell');shell?.classList.add('chat-open');document.getElementById('chat-empty').style.display='none';document.getElementById('chat-active').style.display='flex';document.getElementById('active-chat-name').textContent=other.display_name||other.username||'User';document.getElementById('active-chat-avatar').innerHTML=avatar(other);document.getElementById('active-chat-presence').textContent='Private conversation';await loadMessages(cid);subscribeMessages(cid);renderUsers(document.getElementById('chat-search')?.value||'');}
+async function loadMessages(cid){const box=document.getElementById('message-list');if(!box)return;box.innerHTML='<div class="sb8-empty">Loading messages…</div>';const {data,error}=await sb().from('messages').select('id,conversation_id,sender_id,content,message_type,attachment_url,created_at,updated_at,delivered_at,read_at,deleted_at').eq('conversation_id',cid).order('created_at',{ascending:true}).limit(300);if(error){box.innerHTML='<div class="sb8-empty">'+esc(error.message)+'</div>';return}box.innerHTML='';for(const m of data||[])await appendMessage(m,false);box.scrollTop=box.scrollHeight;}
+async function reactions(mid){const {data}=await sb().from('message_reactions').select('id,user_id,reaction').eq('message_id',mid);const map={};for(const x of data||[]){map[x.reaction]=(map[x.reaction]||0)+1}return map}
+async function appendMessage(m,scroll=true){const box=document.getElementById('message-list');if(!box)return;const old=box.querySelector('[data-message-id="'+CSS.escape(m.id)+'"]');if(old)old.remove();let url=m.attachment_url||'';if(url&&!/^https?:/i.test(url)){const s=await sb().storage.from('chat-media').createSignedUrl(url,3600);if(!s.error)url=s.data.signedUrl}const mine=m.sender_id===me();const rm=await reactions(m.id);const chips=Object.entries(rm).map(([r,n])=>'<button class="sb8-reaction" data-react="'+esc(r)+'" data-mid="'+esc(m.id)+'">'+esc(r)+' '+n+'</button>').join('');const el=document.createElement('div');el.className='message-bubble '+(mine?'mine':'theirs');el.dataset.messageId=m.id;let body=m.deleted_at?'<div style="font-style:italic;color:var(--text-muted)">Message deleted</div>':((m.message_type==='image'||url)?'<img class="message-image" src="'+esc(url)+'" alt="Shared picture">':'')+(m.content?'<div class="message-text '+(/[\u0600-\u06ff]/.test(m.content)?'urdu-text':'')+'" dir="'+(/[\u0600-\u06ff]/.test(m.content)?'rtl':'ltr')+'">'+esc(m.content)+'</div>':'');el.innerHTML=body+'<div class="message-meta"><span>'+new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+'</span>'+(mine?'<span>'+(m.read_at?'✓✓':m.delivered_at?'✓✓':'✓')+'</span>':'')+'</div>'+((!m.deleted_at&&chips)?'<div class="sb8-reactions">'+chips+'</div>':'');el.oncontextmenu=e=>{e.preventDefault();messageMenu(e.clientX,e.clientY,m,mine)};el.onclick=e=>{const b=e.target.closest('[data-react]');if(b)toggleReaction(b.dataset.mid,b.dataset.react)};box.appendChild(el);if(scroll)box.scrollTop=box.scrollHeight;}
+function messageMenu(x,y,m,mine){document.querySelector('.sb8-context')?.remove();const d=document.createElement('div');d.className='sb8-context';d.style.left=Math.min(x,innerWidth-170)+'px';d.style.top=Math.min(y,innerHeight-130)+'px';d.innerHTML=['❤️','👍','😂','😮','😢','🔥'].map(r=>'<button data-r="'+r+'">'+r+' React</button>').join('')+(mine?'<button data-del="1">🗑 Delete</button>':'');document.body.appendChild(d);d.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{toggleReaction(m.id,b.dataset.r);d.remove()});d.querySelector('[data-del]')?.addEventListener('click',()=>deleteMessage(m));setTimeout(()=>document.addEventListener('click',()=>d.remove(),{once:true}),0)}
+async function toggleReaction(mid,reaction){const {data:existing}=await sb().from('message_reactions').select('id').eq('message_id',mid).eq('user_id',me()).eq('reaction',reaction).maybeSingle();let r=existing?await sb().from('message_reactions').delete().eq('id',existing.id):await sb().from('message_reactions').insert({message_id:mid,user_id:me(),reaction});if(r.error)toast('Reaction failed',r.error.message);else if(chat.active)await loadMessages(chat.active.cid)}
+async function deleteMessage(m){if(!confirm('Delete this message?'))return;const {error}=await sb().from('messages').update({deleted_at:new Date().toISOString(),content:null,attachment_url:null,updated_at:new Date().toISOString()}).eq('id',m.id).eq('sender_id',me());if(error)toast('Delete failed',error.message)}
+async function send(e){e?.preventDefault();if(!chat.active)return;const i=document.getElementById('message-input'),text=(i?.value||'').trim();if(!text)return;const temp=crypto.randomUUID();i.value='';i.style.height='42px';const payload={id:temp,conversation_id:chat.active.cid,sender_id:me(),content:text,message_type:'text',created_at:new Date().toISOString()};const {data,error}=await sb().from('messages').insert(payload).select('*').single();if(error){toast('Message failed',error.message);i.value=text;return}await appendMessage(data,true);}
+async function sendImage(input){const f=input?.files?.[0];if(!f||!chat.active)return;if(!f.type.startsWith('image/'))return toast('Photo only','Only pictures can be sent.');if(f.size>12*1024*1024)return toast('Photo too large','Maximum 12 MB.');const path=me()+'/'+crypto.randomUUID()+'-'+f.name.replace(/[^a-zA-Z0-9._-]/g,'');const up=await sb().storage.from('chat-media').upload(path,f,{contentType:f.type,upsert:false});if(up.error){toast('Upload failed',up.error.message);return}const payload={conversation_id:chat.active.cid,sender_id:me(),content:null,message_type:'image',attachment_url:path,created_at:new Date().toISOString()};const {data,error}=await sb().from('messages').insert(payload).select('*').single();if(error)toast('Photo failed',error.message);else await appendMessage(data,true);input.value=''}
+function subscribeMessages(cid){if(chat.channel)sb().removeChannel(chat.channel);chat.channel=sb().channel('soulbook-v8-chat-'+cid).on('postgres_changes',{event:'*',schema:'public',table:'messages',filter:'conversation_id=eq.'+cid},async p=>{if(p.eventType==='INSERT'){await appendMessage(p.new,true)}else if(p.eventType==='UPDATE'){await appendMessage(p.new,false)}}).on('postgres_changes',{event:'*',schema:'public',table:'message_reactions'},async p=>{const id=p.new?.message_id||p.old?.message_id;if(id)await loadMessages(cid)}).subscribe();}
+function closeChat(){document.querySelector('#chat-route .chat-shell')?.classList.remove('chat-open');document.getElementById('chat-active').style.display='none';document.getElementById('chat-empty').style.display='flex';chat.active=null;window.activeConversationId=null;window.activeChatUser=null;if(chat.channel){sb().removeChannel(chat.channel);chat.channel=null}}
+async function open(){document.querySelectorAll('.app-view').forEach(v=>v.classList.remove('active'));document.getElementById('chat-route')?.classList.add('active');const u=await session();if(!u){toast('Chat','Please sign in first.');return}await loadUsers();}
+function wire(){const list=document.getElementById('chat-list');if(list&&!list.dataset.sb8){list.dataset.sb8='1';list.addEventListener('click',e=>{const row=e.target.closest('[data-user]');if(row)openChat(row.dataset.user)});}const input=document.getElementById('message-input');if(input&&!input.dataset.sb8){input.dataset.sb8='1';input.addEventListener('input',()=>{input.style.height='42px';input.style.height=Math.min(input.scrollHeight,110)+'px'});input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send(e)}})}document.getElementById('chat-file-input')?.addEventListener('change',e=>sendImage(e.target));}
+window.SoulChat=Object.assign(window.SoulChat||{},{open,start:openChat,sendText:send,attachment:sendImage,close:closeChat,load:loadUsers});
+window.openChatRoute=open;window.closeActiveChat=closeChat;window.sendChatMessage=send;window.handleChatAttachment=e=>sendImage(e);window.filterChatList=v=>renderUsers(v);window.toggleEmojiPicker=()=>{const p=document.getElementById('emoji-picker');if(!p)return;p.innerHTML=['😀','😂','😍','🥰','😎','😭','😡','👍','👎','❤️','🔥','✨','🎉','🙏','👏','💯','😊','😉','🤝','🙌','💔','😴','🤔','😅','🤣','🥹','🤩','😇','🥳','🤗','😮','😢','😱','🤯','💪','👀','💖','💙','💚','💛','🖤','🤍','🌸','🌹','⭐','☀️','🌙','☕','⚽','🎮','🎵','📚'].map(x=>'<button type="button" onclick="window.insertChatEmoji(\''+x+'\')">'+x+'</button>').join('');p.style.display=p.style.display==='grid'?'none':'grid'};window.insertChatEmoji=x=>{const i=document.getElementById('message-input');if(i){i.value+=(i.value?' ':'')+x;i.focus()}};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire,{once:true});else wire();
+
+/* ---------- Channels + News ---------- */
+let ws={kind:'channels',selected:null};
+const W=()=>document.getElementById('soulbook-v7-modal'),WC=()=>document.getElementById('soulbook-v7-content');
+function show(html){if(W()&&WC()){WC().innerHTML=html;W().style.display='flex';window.lucide?.createIcons?.()}}
+async function channelList(){const {data,error}=await sb().from('sb_channels').select('id,name,slug,description,owner_id,avatar_url,created_at').order('created_at',{ascending:false});return {data:data||[],error}}
+async function renderChannels(){const r=await channelList();if(r.error){show('<div class="sb8-empty">Channels table is not ready. Run the V8 SQL migration first.<br><small>'+esc(r.error.message)+'</small></div>');return}const joined=await sb().from('sb_channel_members').select('channel_id').eq('user_id',me());const j=new Set((joined.data||[]).map(x=>x.channel_id));show('<div class="sb8-top"><div><h2>Channels</h2><p class="sb8-note">Create, join and publish to Soulbook channels.</p></div><div><button class="btn-modern btn-primary" onclick="SoulbookV8.createChannel()">＋ Create</button> <button class="icon-btn" onclick="SoulbookV8.close()">×</button></div></div><div class="sb8-grid">'+(r.data.length?r.data.map(c=>'<div class="sb8-card"><div class="sb8-channel-head">'+(c.avatar_url?'<div class="sb8-avatar"><img src="'+esc(c.avatar_url)+'"></div>':'<div class="sb8-avatar">📣</div>')+'<div><h3>'+esc(c.name)+'</h3><span class="sb8-pill">@'+esc(c.slug)+'</span></div></div><p style="margin-top:10px">'+esc(c.description||'Soulbook channel')+'</p><button class="btn-modern btn-primary" onclick="SoulbookV8.openChannel(\''+c.id+'\')">'+(j.has(c.id)?'Open channel':'Join channel')+'</button></div>').join(''):'<div class="sb8-empty">No channels yet.</div>')+'</div>')}
+async function createChannel(){const name=prompt('Channel name');if(!name?.trim())return;const slug=name.toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);const description=prompt('Short description')||'';const r=await sb().from('sb_channels').insert({name:name.trim(),slug,description,owner_id:me()}).select().single();if(r.error)return toast('Channel',r.error.message);await sb().from('sb_channel_members').insert({channel_id:r.data.id,user_id:me(),role:'owner'});await renderChannels()}
+async function openChannel(id){const mem=await sb().from('sb_channel_members').select('id').eq('channel_id',id).eq('user_id',me()).maybeSingle();if(!mem.data){const j=await sb().from('sb_channel_members').insert({channel_id:id,user_id:me(),role:'member'});if(j.error)return toast('Join failed',j.error.message)}const {data:c}=await sb().from('sb_channels').select('*').eq('id',id).single();const {data:posts}=await sb().from('sb_channel_posts').select('id,channel_id,author_id,body,image_url,created_at').eq('channel_id',id).order('created_at',{ascending:false}).limit(100);show('<div class="sb8-top"><div><h2>'+esc(c?.name||'Channel')+'</h2><p class="sb8-note">Share updates with channel members.</p></div><button class="icon-btn" onclick="SoulbookV8.channels()">←</button></div><div class="sb8-form"><textarea id="sb8-channel-body" class="input-field" rows="3" placeholder="Write a channel update…"></textarea><input id="sb8-channel-image" class="input-field" type="file" accept="image/*"><button class="btn-modern btn-primary" onclick="SoulbookV8.postChannel(\''+id+'\')">Publish</button></div><div>'+((posts||[]).map(p=>'<article class="sb8-post"><div style="font-size:11px;color:var(--text-muted)">'+new Date(p.created_at).toLocaleString()+'</div><div style="white-space:pre-wrap;margin-top:5px">'+esc(p.body||'')+'</div>'+(p.image_url?'<img src="'+esc(p.image_url)+'">':'')+'</article>').join('')||'<div class="sb8-empty">No posts yet.</div>')+'</div>')}
+async function postChannel(cid){const body=(document.getElementById('sb8-channel-body')?.value||'').trim();const f=document.getElementById('sb8-channel-image')?.files?.[0];if(!body&&!f)return;let image_url=null;if(f){if(!f.type.startsWith('image/'))return toast('Image','Only pictures are allowed.');const path=me()+'/channel-'+crypto.randomUUID()+'-'+f.name.replace(/[^a-zA-Z0-9._-]/g,'');const up=await sb().storage.from('post-media').upload(path,f,{contentType:f.type,upsert:false});if(up.error)return toast('Image upload',up.error.message);image_url=sb().storage.from('post-media').getPublicUrl(path).data.publicUrl}const r=await sb().from('sb_channel_posts').insert({channel_id:cid,author_id:me(),body,image_url});if(r.error)return toast('Post failed',r.error.message);await openChannel(cid)}
+async function renderNews(){let r=await sb().from('sb_news').select('*').order('created_at',{ascending:false}).limit(100);if(r.error){show('<div class="sb8-empty">News table is not ready. Run the V8 SQL migration first.</div>');return}show('<div class="sb8-top"><div><h2>News</h2><p class="sb8-note">Community news plus optional live API headlines.</p></div><div><button class="btn-modern btn-primary" onclick="SoulbookV8.addNews()">＋ Add news</button> <button class="icon-btn" onclick="SoulbookV8.close()">×</button></div></div><div id="sb8-live-news" class="sb8-card" style="margin-bottom:14px"><b>Live headlines</b><p class="sb8-note">Configure a server-side news API key in your deployment before enabling automatic headlines.</p></div><div class="sb8-grid">'+((r.data||[]).map(n=>'<article class="sb8-card"><span class="sb8-pill">'+esc(n.source||'Soulbook')+'</span><h3 style="margin-top:8px">'+esc(n.title)+'</h3><p>'+esc(n.summary||'')+'</p>'+(n.image_url?'<img src="'+esc(n.image_url)+'" style="max-width:100%;border-radius:12px">':'')+(n.url?'<a class="btn-modern" href="'+esc(n.url)+'" target="_blank" rel="noopener">Read</a>':'')+'</article>').join('')||'<div class="sb8-empty">No news yet.</div>')+'</div>')}
+async function addNews(){const title=prompt('News title');if(!title?.trim())return;const summary=prompt('Short summary')||'';const url=prompt('Source URL (optional)')||null;const source=prompt('Source name')||'Soulbook';const r=await sb().from('sb_news').insert({title:title.trim(),summary,url,source,author_id:me()});if(r.error)return toast('News',r.error.message);await renderNews()}
+window.SoulbookV8={channels:renderChannels,openChannels:renderChannels,openNews:renderNews,createChannel,openChannel,postChannel,addNews,close:()=>{if(W())W().style.display='none'}};
+window.SoulbookV7=Object.assign(window.SoulbookV7||{}, {openChannels:renderChannels,openNews:renderNews});
+})();
+</script>
+
+
+<style id="soulbook-v8-repair">
+/* FINAL V8 REPAIR: keep chat above the footer and make mobile composer always tappable */
+html,body{min-height:100%;}
+#chat-route.active{position:fixed!important;inset:73px 0 0 0!important;height:calc(100dvh - 73px)!important;min-height:0!important;padding:0!important;z-index:900!important;background:var(--bg-main);}
+#chat-route.active .chat-shell{height:100%!important;min-height:0!important;margin:0!important;width:100%!important;max-width:none!important;border-radius:0!important;}
+#chat-route.active .chat-window{position:relative!important;min-height:0!important;height:100%!important;overflow:hidden!important;}
+#chat-route.active #chat-active{height:100%!important;min-height:0!important;display:flex;flex-direction:column;overflow:hidden!important;}
+#chat-route.active #message-list{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain!important;padding-bottom:14px!important;}
+#chat-route.active .message-composer{position:relative!important;bottom:auto!important;left:auto!important;right:auto!important;z-index:9999!important;pointer-events:auto!important;flex:0 0 auto!important;min-height:64px!important;display:flex!important;visibility:visible!important;opacity:1!important;}
+#chat-route.active .message-composer *{pointer-events:auto!important;}
+#chat-route.active .message-composer .send-btn{display:grid!important;visibility:visible!important;opacity:1!important;cursor:pointer!important;pointer-events:auto!important;}
+#chat-route.active .message-composer textarea{pointer-events:auto!important;}
+#chat-route.active .chat-list-panel{height:100%!important;min-height:0!important;}
+body:has(#chat-route.active){overflow:hidden!important;}
+#soulbook-v7-modal .sb7-panel{position:relative;z-index:10001;}
+@media(max-width:850px){
+ #chat-route.active{inset:0 0 72px 0!important;height:calc(100dvh - 72px)!important;}
+ #chat-route.active .chat-shell{height:100%!important;}
+ #chat-route.active .message-composer{padding-bottom:max(9px,env(safe-area-inset-bottom))!important;}
+ #chat-route.active .chat-header{padding-top:max(8px,env(safe-area-inset-top))!important;}
+}
+</style>
+<script id="soulbook-v8-final-repair">
+(()=>{
+ 'use strict';
+ const S=()=>window._supabase;
+ const toast=(title,msg)=>{if(typeof window.__sb8toast==='function')return window.__sb8toast(title,msg);alert(title+(msg?': '+msg:''));};
+ async function auth(){const {data}=await S().auth.getSession();if(data?.session?.user){window.currentUserId=data.session.user.id;return data.session.user}return null}
+ async function openChatRouteFixed(){
+   const route=document.getElementById('chat-route'); if(!route)return false;
+   const u=await auth();
+   if(!u){if(typeof openAuthLogin==='function')openAuthLogin();return false;}
+   document.querySelectorAll('.app-view').forEach(v=>v.classList.remove('active'));
+   route.classList.add('active');
+   document.querySelectorAll('.desktop-link,.dock-item').forEach(x=>x.classList.remove('active'));
+   document.getElementById('nav-chat')?.classList.add('active');document.getElementById('dock-chat')?.classList.add('active');
+   const list=document.getElementById('chat-list'); if(list)list.innerHTML='<div class="sb8-empty">Loading Soulbook users…</div>';
+   if(window.SoulChat?.load) await window.SoulChat.load();
+   setTimeout(()=>window.lucide?.createIcons?.(),30);
+   return false;
+ }
+ async function sendFixed(e){
+   e?.preventDefault?.();
+   const i=document.getElementById('message-input');
+   const text=(i?.value||'').trim();
+   if(!window.activeConversationId && !window.SoulChat)return;
+   if(window.SoulChat?.sendText){return window.SoulChat.sendText(e);}
+ }
+ function wireComposer(){
+   const form=document.querySelector('#chat-route .message-composer');
+   const input=document.getElementById('message-input');
+   if(form && !form.dataset.v8fixed){
+     form.dataset.v8fixed='1';
+     form.onsubmit=(e)=>{e.preventDefault();if(window.SoulChat?.sendText)return window.SoulChat.sendText(e);};
+   }
+   if(input && !input.dataset.v8fixed){
+     input.dataset.v8fixed='1';
+     input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();form?.requestSubmit();}});
+   }
+ }
+ window.openChatRoute=openChatRouteFixed;
+ window.sendChatMessage=e=>window.SoulChat?.sendText?.(e);
+ window.handleChatAttachment=e=>window.SoulChat?.attachment?.(e);
+ window.closeActiveChat=()=>window.SoulChat?.close?.();
+ window.openChannelsFixed=()=>window.SoulbookV8?.channels?.();
+ window.openNewsFixed=()=>window.SoulbookV8?.openNews?.();
+ document.addEventListener('DOMContentLoaded',wireComposer,{once:true});
+ wireComposer();
+ /* Replace old menu/dock handlers that were still calling V7 topic/news code. */
+ document.querySelectorAll('[onclick*="SoulbookV7.openChannels"] , [onclick*="SoulbookV7.openNews"]').forEach(el=>{
+   const a=el.getAttribute('onclick')||'';
+   if(a.includes('openChannels'))el.setAttribute('onclick','event?.preventDefault?.(); window.SoulbookV8.channels();');
+   if(a.includes('openNews'))el.setAttribute('onclick','event?.preventDefault?.(); window.SoulbookV8.openNews();');
+ });
+})();
+</script>
+
+
+<style id="soulbook-final-v10-style">
+#sb-final-panel{position:fixed;inset:0;z-index:20000;background:var(--bg-main);display:none;overflow:hidden}
+#sb-final-panel.open{display:flex;flex-direction:column}
+#sb-final-head{height:64px;flex:0 0 64px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--border-glass);background:var(--bg-surface-solid);gap:12px}
+#sb-final-body{flex:1;min-height:0;overflow:auto;padding:16px}
+.sb-final-wrap{max-width:1100px;margin:0 auto}.sb-final-title{font-size:24px;font-weight:800}.sb-final-sub{font-size:12px;color:var(--text-muted);margin-top:4px}
+.sb-final-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}.sb-final-card{border:1px solid var(--border-glass);background:var(--bg-surface-solid);border-radius:18px;padding:15px}.sb-final-card h3{margin:0 0 7px}.sb-final-card p{color:var(--text-secondary);font-size:13px;line-height:1.5}.sb-final-row{display:flex;align-items:center;gap:10px}.sb-final-avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(225,29,72,.12);font-weight:800;overflow:hidden;flex:0 0 44px}.sb-final-avatar img{width:100%;height:100%;object-fit:cover}.sb-final-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#sb-final-chat{display:grid;grid-template-columns:310px minmax(0,1fr);height:100%}.sb-final-users{border-right:1px solid var(--border-glass);overflow:auto;padding:10px}.sb-final-chatwin{display:flex;flex-direction:column;min-width:0;height:100%}.sb-final-chathead{height:64px;flex:0 0 64px;padding:8px 14px;border-bottom:1px solid var(--border-glass);display:flex;align-items:center;gap:10px}.sb-final-msgs{flex:1;min-height:0;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:8px}.sb-final-bubble{max-width:min(78%,520px);padding:9px 12px;border-radius:16px;background:var(--bg-surface-solid);border:1px solid var(--border-glass);font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}.sb-final-bubble.mine{align-self:flex-end;background:rgba(225,29,72,.1)}.sb-final-bubble img{max-width:280px;max-height:320px;border-radius:12px;display:block;margin-bottom:5px}.sb-final-composer{flex:0 0 auto;padding:10px;border-top:1px solid var(--border-glass);background:var(--bg-surface-solid);display:flex;gap:7px;align-items:flex-end;padding-bottom:max(10px,env(safe-area-inset-bottom))}.sb-final-composer textarea{flex:1;resize:none;max-height:110px;min-height:42px}.sb-final-user{padding:10px;border-radius:12px;display:flex;gap:9px;align-items:center;cursor:pointer}.sb-final-user:hover{background:rgba(225,29,72,.08)}.sb-final-user .name{font-weight:700;font-size:13px}.sb-final-user .handle{font-size:11px;color:var(--text-muted)}
+@media(max-width:750px){#sb-final-chat{grid-template-columns:1fr}.sb-final-users{border-right:0}.sb-final-chatwin{display:none}.sb-final-chat.mobile-open .sb-final-users{display:none}.sb-final-chat.mobile-open .sb-final-chatwin{display:flex}.sb-final-bubble{max-width:86%}}
+</style>
+<div id="sb-final-panel" aria-hidden="true"><div id="sb-final-head"><div><div id="sb-final-title" class="sb-final-title">Soulbook</div><div id="sb-final-sub" class="sb-final-sub">Community</div></div><button class="icon-btn" type="button" onclick="window.SoulbookFinal.close()">×</button></div><div id="sb-final-body"></div></div>
+<script id="soulbook-final-v10">
+(()=>{
+'use strict';
+const S=()=>window._supabase; const esc=v=>window.escapeHtml?window.escapeHtml(String(v??'')):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const panel=()=>document.getElementById('sb-final-panel'), body=()=>document.getElementById('sb-final-body');
+const toast=(t,m)=>window.__sb8toast?window.__sb8toast(t,m):alert(t+(m?': '+m:''));
+async function user(){const r=await S().auth.getUser();const u=r.data?.user;if(u)window.currentUserId=u.id;return u||null}
+function show(title,sub,html){document.getElementById('sb-final-title').textContent=title;document.getElementById('sb-final-sub').textContent=sub||'';body().innerHTML=html;panel().classList.add('open');panel().setAttribute('aria-hidden','false');window.lucide?.createIcons?.()}
+function close(){panel().classList.remove('open');panel().setAttribute('aria-hidden','true');}
+async function requireUser(){const u=await user();if(!u){close();openAuthLogin();return null}return u}
+async function syncAuth(){const r=await S().auth.getSession();window.currentUserId=r.data?.session?.user?.id||null; if(r.data?.session?.user){try{await ensureProfileForUser(r.data.session.user)}catch(_){}}}
+async function fixPost(){const u=await requireUser();if(!u)return;const text=(document.getElementById('sb-final-post-text')?.value||'').trim();if(!text)return toast('Post','Write something first.');const cat=document.getElementById('sb-final-post-cat')?.value||'General';const f=document.getElementById('sb-final-post-file')?.files?.[0];let image_url=null,media_type=null;if(f){if(!f.type.startsWith('image/'))return toast('Post','Only pictures are supported.');const path=`${u.id}/post-${crypto.randomUUID()}-${f.name.replace(/[^a-zA-Z0-9._-]/g,'')}`;const up=await S().storage.from('post-media').upload(path,f,{contentType:f.type,upsert:false});if(up.error)return toast('Post image',up.error.message);image_url=S().storage.from('post-media').getPublicUrl(path).data.publicUrl;media_type='image'}const p={user_id:u.id,author:u.user_metadata?.display_name||u.email,category:cat,body:text,likes:0,liked_by:[],comments:[],media_url:image_url,media_type};const r=await S().from('stories').insert(p).select().single();if(r.error)return toast('Post failed',r.error.message);memoryDatabase.unshift(r.data);renderReactiveSystemFeeds();close();toast('Posted','Your post is live.');}
+function postBox(){show('Create Post','Share with Soulbook',`<div class="sb-final-wrap"><div class="sb-final-card"><textarea id="sb-final-post-text" class="input-field" rows="6" placeholder="What do you want to share?"></textarea><div style="display:flex;gap:8px;margin-top:10px"><select id="sb-final-post-cat" class="input-field"><option>General</option><option>Confessions</option><option>Poetry</option><option>Life Lessons</option><option>Education</option><option>Technology</option><option>World</option><option>Pakistan</option></select><input id="sb-final-post-file" class="input-field" type="file" accept="image/*"></div><div class="sb-final-actions"><button class="btn-modern btn-primary" onclick="SoulbookFinal.post()">Publish Post</button></div></div></div>`)}
+async function channels(){const u=await requireUser();if(!u)return;const r=await S().from('sb_channels').select('*').order('created_at',{ascending:false});if(r.error)return show('Channels','Database error',`<div class="sb-final-card"><b>Channels database is not ready.</b><p>${esc(r.error.message)}</p></div>`);const joined=await S().from('sb_channel_members').select('channel_id').eq('user_id',u.id);const set=new Set((joined.data||[]).map(x=>x.channel_id));show('Channels','Create, join and publish',`<div class="sb-final-wrap"><div class="sb-final-actions"><button class="btn-modern btn-primary" onclick="SoulbookFinal.createChannel()">＋ Create Channel</button></div><div class="sb-final-grid" style="margin-top:14px">${(r.data||[]).map(c=>`<div class="sb-final-card"><div class="sb-final-row"><div class="sb-final-avatar">📣</div><div><h3>${esc(c.name)}</h3><div class="sb-final-sub">@${esc(c.slug)}</div></div></div><p>${esc(c.description||'Soulbook channel')}</p><div class="sb-final-actions"><button class="btn-modern btn-primary" onclick="SoulbookFinal.openChannel('${c.id}')">${set.has(c.id)?'Open':'Join'}</button></div></div>`).join('')||'<div class="sb-final-card">No channels yet.</div>'}</div></div>`)}
+async function createChannel(){const u=await requireUser();if(!u)return;const name=prompt('Channel name');if(!name?.trim())return;const desc=prompt('Channel description')||'';let slug=name.toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40)||'channel';slug+='-'+Math.random().toString(36).slice(2,7);const r=await S().from('sb_channels').insert({name:name.trim(),slug,description:desc,owner_id:u.id}).select().single();if(r.error)return toast('Channel failed',r.error.message);const m=await S().from('sb_channel_members').insert({channel_id:r.data.id,user_id:u.id,role:'owner'});if(m.error)return toast('Channel member failed',m.error.message);await channels();}
+async function openChannel(id){const u=await requireUser();if(!u)return;let m=await S().from('sb_channel_members').select('id').eq('channel_id',id).eq('user_id',u.id).maybeSingle();if(!m.data){const j=await S().from('sb_channel_members').insert({channel_id:id,user_id:u.id,role:'member'});if(j.error)return toast('Join failed',j.error.message)}const c=(await S().from('sb_channels').select('*').eq('id',id).single()).data;const posts=(await S().from('sb_channel_posts').select('*').eq('channel_id',id).order('created_at',{ascending:false})).data||[];show(c?.name||'Channel','@'+(c?.slug||''),`<div class="sb-final-wrap"><button class="btn-modern btn-secondary" onclick="SoulbookFinal.channels()">← Channels</button><div class="sb-final-card" style="margin-top:12px"><textarea id="sb-final-channel-text" class="input-field" rows="4" placeholder="Write an update…"></textarea><input id="sb-final-channel-file" class="input-field" type="file" accept="image/*" style="margin-top:8px"><div class="sb-final-actions"><button class="btn-modern btn-primary" onclick="SoulbookFinal.channelPost('${id}')">Publish</button></div></div><div style="display:grid;gap:10px;margin-top:12px">${posts.map(p=>`<article class="sb-final-card"><div class="sb-final-sub">${new Date(p.created_at).toLocaleString()}</div><div style="white-space:pre-wrap;margin-top:6px">${esc(p.body||'')}</div>${p.image_url?`<img src="${esc(p.image_url)}" style="max-width:100%;border-radius:12px;margin-top:8px">`:''}</article>`).join('')||'<div class="sb-final-card">No channel posts yet.</div>'}</div></div>`)}
+async function channelPost(id){const u=await requireUser();if(!u)return;const text=(document.getElementById('sb-final-channel-text')?.value||'').trim();const f=document.getElementById('sb-final-channel-file')?.files?.[0];if(!text&&!f)return toast('Channel','Write something or choose a picture.');let image_url=null;if(f){const path=`${u.id}/channel-${crypto.randomUUID()}-${f.name.replace(/[^a-zA-Z0-9._-]/g,'')}`;const up=await S().storage.from('post-media').upload(path,f,{contentType:f.type,upsert:false});if(up.error)return toast('Image upload',up.error.message);image_url=S().storage.from('post-media').getPublicUrl(path).data.publicUrl}const r=await S().from('sb_channel_posts').insert({channel_id:id,author_id:u.id,body:text,image_url});if(r.error)return toast('Channel post failed',r.error.message);openChannel(id)}
+async function news(){const u=await requireUser();if(!u)return;const r=await S().from('sb_news').select('*').order('created_at',{ascending:false});if(r.error)return show('News','Database error',`<div class="sb-final-card"><b>News database is not ready.</b><p>${esc(r.error.message)}</p></div>`);show('News','Community news',`<div class="sb-final-wrap"><div class="sb-final-actions"><button class="btn-modern btn-primary" onclick="SoulbookFinal.addNews()">＋ Add News</button></div><div class="sb-final-grid" style="margin-top:14px">${(r.data||[]).map(n=>`<article class="sb-final-card"><div class="sb-final-sub">${esc(n.source||'Soulbook')} · ${new Date(n.created_at).toLocaleString()}</div><h3 style="margin-top:7px">${esc(n.title)}</h3><p>${esc(n.summary||'')}</p>${n.image_url?`<img src="${esc(n.image_url)}" style="max-width:100%;border-radius:12px">`:''}${n.url?`<div class="sb-final-actions"><a class="btn-modern btn-secondary" href="${esc(n.url)}" target="_blank" rel="noopener">Read source</a></div>`:''}</article>`).join('')||'<div class="sb-final-card">No news yet. Add the first news item.</div>'}</div></div>`)}
+async function addNews(){const u=await requireUser();if(!u)return;const title=prompt('News title');if(!title?.trim())return;const summary=prompt('Short summary')||'';const source=prompt('Source name')||'Soulbook';const url=prompt('Source URL (optional)')||null;const r=await S().from('sb_news').insert({title:title.trim(),summary,source,url,author_id:u.id});if(r.error)return toast('News failed',r.error.message);news()}
+async function chat(){const u=await requireUser();if(!u)return;document.querySelectorAll('.app-view').forEach(x=>x.classList.remove('active'));document.getElementById('chat-route')?.classList.add('active');const r=await S().from('profiles').select('id,username,display_name,avatar_url,bio,privacy').neq('id',u.id).order('display_name',{ascending:true});if(r.error){toast('Chat users',r.error.message);return}const users=r.data||[];const route=document.getElementById('chat-route');const list=document.getElementById('chat-list');if(list){list.innerHTML=users.map(p=>`<div class="sb-final-user" data-final-user="${p.id}" onclick="SoulbookFinal.startChat('${p.id}')"><div class="sb-final-avatar">${p.avatar_url?`<img src="${esc(p.avatar_url)}">`:esc((p.display_name||p.username||'U')[0].toUpperCase())}</div><div><div class="name">${esc(p.display_name||p.username||'User')}</div><div class="handle">@${esc(p.username||'user')}</div></div></div>`).join('')||'<div style="padding:20px;color:var(--text-muted)">No other Soulbook users found.</div>'}route.classList.add('final-chat-mode');document.querySelector('#chat-route .chat-shell')?.classList.remove('chat-open');return false}
+async function startChat(other){const u=await requireUser();if(!u||other===u.id)return;const r=await S().rpc('create_direct_conversation',{other_user_id:other});if(r.error)return toast('Chat could not open',r.error.message);const cid=typeof r.data==='string'?r.data:r.data?.id;if(!cid)return toast('Chat','Conversation was not created.');const p=(await S().from('profiles').select('*').eq('id',other).single()).data;window.activeConversationId=cid;window.activeChatUser=p;document.querySelector('#chat-route .chat-shell')?.classList.add('chat-open');document.getElementById('chat-empty').style.display='none';document.getElementById('chat-active').style.display='flex';document.getElementById('active-chat-name').textContent=p?.display_name||p?.username||'User';document.getElementById('active-chat-avatar').innerHTML=p?.avatar_url?`<img src="${esc(p.avatar_url)}">`:esc((p?.display_name||p?.username||'U')[0].toUpperCase());const q=await S().from('messages').select('*').eq('conversation_id',cid).order('created_at',{ascending:true});const box=document.getElementById('message-list');box.innerHTML='';for(const m of (q.data||[]))appendSimple(m);box.scrollTop=box.scrollHeight;subscribeSimple(cid);wireFinalComposer();}
+function appendSimple(m){const box=document.getElementById('message-list');if(!box)return;const mine=m.sender_id===window.currentUserId;let html=m.deleted_at?'<i>Message deleted</i>':(m.attachment_url?`<img src="${esc(m.attachment_url.startsWith('http')?m.attachment_url:'')}" alt="Photo">`:'')+(m.content?`<div>${esc(m.content)}</div>`:'');if(m.attachment_url&&!m.attachment_url.startsWith('http')){S().storage.from('chat-media').createSignedUrl(m.attachment_url,3600).then(x=>{const n=box.querySelector(`[data-final-msg="${m.id}"] img`);if(n&&x.data?.signedUrl)n.src=x.data.signedUrl})}const d=document.createElement('div');d.className='sb-final-bubble '+(mine?'mine':'');d.dataset.finalMsg=m.id;d.innerHTML=html+`<div style="font-size:10px;color:var(--text-muted);margin-top:4px">${new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div>`;box.appendChild(d)}
+function subscribeSimple(cid){if(window.__finalChatCh)S().removeChannel(window.__finalChatCh);window.__finalChatCh=S().channel('final-chat-'+cid).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'conversation_id=eq.'+cid},p=>{if(p.new.sender_id!==window.currentUserId){appendSimple(p.new);const box=document.getElementById('message-list');box.scrollTop=box.scrollHeight}}).subscribe()}
+function wireFinalComposer(){const f=document.querySelector('#chat-route .message-composer'),i=document.getElementById('message-input');if(!f||!i)return;f.onsubmit=async e=>{e.preventDefault();const u=await user();const text=i.value.trim();const file=document.getElementById('chat-file-input')?.files?.[0];if(!u||!window.activeConversationId||(!text&&!file))return;let path=null;if(file){if(!file.type.startsWith('image/'))return toast('Chat','Only pictures are allowed.');path=`${u.id}/${window.activeConversationId}/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,'')}`;const up=await S().storage.from('chat-media').upload(path,file,{contentType:file.type,upsert:false});if(up.error)return toast('Photo failed',up.error.message)}const r=await S().from('messages').insert({conversation_id:window.activeConversationId,sender_id:u.id,content:text||null,message_type:file?'image':'text',attachment_url:path});if(r.error)return toast('Message failed',r.error.message);appendSimple(r.data);i.value='';document.getElementById('chat-file-input').value='';};i.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();f.requestSubmit()}}}
+window.SoulbookFinal={post:postBox,publish:fixPost,channels,createChannel,openChannel,channelPost,news,addNews,chat,startChat,close,openPost:postBox};
+window.openChatRoute=chat;window.sendChatMessage=e=>{e?.preventDefault?.();document.querySelector('#chat-route .message-composer')?.requestSubmit()};
+window.SoulChat=Object.assign(window.SoulChat||{},{open:chat,start:startChat});
+window.submitStorySequence=fixPost;
+window.SoulbookV8=Object.assign(window.SoulbookV8||{},{channels,openChannels:channels,openNews:news,createChannel,openChannel,postChannel:channelPost,addNews,close});
+window.openWritingEngine=postBox;
+window.addEventListener('load',async()=>{try{await syncAuth();document.querySelectorAll('[onclick*="SoulbookV7.openChannels"],[onclick*="SoulbookV7.openNews"]').forEach(el=>{if((el.getAttribute('onclick')||'').includes('openChannels'))el.setAttribute('onclick','event.preventDefault();window.SoulbookFinal.channels()');else el.setAttribute('onclick','event.preventDefault();window.SoulbookFinal.news()')});document.querySelectorAll('#chat-route .message-composer').forEach(()=>wireFinalComposer())}catch(e){console.error('Soulbook final bootstrap',e)}});
 })();
 </script>
 </body>
