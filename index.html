@@ -449,6 +449,15 @@ let presenceChannel=null, lastSeenTimer=null, notificationUnread=0, viewedPosts=
 const esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
 const isUrdu=t=>/[\u0600-\u06ff]/.test(t||"");
 const toast=(t)=>{const n=document.createElement("div");n.className="toast";n.textContent=t;document.getElementById("toastRoot").appendChild(n);setTimeout(()=>n.remove(),2600)};
+function friendlyError(error,fallback="Something went wrong. Please try again."){
+  const raw=String(error?.message||error||"").toLowerCase();
+  if(!navigator.onLine||raw.includes("failed to fetch")||raw.includes("networkerror")||raw.includes("network error")||raw.includes("load failed")||raw.includes("fetch failed")||raw.includes("offline")||raw.includes("timeout")) return "You lost your connection. Please check your internet and try again.";
+  if(raw.includes("jwt")||raw.includes("token")||raw.includes("session")) return "Your session has expired. Please sign in again.";
+  if(raw.includes("duplicate")||raw.includes("already exists")) return "This information is already in use.";
+  if(raw.includes("permission")||raw.includes("not allowed")||raw.includes("row-level security")||raw.includes("violates row-level security")||raw.includes("forbidden")) return "You don't have permission to do that.";
+  return fallback;
+}
+function showActionError(error,fallback){toast(friendlyError(error,fallback))}
 const fmt=t=>{try{return new Date(t).toLocaleString([], {dateStyle:"medium",timeStyle:"short"})}catch{return ""}};
 function avatarHtml(p,size="avatar"){const name=p?.display_name||p?.username||"U";return p?.avatar_url?`<div class="${size}"><img src="${esc(p.avatar_url)}"></div>`:`<div class="${size}">${esc(name.charAt(0).toUpperCase())}</div>`}
 function renderIcons(){window.lucide?.createIcons?.()}
@@ -461,12 +470,12 @@ function authMode(m){authModeState=m;document.getElementById("loginTab").classLi
 async function submitAuth(){
   const email=document.getElementById("authEmail").value.trim(),password=document.getElementById("authPassword").value;
   if(!email||!password)return toast("Email and password are required.");
-  if(authModeState==="login"){const r=await sb.auth.signInWithPassword({email,password});if(r.error)return toast(r.error.message)}
+  if(authModeState==="login"){const r=await sb.auth.signInWithPassword({email,password});if(r.error)return showActionError(r.error)}
   else{
     const display=document.getElementById("authName").value.trim(),username=document.getElementById("authUsername").value.trim().toLowerCase().replace(/^@/,"");
     if(!display||!username)return toast("Display name and username are required.");
     const r=await sb.auth.signUp({email,password,options:{data:{display_name:display,username}}});
-    if(r.error)return toast(r.error.message);
+    if(r.error)return showActionError(r.error);
     if(r.data.user && !r.data.session)toast("Check your email to confirm your account.");
   }
   closeModal("authModal");await bootAuth();
@@ -494,7 +503,7 @@ async function ensureProfile(){
   if(r.error){
     const fallback="user_"+me.id.replace(/-/g,"").slice(0,12);
     const retry=await sb.from("profiles").insert({id:me.id,username:fallback,display_name:meta.display_name||fallback,bio:""}).select().single();
-    if(retry.error){toast(retry.error.message);return} profile=retry.data; return;
+    if(retry.error){showActionError(retry.error);return} profile=retry.data; return;
   } profile=r.data;
 }
 async function loadAllPosts(){
@@ -515,7 +524,7 @@ async function loadFeed(){
     await hydrateInteractions(feed);
     renderFeed();
   }catch(e){
-    document.getElementById("feedList").innerHTML=`<div class="empty glass">${esc(e.message)}<br><small>Check your Supabase tables/RLS and run the SQL migration.</small></div>`;
+    document.getElementById("feedList").innerHTML=`<div class="empty glass"><strong>${navigator.onLine?"Something went wrong":"You lost your connection"}</strong><br><small>${navigator.onLine?"Please try again in a moment.":"Check your internet connection and try again."}</small></div>`;
   }
 }
 async function hydrateInteractions(posts){
@@ -610,12 +619,12 @@ async function deletePost(id){
     }
     toast("Post deleted.");
     if(activeProfileId)await openProfile(activeProfileId); else await loadFeed();
-  }catch(e){toast(e.message)}
+  }catch(e){showActionError(e)}
 }
 function applyUrdu(){document.querySelectorAll(".post-body,.comment p").forEach(e=>{if(isUrdu(e.textContent))e.classList.add("urdu-text")})}
-async function toggleLike(id){if(!me)return openAuth();const has=feed.find(p=>p.id===id)?._likes?.some(x=>x.user_id===me.id);const r=has?await sb.from("post_likes").delete().eq("post_id",id).eq("user_id",me.id):await sb.from("post_likes").insert({post_id:id,user_id:me.id});if(r.error)return toast(r.error.message);const p=feed.find(x=>x.id===id);if(p&&!has)await createNotification(p.user_id,"like","liked your post",id);await loadFeed()}
+async function toggleLike(id){if(!me)return openAuth();const has=feed.find(p=>p.id===id)?._likes?.some(x=>x.user_id===me.id);const r=has?await sb.from("post_likes").delete().eq("post_id",id).eq("user_id",me.id):await sb.from("post_likes").insert({post_id:id,user_id:me.id});if(r.error)return showActionError(r.error);const p=feed.find(x=>x.id===id);if(p&&!has)await createNotification(p.user_id,"like","liked your post",id);await loadFeed()}
 function openReaction(id){if(!me)return openAuth();activeReactionPost=id;document.getElementById("reactionChoices").innerHTML=["❤️","👍","😂","😢","🔥","😍","👏","🙏","💯","😮"].map(x=>`<button class="reaction" onclick="reactPost('${id}','${x}');closeModal('reactionModal')">${x}</button>`).join("");document.getElementById("reactionModal").classList.add("open")}
-async function reactPost(id,reaction){if(!me)return openAuth();const old=feed.find(p=>p.id===id)?._reactions?.find(x=>x.user_id===me.id);let r;if(old?.reaction===reaction)r=await sb.from("post_reactions").delete().eq("post_id",id).eq("user_id",me.id);else r=await sb.from("post_reactions").upsert({post_id:id,user_id:me.id,reaction},{onConflict:"post_id,user_id"});if(r.error)return toast(r.error.message);const p=feed.find(x=>x.id===id);if(p&&old?.reaction!==reaction)await createNotification(p.user_id,"reaction",`reacted ${reaction} to your post`,id);await loadFeed()}
+async function reactPost(id,reaction){if(!me)return openAuth();const old=feed.find(p=>p.id===id)?._reactions?.find(x=>x.user_id===me.id);let r;if(old?.reaction===reaction)r=await sb.from("post_reactions").delete().eq("post_id",id).eq("user_id",me.id);else r=await sb.from("post_reactions").upsert({post_id:id,user_id:me.id,reaction},{onConflict:"post_id,user_id"});if(r.error)return showActionError(r.error);const p=feed.find(x=>x.id===id);if(p&&old?.reaction!==reaction)await createNotification(p.user_id,"reaction",`reacted ${reaction} to your post`,id);await loadFeed()}
 let activeCommentPost=null;
 function renderCommentList(p){
   const root=document.getElementById("commentList");
@@ -637,14 +646,14 @@ async function addCommentFromModal(){
   const id=activeCommentPost,input=document.getElementById("modalCommentInput");
   const body=input?.value.trim();if(!id||!body)return;
   const r=await sb.from("comments").insert({post_id:id,user_id:me.id,body});
-  if(r.error)return toast(r.error.message);
+  if(r.error)return showActionError(r.error);
   const p=feed.find(x=>x.id===id);if(p)await createNotification(p.user_id,"comment","commented on your post",id);
   input.value="";
   await loadFeed();
   const fresh=feed.find(x=>x.id===id);if(fresh)renderCommentList(fresh);
 }
 function focusComment(id){openComments(id)}
-async function toggleRepost(id){if(!me)return openAuth();const has=feed.find(p=>p.id===id)?._reposts?.some(x=>x.user_id===me.id);const r=has?await sb.from("post_reposts").delete().eq("post_id",id).eq("user_id",me.id):await sb.from("post_reposts").insert({post_id:id,user_id:me.id});if(r.error)return toast(r.error.message);await loadFeed()}
+async function toggleRepost(id){if(!me)return openAuth();const has=feed.find(p=>p.id===id)?._reposts?.some(x=>x.user_id===me.id);const r=has?await sb.from("post_reposts").delete().eq("post_id",id).eq("user_id",me.id):await sb.from("post_reposts").insert({post_id:id,user_id:me.id});if(r.error)return showActionError(r.error);await loadFeed()}
 async function sharePost(id){const url=location.href.split("#")[0]+"#post-"+id;try{if(navigator.share)await navigator.share({title:"Soulbook post",url});else{await navigator.clipboard.writeText(url);toast("Post link copied.")}}catch{}}
 async function uploadMedia(file){
   if(!file)return null;
@@ -656,9 +665,9 @@ async function uploadMedia(file){
 }
 async function publishPost(){
   if(!me)return openAuth();const body=document.getElementById("postText").value.trim(),hashtags=parseHashtags(document.getElementById("postHashtags").value),file=document.getElementById("postMedia").files[0];if(!body&&!file)return toast("Write something or attach media.");
-  try{let media=null;if(file)media=await uploadMedia(file);const r=await sb.from("posts").insert({user_id:me.id,body,hashtags,media_url:media?.url||null,media_type:media?.type||null}).select().single();if(r.error)throw r.error;document.getElementById("postText").value="";document.getElementById("postHashtags").value="";document.getElementById("postMedia").value="";closeModal("composerModal");toast("Posted.");renderIcons();await notifyFollowers(r.data?.id);await loadFeed()}catch(e){toast(e.message)}
+  try{let media=null;if(file)media=await uploadMedia(file);const r=await sb.from("posts").insert({user_id:me.id,body,hashtags,media_url:media?.url||null,media_type:media?.type||null}).select().single();if(r.error)throw r.error;document.getElementById("postText").value="";document.getElementById("postHashtags").value="";document.getElementById("postMedia").value="";closeModal("composerModal");toast("Posted.");renderIcons();await notifyFollowers(r.data?.id);await loadFeed()}catch(e){showActionError(e)}
 }
-async function publishQuickPost(){const body=document.getElementById("quickText").value.trim(),hashtags=parseHashtags(document.getElementById("quickHashtags").value),file=document.getElementById("quickMedia").files[0];if(!body&&!file)return openComposer();if(!me)return openAuth();try{let media=null;if(file)media=await uploadMedia(file);const r=await sb.from("posts").insert({user_id:me.id,body,hashtags,media_url:media?.url||null,media_type:media?.type||null});if(r.error)throw r.error;document.getElementById("quickText").value="";document.getElementById("quickHashtags").value="";document.getElementById("quickMedia").value="";toast("Posted.");await notifyFollowers(r.data?.id);await loadFeed()}catch(e){toast(e.message)}}
+async function publishQuickPost(){const body=document.getElementById("quickText").value.trim(),hashtags=parseHashtags(document.getElementById("quickHashtags").value),file=document.getElementById("quickMedia").files[0];if(!body&&!file)return openComposer();if(!me)return openAuth();try{let media=null;if(file)media=await uploadMedia(file);const r=await sb.from("posts").insert({user_id:me.id,body,hashtags,media_url:media?.url||null,media_type:media?.type||null});if(r.error)throw r.error;document.getElementById("quickText").value="";document.getElementById("quickHashtags").value="";document.getElementById("quickMedia").value="";toast("Posted.");await notifyFollowers(r.data?.id);await loadFeed()}catch(e){showActionError(e)}}
 async function notifyFollowers(postId){
   if(!me)return;
   const r=await sb.from("follows").select("follower_id").eq("following_id",me.id);
@@ -668,19 +677,19 @@ async function notifyFollowers(postId){
 }
 function parseHashtags(input){return [...new Set(String(input||"").match(/#[\p{L}\p{N}_]+/gu)||[])].map(x=>x.slice(1).toLowerCase()).slice(0,20)}
 function settingsAvatarMarkup(p){return p?.avatar_url?`<img src="${esc(p.avatar_url)}" alt="">`:esc((p?.display_name||p?.username||"U").charAt(0).toUpperCase())}
-async function openProfileSettings(){if(!me)return openAuth();const r=await sb.from("profiles").select("id,username,display_name,bio,avatar_url").eq("id",me.id).single();if(r.error)return toast(r.error.message);document.getElementById("settingsDisplayName").value=r.data.display_name||"";document.getElementById("settingsUsername").value=r.data.username||"";document.getElementById("settingsBio").value=r.data.bio||"";document.getElementById("settingsAvatarPreview").innerHTML=settingsAvatarMarkup(r.data);document.getElementById("profileSettingsModal").classList.add("open");renderIcons()}
+async function openProfileSettings(){if(!me)return openAuth();const r=await sb.from("profiles").select("id,username,display_name,bio,avatar_url").eq("id",me.id).single();if(r.error)return showActionError(r.error);document.getElementById("settingsDisplayName").value=r.data.display_name||"";document.getElementById("settingsUsername").value=r.data.username||"";document.getElementById("settingsBio").value=r.data.bio||"";document.getElementById("settingsAvatarPreview").innerHTML=settingsAvatarMarkup(r.data);document.getElementById("profileSettingsModal").classList.add("open");renderIcons()}
 async function removeProfilePhoto(){
   if(!me)return;
   if(!confirm("Remove your profile photo?"))return;
   const r=await sb.from("profiles").update({avatar_url:null}).eq("id",me.id);
-  if(r.error)return toast(r.error.message);
+  if(r.error)return showActionError(r.error);
   profile.avatar_url=null;
   document.getElementById("settingsAvatarPreview").innerHTML=settingsAvatarMarkup(profile);
   document.getElementById("settingsAvatarFile").value="";
   toast("Profile photo removed.");
 }
 function previewProfilePhoto(input){const f=input.files?.[0];if(!f)return;if(!f.type.startsWith("image/")){input.value="";return toast("Please select an image.")}const r=new FileReader();r.onload=()=>document.getElementById("settingsAvatarPreview").innerHTML=`<img src="${r.result}" alt="">`;r.readAsDataURL(f)}
-async function saveProfileSettings(){if(!me)return openAuth();const display_name=document.getElementById("settingsDisplayName").value.trim();const username=document.getElementById("settingsUsername").value.trim().toLowerCase().replace(/[^a-z0-9_]/g,"");const bio=document.getElementById("settingsBio").value.trim();const file=document.getElementById("settingsAvatarFile").files?.[0];if(!display_name)return toast("Display name is required.");if(!/^[a-z0-9_]{3,24}$/.test(username))return toast("Username: 3–24 characters, a-z 0-9 _");const exists=await sb.from("profiles").select("id").eq("username",username).neq("id",me.id).maybeSingle();if(exists.error)return toast(exists.error.message);if(exists.data)return toast("Username already taken.");try{let avatar_url;if(file){if(!file.type.startsWith("image/"))throw new Error("Profile photo must be an image.");if(file.size>5*1024*1024)throw new Error("Profile photo must be 5MB or smaller.");const path=`${me.id}/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,"")}`;const up=await sb.storage.from("avatars").upload(path,file,{contentType:file.type,upsert:false});if(up.error)throw up.error;avatar_url=sb.storage.from("avatars").getPublicUrl(path).data.publicUrl}const payload={display_name,username,bio};if(avatar_url)payload.avatar_url=avatar_url;const u=await sb.from("profiles").update(payload).eq("id",me.id).select().single();if(u.error)throw u.error;closeModal("profileSettingsModal");toast("Profile updated.");await loadFeed();await openProfile(me.id)}catch(e){toast(e.message)}}
+async function saveProfileSettings(){if(!me)return openAuth();const display_name=document.getElementById("settingsDisplayName").value.trim();const username=document.getElementById("settingsUsername").value.trim().toLowerCase().replace(/[^a-z0-9_]/g,"");const bio=document.getElementById("settingsBio").value.trim();const file=document.getElementById("settingsAvatarFile").files?.[0];if(!display_name)return toast("Display name is required.");if(!/^[a-z0-9_]{3,24}$/.test(username))return toast("Username: 3–24 characters, a-z 0-9 _");const exists=await sb.from("profiles").select("id").eq("username",username).neq("id",me.id).maybeSingle();if(exists.error)return showActionError(exists.error);if(exists.data)return toast("Username already taken.");try{let avatar_url;if(file){if(!file.type.startsWith("image/"))throw new Error("Profile photo must be an image.");if(file.size>5*1024*1024)throw new Error("Profile photo must be 5MB or smaller.");const path=`${me.id}/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,"")}`;const up=await sb.storage.from("avatars").upload(path,file,{contentType:file.type,upsert:false});if(up.error)throw up.error;avatar_url=sb.storage.from("avatars").getPublicUrl(path).data.publicUrl}const payload={display_name,username,bio};if(avatar_url)payload.avatar_url=avatar_url;const u=await sb.from("profiles").update(payload).eq("id",me.id).select().single();if(u.error)throw u.error;closeModal("profileSettingsModal");toast("Profile updated.");await loadFeed();await openProfile(me.id)}catch(e){showActionError(e)}}
 async function copyProfileId(id){try{await navigator.clipboard.writeText(id);toast("Profile ID copied.")}catch{toast(id)}}
 async function getProfile(id){
   const r=await sb.from("profiles").select("id,username,display_name,bio,avatar_url,created_at,last_seen_at").eq("id",id).maybeSingle();
@@ -762,17 +771,17 @@ async function openProfile(id){
     </div>`;
     renderIcons();applyUrdu();
   }catch(e){
-    root.innerHTML=`<div class="empty glass">${esc(e.message)}<br><small>Check the profiles/posts/follows tables and RLS policies.</small></div>`;
+    root.innerHTML=`<div class="empty glass"><strong>${navigator.onLine?"Something went wrong":"You lost your connection"}</strong><br><small>${navigator.onLine?"Please try again in a moment.":"Check your internet connection and try again."}</small></div>`;
   }
 }
 async function showFollowList(profileId,type){
   const column=type==="followers"?"following_id":"follower_id";
   const r=await sb.from("follows").select("follower_id,following_id").eq(column,profileId);
-  if(r.error)return toast(r.error.message);
+  if(r.error)return showActionError(r.error);
   const ids=[...new Set((r.data||[]).map(x=>type==="followers"?x.follower_id:x.following_id))];
   if(!ids.length)return toast(type==="followers"?"No followers yet.":"Not following anyone yet.");
   const p=await sb.from("profiles").select("id,username,display_name,avatar_url").in("id",ids);
-  if(p.error)return toast(p.error.message);
+  if(p.error)return showActionError(p.error);
   const lines=(p.data||[]).map(x=>`<button class="follow-list-item" onclick="closeModal('followListModal');openProfile('${x.id}')">${avatarHtml(x,"avatar")}<span><b>${esc(x.display_name||x.username)}</b><small>@${esc(x.username||"user")}</small></span></button>`).join("");
   document.getElementById("followListTitle").textContent=type==="followers"?"Followers":"Following";
   document.getElementById("followListBody").innerHTML=lines||'<div class="empty">No profiles found.</div>';
@@ -784,7 +793,7 @@ async function trackPostView(id){
   if(!me||viewedPosts.has(id))return;
   viewedPosts.add(id);
   const r=await sb.from("post_views").upsert({post_id:id,user_id:me.id},{onConflict:"post_id,user_id"});
-  if(r.error && !String(r.error.message||"").includes("duplicate")) console.warn(r.error.message);
+  if(r.error)showActionError(r.error);
 }
 function observePostViews(){
   document.querySelectorAll(".post").forEach(el=>{
@@ -835,7 +844,7 @@ async function openAnalytics(){
   const root=document.getElementById("analyticsRoot");root.innerHTML='<div class="empty">Loading analytics…</div>';
   document.getElementById("analyticsModal").classList.add("open");
   const pr=await sb.from("posts").select("id,body,created_at").eq("user_id",me.id).order("created_at",{ascending:false});
-  if(pr.error)return root.innerHTML=`<div class="empty">${esc(pr.error.message)}</div>`;
+  if(pr.error)return root.innerHTML=`<div class="empty"><strong>Something went wrong</strong><br><small>${friendlyError(pr.error)}</small></div>`;
   const posts=pr.data||[], ids=posts.map(x=>x.id);
   if(!ids.length){root.innerHTML='<div class="empty">No posts yet, so there is no analytics data.</div>';return}
   const [v,l,r,c]=await Promise.all([
@@ -875,7 +884,7 @@ async function toggleFollow(id,isFollowing){
   const r=isFollowing
     ?await sb.from("follows").delete().eq("follower_id",me.id).eq("following_id",id)
     :await sb.from("follows").insert({follower_id:me.id,following_id:id});
-  if(r.error)return toast(r.error.message);
+  if(r.error)return showActionError(r.error);
   toast(isFollowing?"Unfollowed.":"Following.");
   if(!isFollowing)await createNotification(id,"follow","started following you");
   await openProfile(id);
@@ -946,12 +955,14 @@ function startRealtime(){
       }
     })
     .subscribe((status)=>{
-      if(status==="CHANNEL_ERROR")toast("Realtime connection error — checking again…");
+      if(status==="CHANNEL_ERROR")showActionError(new Error("network error"),"Live connection interrupted. Please check your internet and try again.");
     });
 }
 sb.auth.onAuthStateChange(async()=>{await bootAuth();startRealtime();if(me)updateLastSeen()});
 setInterval(()=>{if(me)updateLastSeen()},30000);
 window.addEventListener("beforeunload",()=>{if(me)updateLastSeen()});
+window.addEventListener("offline",()=>toast("You lost your connection. Please check your internet."));
+window.addEventListener("online",()=>toast("Network connection restored."));
 (async()=>{renderIcons();installCopyProtection();authMode("login");await bootAuth();await loadFeed();startRealtime()})();
 </script>
 </body>
